@@ -75,7 +75,39 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
-        "auto-scripts": {
+      "start" : [
+        "Composer\\Config::disableProcessTimeout",
+        "symfony serve"
+      ],
+      "fix:csfixer": [
+        "php-cs-fixer fix"
+      ],
+      "test:csfixer" : [
+        "php-cs-fixer fix --dry-run"
+      ],
+      "test:phpstan" : [
+        "phpstan analyse"
+      ],
+      "test:twig" : [
+        "twig-cs-fixer lint"
+      ],
+      "fix:twig": [
+        "twig-cs-fixer lint --fix"
+      ],
+      "test:yaml" : [
+        "bin/console lint:yaml config"
+      ],
+      "test": [
+        "@test:csfixer",
+        "@test:phpstan",
+        "@test:twig",
+        "@test:yaml"
+      ],
+      "fix" : [
+        "@fix:csfixer",
+        "@fix:twig"
+      ],
+      "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd"
