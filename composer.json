@@ -119,7 +119,17 @@
             "@auto-scripts"
         ]
     },
-    "conflict": {
+    "scripts-descriptions": {
+      "start" : "Run Web server on symfony",
+      "fix:csfixer": "Fix PHP code with PHP CS Fixer",
+      "test:csfixer" : "Test PHP code with PHP CS Fixer",
+      "fix:twig": "Fix Twig code with twig CS Fixer",
+      "test:twig" : "Test Twig code with twig CS Fixer",
+      "test" : "Run all tests",
+      "fix": "Run all fix"
+    },
+
+  "conflict": {
         "symfony/symfony": "*"
     },
     "extra": {
