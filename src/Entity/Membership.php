@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\MembershipRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: MembershipRepository::class)]
+class Membership
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $role = null;
+
+    #[ORM\ManyToOne(inversedBy: 'memberships')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $Member = null;
+
+    #[ORM\ManyToOne(inversedBy: 'memberships')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Team $Team = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): static
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getMember(): ?User
+    {
+        return $this->Member;
+    }
+
+    public function setMember(?User $Member): static
+    {
+        $this->Member = $Member;
+
+        return $this;
+    }
+
+    public function getTeam(): ?Team
+    {
+        return $this->Team;
+    }
+
+    public function setTeam(?Team $Team): static
+    {
+        $this->Team = $Team;
+
+        return $this;
+    }
+}
