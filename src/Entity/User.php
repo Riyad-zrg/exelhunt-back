@@ -1,0 +1,289 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
+class User
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 18)]
+    private ?string $nickname = null;
+
+    #[ORM\Column(length: 30)]
+    private ?string $password = null;
+
+    #[ORM\Column]
+    private array $roles = [];
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $avatar = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $lastname = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $email = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $biography = null;
+
+    #[ORM\ManyToOne]
+    private ?Address $Address = null;
+
+    /**
+     * @var Collection<int, Membership>
+     */
+    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'Member', orphanRemoval: true)]
+    private Collection $memberships;
+
+    /**
+     * @var Collection<int, Participation>
+     */
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'Player')]
+    private Collection $participations;
+
+    /**
+     * @var Collection<int, HasStarted>
+     */
+    #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'player')]
+    private Collection $startPuzzle;
+
+    public function __construct()
+    {
+        $this->memberships = new ArrayCollection();
+        $this->participations = new ArrayCollection();
+        $this->startPuzzle = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(string $nickname): static
+    {
+        $this->nickname = $nickname;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(?string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(?string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getBiography(): ?string
+    {
+        return $this->biography;
+    }
+
+    public function setBiography(?string $biography): static
+    {
+        $this->biography = $biography;
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->Address;
+    }
+
+    public function setAddress(?Address $Address): static
+    {
+        $this->Address = $Address;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Membership>
+     */
+    public function getMemberships(): Collection
+    {
+        return $this->memberships;
+    }
+
+    public function addMembership(Membership $membership): static
+    {
+        if (!$this->memberships->contains($membership)) {
+            $this->memberships->add($membership);
+            $membership->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMembership(Membership $membership): static
+    {
+        if ($this->memberships->removeElement($membership)) {
+            // set the owning side to null (unless already changed)
+            if ($membership->getMember() === $this) {
+                $membership->setMember(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): static
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
+            $participation->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): static
+    {
+        if ($this->participations->removeElement($participation)) {
+            // set the owning side to null (unless already changed)
+            if ($participation->getPlayer() === $this) {
+                $participation->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HasStarted>
+     */
+    public function getStartPuzzle(): Collection
+    {
+        return $this->startPuzzle;
+    }
+
+    public function addStartPuzzle(HasStarted $startPuzzle): static
+    {
+        if (!$this->startPuzzle->contains($startPuzzle)) {
+            $this->startPuzzle->add($startPuzzle);
+            $startPuzzle->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStartPuzzle(HasStarted $startPuzzle): static
+    {
+        if ($this->startPuzzle->removeElement($startPuzzle)) {
+            // set the owning side to null (unless already changed)
+            if ($startPuzzle->getPlayer() === $this) {
+                $startPuzzle->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+}
