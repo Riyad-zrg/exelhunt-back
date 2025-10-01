@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\HuntRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: HuntRepository::class)]
@@ -44,6 +46,17 @@ class Hunt
     #[ORM\ManyToOne(inversedBy: 'hunts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Address $location = null;
+
+    /**
+     * @var Collection<int, Puzzle>
+     */
+    #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'Hunt', orphanRemoval: true)]
+    private Collection $puzzles;
+
+    public function __construct()
+    {
+        $this->puzzles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -166,6 +179,36 @@ class Hunt
     public function setLocation(?Address $location): static
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Puzzle>
+     */
+    public function getPuzzles(): Collection
+    {
+        return $this->puzzles;
+    }
+
+    public function addPuzzle(Puzzle $puzzle): static
+    {
+        if (!$this->puzzles->contains($puzzle)) {
+            $this->puzzles->add($puzzle);
+            $puzzle->setHunt($this);
+        }
+
+        return $this;
+    }
+
+    public function removePuzzle(Puzzle $puzzle): static
+    {
+        if ($this->puzzles->removeElement($puzzle)) {
+            // set the owning side to null (unless already changed)
+            if ($puzzle->getHunt() === $this) {
+                $puzzle->setHunt(null);
+            }
+        }
 
         return $this;
     }
