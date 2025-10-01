@@ -59,10 +59,17 @@ class User
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'Player')]
     private Collection $participations;
 
+    /**
+     * @var Collection<int, HasStarted>
+     */
+    #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'player')]
+    private Collection $startPuzzle;
+
     public function __construct()
     {
         $this->memberships = new ArrayCollection();
         $this->participations = new ArrayCollection();
+        $this->startPuzzle = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -244,6 +251,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($participation->getPlayer() === $this) {
                 $participation->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HasStarted>
+     */
+    public function getStartPuzzle(): Collection
+    {
+        return $this->startPuzzle;
+    }
+
+    public function addStartPuzzle(HasStarted $startPuzzle): static
+    {
+        if (!$this->startPuzzle->contains($startPuzzle)) {
+            $this->startPuzzle->add($startPuzzle);
+            $startPuzzle->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStartPuzzle(HasStarted $startPuzzle): static
+    {
+        if ($this->startPuzzle->removeElement($startPuzzle)) {
+            // set the owning side to null (unless already changed)
+            if ($startPuzzle->getPlayer() === $this) {
+                $startPuzzle->setPlayer(null);
             }
         }
 

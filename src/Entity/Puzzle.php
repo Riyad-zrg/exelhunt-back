@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PuzzleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +37,17 @@ class Puzzle
     #[ORM\ManyToOne(inversedBy: 'puzzles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Hunt $Hunt = null;
+
+    /**
+     * @var Collection<int, HasStarted>
+     */
+    #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'puzzle')]
+    private Collection $hasStarteds;
+
+    public function __construct()
+    {
+        $this->hasStarteds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +134,36 @@ class Puzzle
     public function setHunt(?Hunt $Hunt): static
     {
         $this->Hunt = $Hunt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HasStarted>
+     */
+    public function getHasStarteds(): Collection
+    {
+        return $this->hasStarteds;
+    }
+
+    public function addHasStarted(HasStarted $hasStarted): static
+    {
+        if (!$this->hasStarteds->contains($hasStarted)) {
+            $this->hasStarteds->add($hasStarted);
+            $hasStarted->setPuzzle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHasStarted(HasStarted $hasStarted): static
+    {
+        if ($this->hasStarteds->removeElement($hasStarted)) {
+            // set the owning side to null (unless already changed)
+            if ($hasStarted->getPuzzle() === $this) {
+                $hasStarted->setPuzzle(null);
+            }
+        }
 
         return $this;
     }
