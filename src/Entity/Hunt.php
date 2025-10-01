@@ -54,9 +54,16 @@ class Hunt
     #[ORM\OneToOne(mappedBy: 'Hunt')]
     private Code $code;
 
+    /**
+     * @var Collection<int, Participation>
+     */
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'Hunt')]
+    private Collection $participations;
+
     public function __construct()
     {
         $this->puzzles = new ArrayCollection();
+        $this->participations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -208,6 +215,36 @@ class Hunt
             // set the owning side to null (unless already changed)
             if ($puzzle->getHunt() === $this) {
                 $puzzle->setHunt(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): static
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
+            $participation->setHunt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): static
+    {
+        if ($this->participations->removeElement($participation)) {
+            // set the owning side to null (unless already changed)
+            if ($participation->getHunt() === $this) {
+                $participation->setHunt(null);
             }
         }
 

@@ -53,9 +53,16 @@ class User
     #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'Member', orphanRemoval: true)]
     private Collection $memberships;
 
+    /**
+     * @var Collection<int, Participation>
+     */
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'Player')]
+    private Collection $participations;
+
     public function __construct()
     {
         $this->memberships = new ArrayCollection();
+        $this->participations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -207,6 +214,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($membership->getMember() === $this) {
                 $membership->setMember(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): static
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
+            $participation->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): static
+    {
+        if ($this->participations->removeElement($participation)) {
+            // set the owning side to null (unless already changed)
+            if ($participation->getPlayer() === $this) {
+                $participation->setPlayer(null);
             }
         }
 
