@@ -15,9 +15,6 @@ class Hunt
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $code = null;
-
     #[ORM\Column(length: 100)]
     private ?string $title = null;
 
@@ -53,6 +50,11 @@ class Hunt
     #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'Hunt', orphanRemoval: true)]
     private Collection $puzzles;
 
+
+    #[ORM\OneToOne(mappedBy: 'Hunt')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Code $code;
+
     public function __construct()
     {
         $this->puzzles = new ArrayCollection();
@@ -63,12 +65,12 @@ class Hunt
         return $this->id;
     }
 
-    public function getCode(): ?int
+    public function getCode(): ?Code
     {
         return $this->code;
     }
 
-    public function setCode(int $code): static
+    public function setCode(?Code $code): static
     {
         $this->code = $code;
 
