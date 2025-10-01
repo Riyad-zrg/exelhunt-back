@@ -30,9 +30,16 @@ class Team
     #[ORM\OneToMany(targetEntity: Hunt::class, mappedBy: 'Team')]
     private Collection $hunts;
 
+    /**
+     * @var Collection<int, Membership>
+     */
+    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'Team')]
+    private Collection $memberships;
+
     public function __construct()
     {
         $this->hunts = new ArrayCollection();
+        $this->memberships = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +107,36 @@ class Team
             // set the owning side to null (unless already changed)
             if ($hunt->getTeam() === $this) {
                 $hunt->setTeam(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Membership>
+     */
+    public function getMemberships(): Collection
+    {
+        return $this->memberships;
+    }
+
+    public function addMembership(Membership $membership): static
+    {
+        if (!$this->memberships->contains($membership)) {
+            $this->memberships->add($membership);
+            $membership->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMembership(Membership $membership): static
+    {
+        if ($this->memberships->removeElement($membership)) {
+            // set the owning side to null (unless already changed)
+            if ($membership->getTeam() === $this) {
+                $membership->setTeam(null);
             }
         }
 
