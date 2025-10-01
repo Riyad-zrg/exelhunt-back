@@ -160,12 +160,12 @@ class Hunt
         return $this;
     }
 
-    public function getCreatedBy(): ?Team
+    public function getTeam(): ?Team
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?Team $createdBy): static
+    public function setTeam(?Team $createdBy): static
     {
         $this->createdBy = $createdBy;
 
