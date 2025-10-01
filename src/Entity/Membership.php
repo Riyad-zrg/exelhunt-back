@@ -14,7 +14,7 @@ class Membership
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $role = null;
+    private array $role = [];
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
@@ -29,12 +29,12 @@ class Membership
         return $this->id;
     }
 
-    public function getRole(): ?string
+    public function getRole(): ?array
     {
         return $this->role;
     }
 
-    public function setRole(string $role): static
+    public function setRole(array $role): static
     {
         $this->role = $role;
 
