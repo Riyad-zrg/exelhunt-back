@@ -13,9 +13,6 @@ class Address
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $idAddress = null;
-
     #[ORM\Column(length: 30)]
     private ?string $country = null;
 
@@ -32,19 +29,6 @@ class Address
     {
         return $this->id;
     }
-
-    public function getIdAddress(): ?int
-    {
-        return $this->idAddress;
-    }
-
-    public function setIdAddress(int $idAddress): static
-    {
-        $this->idAddress = $idAddress;
-
-        return $this;
-    }
-
     public function getCountry(): ?string
     {
         return $this->country;
