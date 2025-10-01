@@ -52,7 +52,6 @@ class Hunt
 
 
     #[ORM\OneToOne(mappedBy: 'Hunt')]
-    #[ORM\JoinColumn(nullable: false)]
     private Code $code;
 
     public function __construct()
