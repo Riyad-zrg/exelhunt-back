@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
@@ -24,6 +26,17 @@ class Address
 
     #[ORM\Column(length: 100)]
     private ?string $street = null;
+
+    /**
+     * @var Collection<int, Hunt>
+     */
+    #[ORM\OneToMany(targetEntity: Hunt::class, mappedBy: 'location')]
+    private Collection $hunts;
+
+    public function __construct()
+    {
+        $this->hunts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -73,6 +86,36 @@ class Address
     public function setStreet(string $street): static
     {
         $this->street = $street;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Hunt>
+     */
+    public function getHunts(): Collection
+    {
+        return $this->hunts;
+    }
+
+    public function addHunt(Hunt $hunt): static
+    {
+        if (!$this->hunts->contains($hunt)) {
+            $this->hunts->add($hunt);
+            $hunt->setLocation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHunt(Hunt $hunt): static
+    {
+        if ($this->hunts->removeElement($hunt)) {
+            // set the owning side to null (unless already changed)
+            if ($hunt->getLocation() === $this) {
+                $hunt->setLocation(null);
+            }
+        }
 
         return $this;
     }
