@@ -134,7 +134,8 @@
       "fix:twig": "Fix Twig code with twig CS Fixer",
       "test:twig" : "Test Twig code with twig CS Fixer",
       "test" : "Run all tests",
-      "fix": "Run all fix"
+      "fix": "Run all fix",
+      "db": "Drop, create database, run migrations and load fixtures"
     },
 
   "conflict": {
