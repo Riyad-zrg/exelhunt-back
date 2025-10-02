@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\Team;
+use Faker\Factory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -32,11 +33,12 @@ final class TeamFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'avatar' => self::faker()->text(255),
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'name' => self::faker()->text(30),
+            'avatar' => base64_encode(file_get_contents(__DIR__.'/../DataFixtures/img/teamDefault.jpeg')),
+            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-30 days', 'now')),
+            'name' => self::faker()->company(),
         ];
     }
+
 
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
