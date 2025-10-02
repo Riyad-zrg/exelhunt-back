@@ -3,16 +3,13 @@
 namespace App\Factory;
 
 use App\Entity\Participation;
-use App\Repository\ParticipationRepository;
-use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
-use Zenstruck\Foundry\Persistence\Proxy;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentProxyObjectFactory<Participation>
  */
-final class ParticipationFactory extends PersistentProxyObjectFactory{
+final class ParticipationFactory extends PersistentProxyObjectFactory
+{
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -27,12 +24,13 @@ final class ParticipationFactory extends PersistentProxyObjectFactory{
         return Participation::class;
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
      * @todo add your default values here
      */
-    protected function defaults(): array|callable    {
+    protected function defaults(): array|callable
+    {
         return [
             'hunt' => HuntFactory::new(),
             'player' => UserFactory::new(),
@@ -40,7 +38,7 @@ final class ParticipationFactory extends PersistentProxyObjectFactory{
         ];
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
     protected function initialize(): static

@@ -3,16 +3,13 @@
 namespace App\Factory;
 
 use App\Entity\UserAnswer;
-use App\Repository\UserAnswerRepository;
-use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
-use Zenstruck\Foundry\Persistence\Proxy;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentProxyObjectFactory<UserAnswer>
  */
-final class UserAnswerFactory extends PersistentProxyObjectFactory{
+final class UserAnswerFactory extends PersistentProxyObjectFactory
+{
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -27,12 +24,13 @@ final class UserAnswerFactory extends PersistentProxyObjectFactory{
         return UserAnswer::class;
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
      * @todo add your default values here
      */
-    protected function defaults(): array|callable    {
+    protected function defaults(): array|callable
+    {
         return [
             'content' => [],
             'isCorrect' => self::faker()->boolean(),
@@ -40,7 +38,7 @@ final class UserAnswerFactory extends PersistentProxyObjectFactory{
         ];
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
     protected function initialize(): static

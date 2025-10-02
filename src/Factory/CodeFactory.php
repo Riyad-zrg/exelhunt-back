@@ -3,16 +3,13 @@
 namespace App\Factory;
 
 use App\Entity\Code;
-use App\Repository\CodeRepository;
-use Doctrine\ORM\EntityRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
-use Zenstruck\Foundry\Persistence\Proxy;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 
 /**
  * @extends PersistentProxyObjectFactory<Code>
  */
-final class CodeFactory extends PersistentProxyObjectFactory{
+final class CodeFactory extends PersistentProxyObjectFactory
+{
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -27,12 +24,13 @@ final class CodeFactory extends PersistentProxyObjectFactory{
         return Code::class;
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
      * @todo add your default values here
      */
-    protected function defaults(): array|callable    {
+    protected function defaults(): array|callable
+    {
         return [
             'code' => self::faker()->randomNumber(),
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
@@ -41,7 +39,7 @@ final class CodeFactory extends PersistentProxyObjectFactory{
         ];
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
     protected function initialize(): static

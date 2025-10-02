@@ -42,6 +42,7 @@ class Address
     {
         return $this->id;
     }
+
     public function getCountry(): ?string
     {
         return $this->country;

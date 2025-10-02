@@ -50,7 +50,6 @@ class Hunt
     #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'Hunt', orphanRemoval: true)]
     private Collection $puzzles;
 
-
     #[ORM\OneToOne(mappedBy: 'Hunt')]
     private Code $code;
 
