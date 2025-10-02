@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\User;
+use Faker\Factory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -31,13 +32,39 @@ final class UserFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
-        return [
-            'avatar' => self::faker()->text(255),
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'nickname' => self::faker()->text(18),
-            'password' => self::faker()->text(30),
-            'roles' => [],
+        $faker = Factory::create('fr_FR');
+        $primaryRole = $faker->randomElement(['GUEST', 'ADMIN', 'STAFF', 'PLAYER', 'USER']);
+
+        // Déterminer les rôles effectifs selon la règle
+        $roles = match ($primaryRole) {
+            'GUEST' => ['GUEST'],
+            'ADMIN' => ['ADMIN', 'STAFF', 'PLAYER', 'CONCEPTOR', 'USER'],
+            'STAFF' => ['STAFF', 'PLAYER', 'CONCEPTOR', 'USER'],
+            'CONCEPTOR' => ['CONCEPTOR', 'PLAYER', 'USER'],
+            'PLAYER' => ['PLAYER', 'USER'],
+            'USER' => ['USER'],
+        };
+
+        $defaults = [
+            'avatar' => base64_encode(file_get_contents(__DIR__.'/../DataFixtures/img/userDefault.jpg')),
+            'createdAt' => \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-500 days', 'now')),
+            'nickname' => $faker->userName(),
+            'password' => $faker->password(30),
+            'roles' => $roles,
         ];
+
+        // Remplir les champs optionnels si ce n'est pas un GUEST
+        if ('GUEST' !== $primaryRole) {
+            $defaults = array_merge($defaults, [
+                'firstname' => $faker->firstName(),
+                'lastname' => $faker->lastName(),
+                'email' => $faker->email(),
+                'biography' => $faker->paragraph(),
+                'Address' => AddressFactory::new(),
+            ]);
+        }
+
+        return $defaults;
     }
 
     /**
