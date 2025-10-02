@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\Address;
+use Faker\Factory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -31,11 +32,22 @@ final class AddressFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
+        $faker = Factory::create('fr_FR');
+        $country = $faker->randomElement(['France', 'United States', 'Germany', 'Italy', 'Spain']);
+        $fakerByCountry = match ($country) {
+            'France' => Factory::create('fr_FR'),
+            'United States' => Factory::create('en_US'),
+            'Germany' => Factory::create('de_DE'),
+            'Italy' => Factory::create('it_IT'),
+            'Spain' => Factory::create('es_ES'),
+            default => Factory::create(),
+        };
+
         return [
-            'city' => self::faker()->text(50),
-            'country' => self::faker()->text(30),
-            'postCode' => self::faker()->text(5),
-            'street' => self::faker()->text(100),
+            'city' => $fakerByCountry->city(),
+            'country' => $country,
+            'postCode' => $fakerByCountry->postcode(),
+            'street' => $fakerByCountry->streetAddress(),
         ];
     }
 
