@@ -14,7 +14,7 @@
    ```bash
    composer install
    ```
-   
+   ne pas accepter le fichier de configuration grumphp lors de l'installation
 
 ### Utilisation des Scripts
 
@@ -34,3 +34,8 @@
     composer fix
     ```
     Cela exécutera tous les fixs définis dans le projet.
+4. Pour lancer la base de données, utilisez la commande suivante :
+    ```bash
+    composer db
+    ```
+    Cela lancera la base de données et chargera les données.

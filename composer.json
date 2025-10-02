@@ -108,6 +108,13 @@
         "@fix:csfixer",
         "@fix:twig"
       ],
+      "db": [
+        "bin/console doctrine:database:drop --force --if-exists",
+        "bin/console doctrine:database:create",
+        "bin/console doctrine:migrations:migrate --no-interaction",
+        "bin/console doctrine:fixtures:load --no-interaction"
+      ],
+
       "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
@@ -127,7 +134,8 @@
       "fix:twig": "Fix Twig code with twig CS Fixer",
       "test:twig" : "Test Twig code with twig CS Fixer",
       "test" : "Run all tests",
-      "fix": "Run all fix"
+      "fix": "Run all fix",
+      "db": "Drop, create database, run migrations and load fixtures"
     },
 
   "conflict": {
