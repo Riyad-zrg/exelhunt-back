@@ -32,9 +32,9 @@ final class CodeFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'code' => self::faker()->randomNumber(),
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'expireAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'code' => self::faker()->unique()->numerify('######'),
+            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-120 days', 'now')),
+            'expireAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('now', '+60 days')),
             'hunt' => HuntFactory::new(),
         ];
     }
