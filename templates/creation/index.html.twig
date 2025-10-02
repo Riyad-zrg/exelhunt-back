@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreationController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div className="creation_choice__buttons d-flex flex-column align-items-center justify-content-center vh-100">
+    <h3 className="creation_choice__title fw-bold p-3 mb-3">
+        Création
+    </h3>
+    <button className="btn btn-primary btn-lg mb-3 p-4">
+        Création de chasse
+    </button>
+    <button className="btn btn-secondary btn-lg mb-3 p-4">
+        Création d'une équipe
+    </button>
+</div>
+
+{% endblock %}
