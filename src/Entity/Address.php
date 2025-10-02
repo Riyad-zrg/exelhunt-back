@@ -21,7 +21,7 @@ class Address
     #[ORM\Column(length: 50)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 5)]
+    #[ORM\Column(length: 10)]
     private ?string $postCode = null;
 
     #[ORM\Column(length: 100)]
