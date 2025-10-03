@@ -12,7 +12,7 @@ class CodeFixtures extends Fixture
     {
         // $product = new Product();
         // $manager->persist($product);
-//        CodeFactory::createMany(100);
+        CodeFactory::createMany(100);
 
         $manager->flush();
     }
