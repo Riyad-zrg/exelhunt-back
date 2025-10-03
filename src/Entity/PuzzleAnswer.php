@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PuzzleAnswerRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PuzzleAnswerRepository::class)]
@@ -21,6 +22,8 @@ class PuzzleAnswer
     #[ORM\ManyToOne(inversedBy: 'answers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Puzzle $puzzle = null;
+    #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'puzzleAnswer', cascade: ['persist', 'remove'])]
+    private Collection $userAnswers;
 
     public function getId(): ?int
     {
@@ -59,6 +62,15 @@ class PuzzleAnswer
     public function setPuzzle(?Puzzle $puzzle): static
     {
         $this->puzzle = $puzzle;
+
+        return $this;
+    }
+    public function addUserAnswer(UserAnswer $answer): static
+    {
+        if (!$this->userAnswers->contains($answer)) {
+            $this->userAnswers->add($answer);
+            $answer->setPuzzleAnswer($this);
+        }
         return $this;
     }
 }
