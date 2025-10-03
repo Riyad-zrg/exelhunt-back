@@ -31,20 +31,30 @@ final class ParticipationFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
+        $hunt = HuntFactory::randomOrCreate();
+        $player = UserFactory::randomOrCreate();
+        $puzzles = $hunt->getPuzzles()->toArray();
+        $tracking = null;
+        if (!empty($puzzles)) {
+            $randomPuzzle = self::faker()->randomElement($puzzles);
+            $tracking = 'Puzzle_'.$randomPuzzle->getId();
+        }
+
         return [
-            'hunt' => HuntFactory::new(),
-            'player' => UserFactory::new(),
-            'tracking' => self::faker()->text(15),
+            'hunt' => $hunt,
+            'player' => $player,
+            'tracking' => $tracking ?? 'start',
+            'globalTime' => null,
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Participation $participation): void {})
-        ;
+            ->afterInstantiate(function (Participation $participation): void {
+                if (self::faker()->boolean(20)) {
+                    $participation->setGlobalTime(self::faker()->dateTimeBetween('-2 hours', 'now'));
+                }
+            });
     }
 }
