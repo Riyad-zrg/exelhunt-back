@@ -31,10 +31,43 @@ final class UserAnswerFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
+        $faker = self::faker();
+        $puzzleAnswer = PuzzleAnswerFactory::random();
+
+        $content = [];
+        $isCorrect = $faker->boolean();
+
+        if ($puzzleAnswer) {
+            switch ($puzzleAnswer->getType()) {
+                case 'qcm':
+                    $options = $puzzleAnswer->getContent()['options'] ?? [];
+                    $selected = $faker->randomElement($options);
+                    $content = ['selected' => $selected['label']];
+                    $isCorrect = $selected['isCorrect'];
+                    break;
+
+                case 'text':
+                    $content = ['answer' => $faker->sentence(3)];
+                    break;
+
+                case 'qrcode':
+                    $content = ['code' => $faker->uuid()];
+                    break;
+
+                case 'gps':
+                    $content = [
+                        'latitude' => $faker->latitude(),
+                        'longitude' => $faker->longitude(),
+                    ];
+                    break;
+            }
+        }
+
         return [
-            'content' => [],
-            'isCorrect' => self::faker()->boolean(),
-            'sendAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'content' => $content,
+            'isCorrect' => $isCorrect,
+            'sendAt' => \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-10 days', 'now')),
+            'puzzleAnswer' => $puzzleAnswer,
         ];
     }
 
