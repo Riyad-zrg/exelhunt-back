@@ -18,6 +18,9 @@ class PuzzleAnswer
 
     #[ORM\Column]
     private array $content = [];
+    #[ORM\ManyToOne(inversedBy: 'answers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Puzzle $puzzle = null;
 
     public function getId(): ?int
     {
@@ -45,6 +48,17 @@ class PuzzleAnswer
     {
         $this->content = $content;
 
+        return $this;
+    }
+
+    public function getPuzzle(): ?Puzzle
+    {
+        return $this->puzzle;
+    }
+
+    public function setPuzzle(?Puzzle $puzzle): static
+    {
+        $this->puzzle = $puzzle;
         return $this;
     }
 }

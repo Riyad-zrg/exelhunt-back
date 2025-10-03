@@ -44,9 +44,16 @@ class Puzzle
     #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'puzzle')]
     private Collection $hasStarteds;
 
+    /**
+     * @var Collection<int, PuzzleAnswer>
+     */
+    #[ORM\OneToMany(targetEntity: PuzzleAnswer::class, mappedBy: 'puzzle', cascade: ['persist', 'remove'])]
+    private Collection $answers;
+
     public function __construct()
     {
         $this->hasStarteds = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,6 +172,30 @@ class Puzzle
             }
         }
 
+        return $this;
+    }
+
+    public function getAnswers(): Collection
+    {
+        return $this->answers;
+    }
+
+    public function addAnswer(PuzzleAnswer $answer): static
+    {
+        if (!$this->answers->contains($answer)) {
+            $this->answers->add($answer);
+            $answer->setPuzzle($this);
+        }
+        return $this;
+    }
+
+    public function removeAnswer(PuzzleAnswer $answer): static
+    {
+        if ($this->answers->removeElement($answer)) {
+            if ($answer->getPuzzle() === $this) {
+                $answer->setPuzzle(null);
+            }
+        }
         return $this;
     }
 }
