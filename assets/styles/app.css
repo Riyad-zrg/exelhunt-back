@@ -6,20 +6,21 @@ html, body {
 
 /* Puzzle creation page styles */
 
-.creation_puzzle_form > input {
+.creation_puzzle_main_form > input, .creation_puzzle_main_form > .input-group {
     background-color: lightgrey;
     border-radius: 15px;
     text-align: center;
-    width: 50%;
+    width: 75%;
 }
 
 #puzzle_media {
     height: 30vh;
 }
 
-#puzzle_question {
-    padding: 5px;
-    height: 5vh;
+#puzzle_question, #puzzle_answer {
+    background-color: lightgrey;
+    text-align: center;
+    border: none;
 }
 
 #puzzle_answer {
@@ -27,7 +28,13 @@ html, body {
 }
 
 @media (min-width:450px) {
-    .creation_puzzle_form > input {
+    .creation_puzzle_main_form > input,
+    .creation_puzzle_main_form > .input-group,
+    .creation_puzzle_main {
         width: 400px;
     }
+}
+
+p {
+    text-align: justify;
 }

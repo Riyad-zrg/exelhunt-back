@@ -3,20 +3,41 @@
 {% block title %}Création d'une chasse{% endblock %}
 
 {% block body %}
-<div class="creation_puzzle d-flex flex-column align-items-center justify-content-center vh-100">
-    <form class="creation_puzzle_form d-flex flex-column align-items-center justify-content-center vw-100" method="POST" action="/creation/hunt">
+<div class="creation_puzzle d-flex flex-column align-items-center vh-100">
+    <div class="creation_puzzle_top vw-100 d-flex flex-row justify-content-between">
         <div class="input-group mb-3">
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="puzzle_media" accept="image/*,video/*,audio/*">
-                <label class="custom-file-label" for="puzzle_media">Ajouter un média</label>
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Type d'énigme</label>
             </div>
+            <select class="custom-select" id="inputGroupSelect01">
+                <option value="txt" selected>Texte</option>
+                <option value="mcq">QCM</option>
+                <option value="qrc">Code QR</option>
+                <option value="gps">Point GPS</option>
+            </select>
         </div>
-        <input type="file" >
-        <label for="puzzle_question">Question</label>
-        <input type="text" id="puzzle_question" placeholder="Appuie pour ajouter une question" required>
-        <label for="puzzle_answer">Réponse</label>
-        <input type="text" id="puzzle_answer" placeholder="Appuie pour écrire la bonne réponse" required>
-        <input type="submit">
-    </form>
+        <input class="btn btn-success" type="submit">
+    </div>
+    <div class="creation_puzzle_main">
+        <form class="creation_puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/creation/hunt">
+            <div class="input-group mb-3">
+                <div class="custom-file puzzle_media_div">
+                    <input type="file" class="custom-file-input" id="puzzle_media" accept="image/*,video/*,audio/*">
+                    <label class="custom-file-label" for="puzzle_media">Ajouter un média</label>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter une question" aria-label="Question">
+            </div>
+            <div class="input-group mb-3">
+                <textarea id="puzzle_answer" class="form-control" aria-label="With textarea" placeholder="Appuie pour écrire la bonne réponse"></textarea>
+            </div>
+            <input type="submit">
+        </form>
+        <p>
+            La réponse de l'utilisateur sera vérifiée par une IA afin d'éviter une mauvaise interprétation due à des fautes
+            d'orthographe ou à l'utilisation de synonymes
+        </p>
+    </div>
 </div>
 {% endblock %}
