@@ -33,7 +33,8 @@ final class HasStartedFactory extends PersistentProxyObjectFactory
     {
         return [
             'player' => UserFactory::new(),
-            'startedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'puzzle' => PuzzleFactory::new(),
+            'startedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-7 days', 'now')),
         ];
     }
 
@@ -43,7 +44,12 @@ final class HasStartedFactory extends PersistentProxyObjectFactory
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(HasStarted $hasStarted): void {})
-        ;
+            ->afterInstantiate(function (HasStarted $hasStarted): void {
+                if (!$hasStarted->getStartedAt() instanceof \DateTimeImmutable) {
+                    $hasStarted->setStartedAt(
+                        new \DateTimeImmutable($hasStarted->getStartedAt()->format('Y-m-d H:i:s'))
+                    );
+                }
+            });
     }
 }
