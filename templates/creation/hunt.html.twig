@@ -1,20 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CreationController!{% endblock %}
+{% block title %}Création d'une chasse{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/cada0003/Documents/BUT3A/sae5.01_exelhunt/src/Controller/CreationController.php</code></li>
-        <li>Your template at <code>/home/cada0003/Documents/BUT3A/sae5.01_exelhunt/templates/creation/hunt.html.twig</code></li>
-    </ul>
+<div class="creation_puzzle d-flex flex-column align-items-center justify-content-center vh-100">
+    <form class="creation_puzzle_form d-flex flex-column align-items-center justify-content-center vw-100" method="POST" action="/creation/hunt">
+        <div class="input-group mb-3">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="puzzle_media" accept="image/*,video/*,audio/*">
+                <label class="custom-file-label" for="puzzle_media">Ajouter un média</label>
+            </div>
+        </div>
+        <input type="file" >
+        <label for="puzzle_question">Question</label>
+        <input type="text" id="puzzle_question" placeholder="Appuie pour ajouter une question" required>
+        <label for="puzzle_answer">Réponse</label>
+        <input type="text" id="puzzle_answer" placeholder="Appuie pour écrire la bonne réponse" required>
+        <input type="submit">
+    </form>
 </div>
 {% endblock %}

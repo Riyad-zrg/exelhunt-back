@@ -1,3 +1,33 @@
-body {
-    background-color: skyblue;
+html, body {
+    background-color: #FDF5E6;
+    color: #01161E;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Puzzle creation page styles */
+
+.creation_puzzle_form > input {
+    background-color: lightgrey;
+    border-radius: 15px;
+    text-align: center;
+    width: 50%;
+}
+
+#puzzle_media {
+    height: 30vh;
+}
+
+#puzzle_question {
+    padding: 5px;
+    height: 5vh;
+}
+
+#puzzle_answer {
+    height: 20vh;
+}
+
+@media (min-width:450px) {
+    .creation_puzzle_form > input {
+        width: 400px;
+    }
 }
