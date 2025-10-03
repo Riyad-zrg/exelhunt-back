@@ -33,8 +33,9 @@ final class MembershipFactory extends PersistentProxyObjectFactory
     {
         return [
             'member' => UserFactory::new(),
-            'role' => [],
             'team' => TeamFactory::new(),
+            'role' => ['TESTER'],
+            'joinedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 year', 'now')),
         ];
     }
 
@@ -43,8 +44,20 @@ final class MembershipFactory extends PersistentProxyObjectFactory
      */
     protected function initialize(): static
     {
-        return $this
-            // ->afterInstantiate(function(Membership $membership): void {})
-        ;
+        return $this->afterInstantiate(function (Membership $membership) {
+            $roleHierarchy = [
+                'OWNER' => ['OWNER', 'MODERATOR', 'DEVELOPER', 'TESTER'],
+                'MODERATOR' => ['MODERATOR', 'DEVELOPER', 'TESTER'],
+                'DEVELOPER' => ['DEVELOPER', 'TESTER'],
+                'TESTER' => ['TESTER'],
+            ];
+            $roles = $membership->getRole();
+            if (count($roles) > 0) {
+                $mainRole = strtoupper($roles[0]);
+                if (isset($roleHierarchy[$mainRole])) {
+                    $membership->getMember()->setRoles($roleHierarchy[$mainRole]);
+                }
+            }
+        });
     }
 }
