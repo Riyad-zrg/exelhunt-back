@@ -31,14 +31,17 @@ final class HuntFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
+        $faker = \Faker\Factory::create('fr_FR');
+
         return [
-            'avatar' => self::faker()->text(255),
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'avatar' => base64_encode(file_get_contents(__DIR__.'/../DataFixtures/img/huntIcon.jpg')),
+            'createdAt' => \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-50 days', 'now')),
             'description' => self::faker()->text(500),
             'location' => AddressFactory::new(),
-            'nbPlayers' => self::faker()->randomNumber(),
-            'title' => self::faker()->text(100),
-            'visibility' => self::faker()->text(15),
+            'nbPlayers' => self::faker()->randomNumber(3, false),
+            'title' => self::faker()->sentence(3, true),
+            'visibility' => self::faker()->randomElement(['PUBLIC', 'PRIVATE', 'DEVELOPMENT', 'CLOSED']),
+            'createdBy' => TeamFactory::new(),
         ];
     }
 
