@@ -21,6 +21,9 @@ class UserAnswer
 
     #[ORM\Column]
     private ?\DateTimeImmutable $sendAt = null;
+    #[ORM\ManyToOne(inversedBy: 'userAnswers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PuzzleAnswer $puzzleAnswer = null;
 
     public function getId(): ?int
     {
@@ -60,6 +63,16 @@ class UserAnswer
     {
         $this->sendAt = $sendAt;
 
+        return $this;
+    }
+    public function getPuzzleAnswer(): ?PuzzleAnswer
+    {
+        return $this->puzzleAnswer;
+    }
+
+    public function setPuzzleAnswer(?PuzzleAnswer $puzzleAnswer): static
+    {
+        $this->puzzleAnswer = $puzzleAnswer;
         return $this;
     }
 }

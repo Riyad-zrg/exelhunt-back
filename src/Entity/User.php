@@ -17,7 +17,7 @@ class User
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 18)]
+    #[ORM\Column(length: 30)]
     private ?string $nickname = null;
 
     #[ORM\Column(length: 30)]
@@ -29,7 +29,7 @@ class User
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 10000)]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 30, nullable: true)]

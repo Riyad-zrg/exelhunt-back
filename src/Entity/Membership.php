@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MembershipRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MembershipRepository::class)]
@@ -15,6 +16,8 @@ class Membership
 
     #[ORM\Column(length: 50)]
     private array $role = [];
+    #[ORM\Column]
+    private ?\DateTimeImmutable $joinedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
@@ -63,5 +66,15 @@ class Membership
         $this->Team = $Team;
 
         return $this;
+    }
+
+    public function getJoinedAt(): ?\DateTimeImmutable
+    {
+        return $this->joinedAt;
+    }
+
+    public function setJoinedAt(?\DateTimeImmutable $joinedAt): void
+    {
+        $this->joinedAt = $joinedAt;
     }
 }

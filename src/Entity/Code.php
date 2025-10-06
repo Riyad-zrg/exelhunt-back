@@ -13,7 +13,7 @@ class Code
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 6, unique: true)]
     private ?int $code = null;
 
     #[ORM\Column]

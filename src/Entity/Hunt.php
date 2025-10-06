@@ -30,7 +30,7 @@ class Hunt
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 10000)]
     private ?string $avatar = null;
 
     #[ORM\Column]
@@ -49,7 +49,6 @@ class Hunt
      */
     #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'Hunt', orphanRemoval: true)]
     private Collection $puzzles;
-
 
     #[ORM\OneToOne(mappedBy: 'Hunt')]
     private Code $code;
@@ -167,12 +166,12 @@ class Hunt
         return $this;
     }
 
-    public function getTeam(): ?Team
+    public function getcreatedBy(): ?Team
     {
         return $this->createdBy;
     }
 
-    public function setTeam(?Team $createdBy): static
+    public function setcreatedBy(?Team $createdBy): static
     {
         $this->createdBy = $createdBy;
 
