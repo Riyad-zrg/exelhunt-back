@@ -19,11 +19,8 @@ class Puzzle
     #[ORM\Column(length: 100)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $question = null;
-
-    #[ORM\Column(length: 1000, nullable: true)]
-    private ?string $media = null;
+    #[ORM\Column(length: 1000)]
+    private ?string $content = null;
 
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $hint = null;
