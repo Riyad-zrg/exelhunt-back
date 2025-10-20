@@ -17,7 +17,7 @@
    ne pas accepter le fichier de configuration grumphp lors de l'installation
 3. Pour démarrer la base de données, utilisez les commandes suivante :
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
    Assurez-vous que Docker est installé et en cours d'exécution sur votre machine.
    puis connectez-vous à la base de données avec les identifiants suivants :
