@@ -66,6 +66,12 @@ class Hunt
     #[ORM\OneToMany(targetEntity: TeamPlayer::class, mappedBy: 'hunt', orphanRemoval: true)]
     private Collection $teamPlayers;
 
+    #[ORM\Column]
+    private ?bool $isTeamPlayable = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $teamPlayerMax = null;
+
     public function __construct()
     {
         $this->puzzles = new ArrayCollection();
@@ -277,6 +283,30 @@ class Hunt
                 $teamPlayer->setHunt(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isTeamPlayable(): ?bool
+    {
+        return $this->isTeamPlayable;
+    }
+
+    public function setIsTeamPlayable(bool $isTeamPlayable): static
+    {
+        $this->isTeamPlayable = $isTeamPlayable;
+
+        return $this;
+    }
+
+    public function getTeamPlayerMax(): ?int
+    {
+        return $this->teamPlayerMax;
+    }
+
+    public function setTeamPlayerMax(?int $teamPlayerMax): static
+    {
+        $this->teamPlayerMax = $teamPlayerMax;
 
         return $this;
     }
