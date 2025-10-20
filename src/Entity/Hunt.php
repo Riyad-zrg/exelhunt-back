@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use AllowDynamicProperties;
 use App\Repository\HuntRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+#[AllowDynamicProperties]
 #[ORM\Entity(repositoryClass: HuntRepository::class)]
 class Hunt
 {
@@ -38,7 +40,7 @@ class Hunt
 
     #[ORM\ManyToOne(inversedBy: 'hunts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Team $createdBy = null;
+    private ?TeamCreator $createdBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'hunts')]
     #[ORM\JoinColumn(nullable: false)]
@@ -51,15 +53,15 @@ class Hunt
     private Collection $puzzles;
 
     #[ORM\OneToOne(mappedBy: 'Hunt')]
-    private Code $code;
+    private ?Code $code = null;
 
     /**
-     * @var Collection<int, Participation>
+     * @var Collection<int, ParticipationTeam>
      */
-    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'Hunt')]
-    private Collection $participations;
+    #[ORM\OneToMany(targetEntity: ParticipationTeam::class, mappedBy: 'hunt')]
+    private Collection $participationTeams;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => false])]
     private ?bool $isTeamPlayable = null;
 
     #[ORM\Column(nullable: true)]
@@ -68,7 +70,7 @@ class Hunt
     public function __construct()
     {
         $this->puzzles = new ArrayCollection();
-        $this->participations = new ArrayCollection();
+        $this->participationTeams = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -172,15 +174,14 @@ class Hunt
         return $this;
     }
 
-    public function getcreatedBy(): ?Team
+    public function getCreatedBy(): ?TeamCreator
     {
         return $this->createdBy;
     }
 
-    public function setcreatedBy(?Team $createdBy): static
+    public function setCreatedBy(?TeamCreator $createdBy): static
     {
         $this->createdBy = $createdBy;
-
         return $this;
     }
 
@@ -227,36 +228,33 @@ class Hunt
     }
 
     /**
-     * @return Collection<int, Participation>
+     * @return Collection<int, ParticipationTeam>
      */
-    public function getParticipations(): Collection
+    public function getParticipationTeams(): Collection
     {
-        return $this->participations;
+        return $this->participationTeams;
     }
 
-    public function addParticipation(Participation $participation): static
+    public function addParticipationTeam(ParticipationTeam $participationTeam): static
     {
-        if (!$this->participations->contains($participation)) {
-            $this->participations->add($participation);
-            $participation->setHunt($this);
+        if (!$this->participationTeams->contains($participationTeam)) {
+            $this->participationTeams->add($participationTeam);
+            $participationTeam->setHunt($this);
         }
-
         return $this;
     }
 
-    public function removeParticipation(Participation $participation): static
+    public function removeParticipationTeam(ParticipationTeam $participationTeam): static
     {
-        if ($this->participations->removeElement($participation)) {
-            // set the owning side to null (unless already changed)
-            if ($participation->getHunt() === $this) {
-                $participation->setHunt(null);
+        if ($this->participationTeams->removeElement($participationTeam)) {
+            if ($participationTeam->getHunt() === $this) {
+                $participationTeam->setHunt(null);
             }
         }
-
         return $this;
     }
 
-    public function isTeamPlayable(): ?bool
+        public function isTeamPlayable(): ?bool
     {
         return $this->isTeamPlayable;
     }
