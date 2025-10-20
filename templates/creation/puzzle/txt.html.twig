@@ -1,10 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Création d'une chasse{% endblock %}
+{% block title %}Création d'une énigme{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/puzzle/create.css') }}">
+{% endblock %}
 
 {% block body %}
 <div class="creation_puzzle d-flex flex-column align-items-center vh-100">
-    <div class="creation_puzzle_top vw-100 d-flex flex-row justify-content-between">
+    <div class="creation_puzzle_top vw-100 d-flex flex-row justify-content-between mb-5">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <label class="input-group-text" for="inputGroupSelect01">Type d'énigme</label>
@@ -16,23 +20,22 @@
                 <option value="gps">Point GPS</option>
             </select>
         </div>
-        <input class="btn btn-success" type="submit">
     </div>
     <div class="creation_puzzle_main">
-        <form class="creation_puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/creation/hunt">
+        <form class="creation_puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
             <div class="input-group mb-3">
                 <div class="custom-file puzzle_media_div">
+                    <label class="custom-file-label mb-1" for="puzzle_media">Ajouter un média</label>
                     <input type="file" class="custom-file-input" id="puzzle_media" accept="image/*,video/*,audio/*">
-                    <label class="custom-file-label" for="puzzle_media">Ajouter un média</label>
                 </div>
             </div>
             <div class="input-group mb-3">
-                <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter une question" aria-label="Question">
+                <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
             </div>
             <div class="input-group mb-3">
-                <textarea id="puzzle_answer" class="form-control" aria-label="With textarea" placeholder="Appuie pour écrire la bonne réponse"></textarea>
+                <textarea id="puzzle_answer" class="form-control" aria-label="With textarea" placeholder="Appuie pour écrire la bonne réponse" required></textarea>
             </div>
-            <input type="submit">
+            <input type="submit" class="btn btn-primary mb-3" value="Enregistrer l'énigme">
         </form>
         <p>
             La réponse de l'utilisateur sera vérifiée par une IA afin d'éviter une mauvaise interprétation due à des fautes
