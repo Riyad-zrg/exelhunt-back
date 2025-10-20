@@ -29,6 +29,9 @@ class Code
     #[ORM\OneToOne(mappedBy: 'code', cascade: ['persist', 'remove'])]
     private ?TeamPlayer $teamPlayer = null;
 
+    #[ORM\OneToOne(mappedBy: 'code', cascade: ['persist', 'remove'])]
+    private ?TeamPlayer $teamPlayer = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,6 +99,28 @@ class Code
 
         // set the owning side of the relation if necessary
         if (null !== $teamPlayer && $teamPlayer->getCode() !== $this) {
+            $teamPlayer->setCode($this);
+        }
+
+        $this->teamPlayer = $teamPlayer;
+
+        return $this;
+    }
+
+    public function getTeamPlayer(): ?TeamPlayer
+    {
+        return $this->teamPlayer;
+    }
+
+    public function setTeamPlayer(?TeamPlayer $teamPlayer): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($teamPlayer === null && $this->teamPlayer !== null) {
+            $this->teamPlayer->setCode(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($teamPlayer !== null && $teamPlayer->getCode() !== $this) {
             $teamPlayer->setCode($this);
         }
 
