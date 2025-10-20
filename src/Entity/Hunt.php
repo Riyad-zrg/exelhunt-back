@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use AllowDynamicProperties;
 use App\Repository\HuntRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[\AllowDynamicProperties]
+#[AllowDynamicProperties]
 #[ORM\Entity(repositoryClass: HuntRepository::class)]
 class Hunt
 {
@@ -51,22 +52,16 @@ class Hunt
     #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'hunt', orphanRemoval: true)]
     private Collection $puzzles;
 
-    #[ORM\OneToOne(mappedBy: 'hunt')]
+    #[ORM\OneToOne(mappedBy: 'Hunt')]
     private ?Code $code = null;
 
-    #[ORM\Column(options: ['default' => false])]
-    private ?bool $isTeamPlayable = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $teamPlayerMax = null;
-
     /**
-     * @var Collection<int, TeamPlayer>
+     * @var Collection<int, ParticipationTeam>
      */
-    #[ORM\OneToMany(targetEntity: TeamPlayer::class, mappedBy: 'hunt', orphanRemoval: true)]
-    private Collection $teamPlayers;
+    #[ORM\OneToMany(targetEntity: ParticipationTeam::class, mappedBy: 'hunt')]
+    private Collection $participationTeams;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => false])]
     private ?bool $isTeamPlayable = null;
 
     #[ORM\Column(nullable: true)]
@@ -75,7 +70,7 @@ class Hunt
     public function __construct()
     {
         $this->puzzles = new ArrayCollection();
-        $this->teamPlayers = new ArrayCollection();
+        $this->participationTeams = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,7 +182,6 @@ class Hunt
     public function setCreatedBy(?TeamCreator $createdBy): static
     {
         $this->createdBy = $createdBy;
-
         return $this;
     }
 
@@ -233,61 +227,34 @@ class Hunt
         return $this;
     }
 
-    public function isTeamPlayable(): ?bool
-    {
-        return $this->isTeamPlayable;
-    }
-
-    public function setIsTeamPlayable(bool $isTeamPlayable): static
-    {
-        $this->isTeamPlayable = $isTeamPlayable;
-
-        return $this;
-    }
-
-    public function getTeamPlayerMax(): ?int
-    {
-        return $this->teamPlayerMax;
-    }
-
-    public function setTeamPlayerMax(?int $teamPlayerMax): static
-    {
-        $this->teamPlayerMax = $teamPlayerMax;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, TeamPlayer>
+     * @return Collection<int, ParticipationTeam>
      */
-    public function getTeamPlayers(): Collection
+    public function getParticipationTeams(): Collection
     {
-        return $this->teamPlayers;
+        return $this->participationTeams;
     }
 
-    public function addTeamPlayer(TeamPlayer $teamPlayer): static
+    public function addParticipationTeam(ParticipationTeam $participationTeam): static
     {
-        if (!$this->teamPlayers->contains($teamPlayer)) {
-            $this->teamPlayers->add($teamPlayer);
-            $teamPlayer->setHunt($this);
+        if (!$this->participationTeams->contains($participationTeam)) {
+            $this->participationTeams->add($participationTeam);
+            $participationTeam->setHunt($this);
         }
-
         return $this;
     }
 
-    public function removeTeamPlayer(TeamPlayer $teamPlayer): static
+    public function removeParticipationTeam(ParticipationTeam $participationTeam): static
     {
-        if ($this->teamPlayers->removeElement($teamPlayer)) {
-            // set the owning side to null (unless already changed)
-            if ($teamPlayer->getHunt() === $this) {
-                $teamPlayer->setHunt(null);
+        if ($this->participationTeams->removeElement($participationTeam)) {
+            if ($participationTeam->getHunt() === $this) {
+                $participationTeam->setHunt(null);
             }
         }
-
         return $this;
     }
 
-    public function isTeamPlayable(): ?bool
+        public function isTeamPlayable(): ?bool
     {
         return $this->isTeamPlayable;
     }
