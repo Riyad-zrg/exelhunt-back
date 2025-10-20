@@ -19,7 +19,7 @@ class Puzzle
     #[ORM\Column(length: 100)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(length: 1000)]
     private ?string $content = null;
 
     #[ORM\Column(length: 500, nullable: true)]
