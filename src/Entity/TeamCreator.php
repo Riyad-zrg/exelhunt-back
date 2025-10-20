@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TeamCreatorRepository::class)]
 class TeamCreator extends Team
 {
+    #[ORM\Column(length: 1000)]
+    private ?string $avatar = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -23,6 +26,18 @@ class TeamCreator extends Team
     {
         parent::__construct();
         $this->hunts = new ArrayCollection();
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -51,7 +66,6 @@ class TeamCreator extends Team
             $this->hunts->add($hunt);
             $hunt->setCreatedBy($this);
         }
-
         return $this;
     }
 
@@ -62,7 +76,6 @@ class TeamCreator extends Team
                 $hunt->setCreatedBy(null);
             }
         }
-
         return $this;
     }
 }
