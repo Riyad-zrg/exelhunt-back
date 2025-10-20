@@ -1,0 +1,28 @@
+<header class="app__header header">
+    <nav class="header__navbar">
+        <div class="header__container">
+            <a href="{{ path('app_home') }}" class="flex-grow-1 fs-2 header__brand">
+                <img
+                        alt=""
+                        src="{{ asset('images/logo_main.png') }}"
+                        width="64"
+                        height="64"
+                        class="d-inline-block header__logo"
+                />
+                <span>Exel'Hunt</span>
+            </a>
+            <ul class="me-auto header__nav">
+                <li>
+                    <a href="#" class="header__link" aria-label="Profil">
+                        <i class="bi bi-person-circle fs-1 header__icon"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="header__link" aria-label="Réglages">
+                        <i class="bi bi-gear-fill fs-1 header__icon"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
