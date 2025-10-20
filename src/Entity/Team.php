@@ -8,7 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
-class Team
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['player' => TeamPlayer::class, 'creator' => TeamCreator::class])]
+abstract class Team
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,27 +21,14 @@ class Team
     #[ORM\Column(length: 60)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 5000)]
-    private ?string $avatar = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    /**
-     * @var Collection<int, Hunt>
-     */
-    #[ORM\OneToMany(targetEntity: Hunt::class, mappedBy: 'Team')]
-    private Collection $hunts;
-
     /**
      * @var Collection<int, Membership>
      */
-    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'Team')]
+    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'team')]
     private Collection $memberships;
 
     public function __construct()
     {
-        $this->hunts = new ArrayCollection();
         $this->memberships = new ArrayCollection();
     }
 
@@ -55,61 +45,6 @@ class Team
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getAvatar(): ?string
-    {
-        return $this->avatar;
-    }
-
-    public function setAvatar(string $avatar): static
-    {
-        $this->avatar = $avatar;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Hunt>
-     */
-    public function getHunts(): Collection
-    {
-        return $this->hunts;
-    }
-
-    public function addHunt(Hunt $hunt): static
-    {
-        if (!$this->hunts->contains($hunt)) {
-            $this->hunts->add($hunt);
-            $hunt->setTeam($this);
-        }
-
-        return $this;
-    }
-
-    public function removeHunt(Hunt $hunt): static
-    {
-        if ($this->hunts->removeElement($hunt)) {
-            // set the owning side to null (unless already changed)
-            if ($hunt->getTeam() === $this) {
-                $hunt->setTeam(null);
-            }
-        }
-
         return $this;
     }
 
@@ -127,19 +62,16 @@ class Team
             $this->memberships->add($membership);
             $membership->setTeam($this);
         }
-
         return $this;
     }
 
     public function removeMembership(Membership $membership): static
     {
         if ($this->memberships->removeElement($membership)) {
-            // set the owning side to null (unless already changed)
             if ($membership->getTeam() === $this) {
                 $membership->setTeam(null);
             }
         }
-
         return $this;
     }
 }
