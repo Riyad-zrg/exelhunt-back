@@ -19,26 +19,16 @@ class TeamPlayer extends Team
     #[ORM\OneToOne(inversedBy: 'teamPlayer', cascade: ['persist', 'remove'])]
     private ?Code $code = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $teamGlobalTime = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $averageGlobalTime = null;
-
     /**
-     * @var Collection<int, Participation>
+     * @var Collection<int, ParticipationTeam>
      */
-    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'teamPlayer')]
-    private Collection $participation;
-
-    #[ORM\ManyToOne(inversedBy: 'teamPlayers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Hunt $hunt = null;
+    #[ORM\OneToMany(targetEntity: ParticipationTeam::class, mappedBy: 'teamPlayer')]
+    private Collection $participationTeams;
 
     public function __construct()
     {
         parent::__construct();
-        $this->participation = new ArrayCollection();
+        $this->participationTeams = new ArrayCollection();
     }
 
     public function getNbPlayers(): ?int
@@ -77,68 +67,32 @@ class TeamPlayer extends Team
         return $this;
     }
 
-    public function getTeamGlobalTime(): ?\DateTimeImmutable
-    {
-        return $this->teamGlobalTime;
-    }
-
-    public function setTeamGlobalTime(?\DateTimeImmutable $teamGlobalTime): static
-    {
-        $this->teamGlobalTime = $teamGlobalTime;
-
-        return $this;
-    }
-
-    public function getAverageGlobalTime(): ?\DateTimeImmutable
-    {
-        return $this->averageGlobalTime;
-    }
-
-    public function setAverageGlobalTime(?\DateTimeImmutable $averageGlobalTime): static
-    {
-        $this->averageGlobalTime = $averageGlobalTime;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, Participation>
+     * @return Collection<int, ParticipationTeam>
      */
-    public function getParticipation(): Collection
+    public function getParticipationTeams(): Collection
     {
-        return $this->participation;
+        return $this->participationTeams;
     }
 
-    public function addParticipation(Participation $participation): static
+    public function addParticipationTeam(ParticipationTeam $participationTeam): static
     {
-        if (!$this->participation->contains($participation)) {
-            $this->participation->add($participation);
-            $participation->setTeamPlayer($this);
+        if (!$this->participationTeams->contains($participationTeam)) {
+            $this->participationTeams->add($participationTeam);
+            $participationTeam->setTeamPlayer($this);
         }
 
         return $this;
     }
 
-    public function removeParticipation(Participation $participation): static
+    public function removeParticipationTeam(ParticipationTeam $participationTeam): static
     {
-        if ($this->participation->removeElement($participation)) {
+        if ($this->participationTeams->removeElement($participationTeam)) {
             // set the owning side to null (unless already changed)
-            if ($participation->getTeamPlayer() === $this) {
-                $participation->setTeamPlayer(null);
+            if ($participationTeam->getTeamPlayer() === $this) {
+                $participationTeam->setTeamPlayer(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getHunt(): ?Hunt
-    {
-        return $this->hunt;
-    }
-
-    public function setHunt(?Hunt $hunt): static
-    {
-        $this->hunt = $hunt;
 
         return $this;
     }
