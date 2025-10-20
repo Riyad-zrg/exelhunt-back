@@ -64,7 +64,6 @@ class Membership
     public function setTeam(?Team $team): static
     {
         $this->team = $team;
-
         return $this;
     }
 
