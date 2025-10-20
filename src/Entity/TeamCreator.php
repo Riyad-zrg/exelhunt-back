@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\TeamCreatorRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: TeamCreatorRepository::class)]
+class TeamCreator extends Team
+{
+    #[ORM\Column(length: 1000)]
+    private ?string $avatar = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    /**
+     * @var Collection<int, Hunt>
+     */
+    #[ORM\OneToMany(targetEntity: Hunt::class, mappedBy: 'createdBy')]
+    private Collection $hunts;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->hunts = new ArrayCollection();
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Hunt>
+     */
+    public function getHunts(): Collection
+    {
+        return $this->hunts;
+    }
+
+    public function addHunt(Hunt $hunt): static
+    {
+        if (!$this->hunts->contains($hunt)) {
+            $this->hunts->add($hunt);
+            $hunt->setCreatedBy($this);
+        }
+        return $this;
+    }
+
+    public function removeHunt(Hunt $hunt): static
+    {
+        if ($this->hunts->removeElement($hunt)) {
+            if ($hunt->getCreatedBy() === $this) {
+                $hunt->setCreatedBy(null);
+            }
+        }
+        return $this;
+    }
+}
