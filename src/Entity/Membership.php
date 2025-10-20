@@ -25,7 +25,7 @@ class Membership
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Team $Team = null;
+    private ?Team $team = null;
 
     public function getId(): ?int
     {
@@ -58,13 +58,12 @@ class Membership
 
     public function getTeam(): ?Team
     {
-        return $this->Team;
+        return $this->team;
     }
 
-    public function setTeam(?Team $Team): static
+    public function setTeam(?Team $team): static
     {
-        $this->Team = $Team;
-
+        $this->team = $team;
         return $this;
     }
 
