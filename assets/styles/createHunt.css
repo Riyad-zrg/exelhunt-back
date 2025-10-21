@@ -81,6 +81,7 @@ input[type="text"], textarea, select {
 }
 
 .description-input {
+    min-height: 50px;
     height: 150px;
     resize: vertical;
 }
