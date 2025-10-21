@@ -27,6 +27,9 @@ abstract class Team
     #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'team')]
     private Collection $memberships;
 
+    #[ORM\Column(length: 10000)]
+    private ?string $avatar = null;
+
     public function __construct()
     {
         $this->memberships = new ArrayCollection();
@@ -72,6 +75,18 @@ abstract class Team
                 $membership->setTeam(null);
             }
         }
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(string $avatar): static
+    {
+        $this->avatar = $avatar;
+
         return $this;
     }
 }
