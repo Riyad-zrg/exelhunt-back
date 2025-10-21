@@ -45,18 +45,18 @@ class User
     private ?string $biography = null;
 
     #[ORM\ManyToOne]
-    private ?Address $Address = null;
+    private ?Address $address = null;
 
     /**
      * @var Collection<int, Membership>
      */
-    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'Member', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'member', orphanRemoval: true)]
     private Collection $memberships;
 
     /**
      * @var Collection<int, Participation>
      */
-    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'Player')]
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'player')]
     private Collection $participations;
 
     /**
@@ -187,12 +187,12 @@ class User
 
     public function getAddress(): ?Address
     {
-        return $this->Address;
+        return $this->address;
     }
 
-    public function setAddress(?Address $Address): static
+    public function setAddress(?Address $address): static
     {
-        $this->Address = $Address;
+        $this->address = $address;
 
         return $this;
     }
