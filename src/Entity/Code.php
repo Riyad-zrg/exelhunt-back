@@ -24,10 +24,7 @@ class Code
 
     #[ORM\OneToOne(inversedBy: 'code')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Hunt $hunt = null;
-
-    #[ORM\OneToOne(mappedBy: 'code', cascade: ['persist', 'remove'])]
-    private ?TeamPlayer $teamPlayer = null;
+    private ?hunt $hunt = null;
 
     #[ORM\OneToOne(mappedBy: 'code', cascade: ['persist', 'remove'])]
     private ?TeamPlayer $teamPlayer = null;
@@ -73,36 +70,14 @@ class Code
         return $this;
     }
 
-    public function getHunt(): ?Hunt
+    public function getHunt(): ?hunt
     {
         return $this->hunt;
     }
 
-    public function setHunt(?Hunt $hunt): static
+    public function setHunt(?hunt $hunt): static
     {
         $this->hunt = $hunt;
-
-        return $this;
-    }
-
-    public function getTeamPlayer(): ?TeamPlayer
-    {
-        return $this->teamPlayer;
-    }
-
-    public function setTeamPlayer(?TeamPlayer $teamPlayer): static
-    {
-        // unset the owning side of the relation if necessary
-        if (null === $teamPlayer && null !== $this->teamPlayer) {
-            $this->teamPlayer->setCode(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if (null !== $teamPlayer && $teamPlayer->getCode() !== $this) {
-            $teamPlayer->setCode($this);
-        }
-
-        $this->teamPlayer = $teamPlayer;
 
         return $this;
     }
