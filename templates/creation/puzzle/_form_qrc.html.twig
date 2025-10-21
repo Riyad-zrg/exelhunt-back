@@ -1,6 +1,7 @@
-<div class="creation_puzzle_main d-flex flex-column align-items-center justify-content-center">
-    <img alt="Generated QR code" src="{{ qrc }}">
-    <form action="" method="get" target="_blank">
-        <input type="submit" class="btn btn-primary mt-4" value="Enregistrer au format PNG">
-    </form>
+<div class="creation_puzzle_main d-flex flex-column align-items-center justify-content-center mb-3">
+    <img alt="Generated QR code" src="{{ qrc.getDataUri() }}">
+    <a href="{{ path('app_creation_qrc_dl', { randomString: randomString }) }}" class="btn btn-primary mt-4">Enregistrer au format PNG</a>
 </div>
+<p>
+    ! Recharger la page va générer un nouveau code QR !
+</p>
