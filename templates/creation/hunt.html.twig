@@ -4,6 +4,7 @@
 
 {% block body %}
     <link href="{{ asset('styles/createHunt.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/imagePreview.js') }}"></script>
     <div class="creation_puzzle d-flex flex-column align-items-center vh-100">
 
         <!-- HEADER -->
@@ -15,64 +16,68 @@
 
         <!-- Main -->
         <div class="main">
-        <!-- Add image -->
-            <script src="{{ asset('js/imagePreview.js') }}"></script>
-            <input id="upload-input" type="file" accept="image/*">
+
+            <!-- Media Upload -->
+            <div class="puzzle_media_div">
+                <label for="upload-input" class="file-upload-label" id="upload-label">
+                    <div class="icon-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#fff" viewBox="0 0 24 24">
+                            <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM5 5h14v14H5V5zm4 8l2.5 3 3-4 4 5H5l4-4z"/>
+                        </svg>
+                    </div>
+                    <div class="text">Ajoute une image</div>
+                </label>
+                <input type="file" id="upload-input" accept="image/*" class="custom-file-input">
+            </div>
+
+
+            <!-- Preview -->
             <div id="preview"></div>
 
-
+            <!-- Formulaire -->
             <div class="form-container">
-            <!-- Titre -->
-            <div class="form-group">
-                <p>Title</p>
-                <input type="text" name="title" class="title-input" maxlength="30" placeholder="Entrez le titre">
-            </div>
-
-            <!-- Description -->
-            <div class="form-group">
-                <p>Description</p>
-                <textarea name="description" class="description-input" maxlength="500" placeholder="Entrez la description"></textarea>
-            </div>
-
-            <!-- Type de chasse -->
-            <div class="form-group">
-                <p>Type de chasse</p>
-                <select name="hunt_type">
-                    <option value="solo">Solo</option>
-                    <option value="team">Team</option>
-                </select>
-            </div>
-        </div>
-
-
-
-
-        <!-- Questions -->
-        <div class="questions-container">
-            <div class="question-card">
-                <div class="question-image">
-                    <img src="{{ asset('images/Image_PlaceHolder.png') }}" alt="Question Image">
+                <div class="form-group">
+                    <p>Titre</p>
+                    <input type="text" name="title" placeholder="Entrez le titre">
                 </div>
-                <div class="question-info">
-                    <h4>Question 1</h4>
-                    <p>2+2</p>
+
+                <div class="form-group">
+                    <p>Description</p>
+                    <textarea name="description" class="description-input" placeholder="Entrez la description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <p>Type de chasse</p>
+                    <select name="hunt_type">
+                        <option value="solo">Solo</option>
+                        <option value="team">Team</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="question-card">
-                <div class="question-image">
-                    <img src="{{ asset('images/Image_PlaceHolder.png') }}" alt="Question Image">
+            <!-- Questions -->
+            <div class="questions-container">
+                <div class="question-card">
+                    <div class="question-image">
+                        <img src="{{ asset('images/Image_PlaceHolder.png') }}" alt="Question Image">
+                    </div>
+                    <div class="question-info">
+                        <h4>Question 1</h4>
+                        <p>2+2</p>
+                    </div>
                 </div>
-                <div class="question-info">
-                    <h4>Question 2</h4>
-                    <p>3+5</p>
+
+                <div class="question-card">
+                    <div class="question-image">
+                        <img src="{{ asset('images/Image_PlaceHolder.png') }}" alt="Question Image">
+                    </div>
+                    <div class="question-info">
+                        <h4>Question 2</h4>
+                        <p>3+5</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
         </div>
-
-
-
     </div>
 {% endblock %}
