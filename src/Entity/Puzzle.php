@@ -36,7 +36,7 @@ class Puzzle
 
     #[ORM\ManyToOne(inversedBy: 'puzzles')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Hunt $Hunt = null;
+    private ?Hunt $hunt = null;
 
     /**
      * @var Collection<int, HasStarted>
@@ -135,12 +135,12 @@ class Puzzle
 
     public function getHunt(): ?Hunt
     {
-        return $this->Hunt;
+        return $this->hunt;
     }
 
-    public function setHunt(?Hunt $Hunt): static
+    public function setHunt(?Hunt $hunt): static
     {
-        $this->Hunt = $Hunt;
+        $this->hunt = $hunt;
 
         return $this;
     }
