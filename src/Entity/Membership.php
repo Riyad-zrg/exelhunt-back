@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\MembershipRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MembershipRepository::class)]
@@ -64,6 +63,7 @@ class Membership
     public function setTeam(?Team $team): static
     {
         $this->team = $team;
+
         return $this;
     }
 
