@@ -21,26 +21,6 @@
             </select>
         </div>
     </div>
-    <div class="creation_puzzle_main">
-        <form class="creation_puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
-            <div class="input-group mb-3">
-                <div class="custom-file puzzle_media_div">
-                    <label class="custom-file-label mb-1" for="puzzle_media">Ajouter un média</label>
-                    <input type="file" class="custom-file-input" id="puzzle_media" accept="image/*,video/*,audio/*">
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
-            </div>
-            <div class="input-group mb-3">
-                <textarea id="puzzle_answer" class="form-control" aria-label="With textarea" placeholder="Appuie pour écrire la bonne réponse" required></textarea>
-            </div>
-            <input type="submit" class="btn btn-primary mb-3" value="Enregistrer l'énigme">
-        </form>
-        <p>
-            La réponse de l'utilisateur sera vérifiée par une IA afin d'éviter une mauvaise interprétation due à des fautes
-            d'orthographe ou à l'utilisation de synonymes
-        </p>
-    </div>
+    {% include 'creation/puzzle/_form_txt.html.twig' %}
 </div>
 {% endblock %}
