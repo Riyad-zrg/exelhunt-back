@@ -2,6 +2,13 @@
 
 namespace App\Controller;
 
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\Font\OpenSans;
+use Endroid\QrCode\Label\LabelAlignment;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -11,40 +18,46 @@ final class CreationController extends AbstractController
     #[Route('/create', name: 'app_creation')]
     public function index(): Response
     {
-        return $this->render('creation/index.html.twig', [
-            'controller_name' => 'CreationController',
-        ]);
+        return $this->render('creation/index.html.twig');
     }
 
     #[Route('/create/text_puzzle', name: 'app_creation_txt_puzzle')]
     public function text_puzzle(): Response
     {
-        return $this->render('creation/puzzle/txt.html.twig', [
-            'controller_name' => 'CreationController',
-        ]);
+        return $this->render('creation/puzzle/txt.html.twig');
     }
 
     #[Route('/create/mcq_puzzle', name: 'app_creation_mcq_puzzle')]
     public function qcm_puzzle(): Response
     {
-        return $this->render('creation/puzzle/mcq.html.twig', [
-            'controller_name' => 'CreationController',
-        ]);
+        return $this->render('creation/puzzle/mcq.html.twig');
     }
 
     #[Route('/create/gps_puzzle', name: 'app_creation_gps_puzzle')]
     public function gps_puzzle(): Response
     {
-        return $this->render('creation/puzzle/gps.html.twig', [
-            'controller_name' => 'CreationController',
-        ]);
+        return $this->render('creation/puzzle/gps.html.twig');
     }
 
     #[Route('/create/qrc_puzzle', name: 'app_creation_qrc_puzzle')]
     public function qrc_puzzle(): Response
     {
+        $builder = new Builder(
+            writer: new PngWriter(),
+            writerOptions: [],
+            validateResult: false,
+            data: 'test again',
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::High,
+            size: 300,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        );
+
+        $result = $builder->build();
+
         return $this->render('creation/puzzle/qrc.html.twig', [
-            'controller_name' => 'CreationController',
+            'qrc' => $result->getDataUri(),
         ]);
     }
 
