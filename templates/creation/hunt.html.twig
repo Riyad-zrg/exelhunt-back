@@ -14,21 +14,14 @@
         </div>
 
         <!-- Main -->
-
+        <div class="main">
         <!-- Add image -->
-        <div class="custom-file puzzle_media_div">
-            <label for="puzzle_media" class="file-upload-label">
-                <div class="icon-container">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#fff" viewBox="0 0 24 24">
-                        <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM5 5h14v14H5V5zm4 8l2.5 3 3-4 4 5H5l4-4z"/>
-                    </svg>
-                </div>
-                <div class="text">Ajoute une image de couverture</div>
-            </label>
-            <input type="file" id="puzzle_media" accept="image/*" class="custom-file-input">
-        </div>
+            <script src="{{ asset('js/imagePreview.js') }}"></script>
+            <input id="upload-input" type="file" accept="image/*">
+            <div id="preview"></div>
 
-        <div class="form-container">
+
+            <div class="form-container">
             <!-- Titre -->
             <div class="form-group">
                 <p>Title</p>
@@ -75,6 +68,8 @@
                     <p>3+5</p>
                 </div>
             </div>
+        </div>
+
         </div>
 
 
