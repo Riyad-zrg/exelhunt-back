@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use AllowDynamicProperties;
 use App\Repository\HuntRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 #[ORM\Entity(repositoryClass: HuntRepository::class)]
 class Hunt
 {
@@ -49,10 +48,10 @@ class Hunt
     /**
      * @var Collection<int, Puzzle>
      */
-    #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'Hunt', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'hunt', orphanRemoval: true)]
     private Collection $puzzles;
 
-    #[ORM\OneToOne(mappedBy: 'Hunt')]
+    #[ORM\OneToOne(mappedBy: 'hunt')]
     private ?Code $code = null;
 
     /**
@@ -182,6 +181,7 @@ class Hunt
     public function setCreatedBy(?TeamCreator $createdBy): static
     {
         $this->createdBy = $createdBy;
+
         return $this;
     }
 
@@ -241,6 +241,7 @@ class Hunt
             $this->participationTeams->add($participationTeam);
             $participationTeam->setHunt($this);
         }
+
         return $this;
     }
 
@@ -251,10 +252,11 @@ class Hunt
                 $participationTeam->setHunt(null);
             }
         }
+
         return $this;
     }
 
-        public function isTeamPlayable(): ?bool
+    public function isTeamPlayable(): ?bool
     {
         return $this->isTeamPlayable;
     }
