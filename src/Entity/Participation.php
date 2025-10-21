@@ -28,9 +28,6 @@ class Participation
     #[ORM\JoinColumn(nullable: false)]
     private ?User $player = null;
 
-    #[ORM\ManyToOne(inversedBy: 'participation')]
-    private ?TeamPlayer $teamPlayer = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -80,18 +77,6 @@ class Participation
     public function setPlayer(?User $player): static
     {
         $this->player = $player;
-
-        return $this;
-    }
-
-    public function getTeamPlayer(): ?TeamPlayer
-    {
-        return $this->teamPlayer;
-    }
-
-    public function setTeamPlayer(?TeamPlayer $teamPlayer): static
-    {
-        $this->teamPlayer = $teamPlayer;
 
         return $this;
     }
