@@ -22,31 +22,6 @@
             </select>
         </div>
     </div>
-    <div class="creation_puzzle_main">
-        <form class="creation_puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
-            <div class="input-group mb-3">
-                <div class="custom-file puzzle_media_div">
-                    <label class="custom-file-label mb-1" for="puzzle_media">Ajouter un média</label>
-                    <input type="file" class="custom-file-input" id="puzzle_media" accept="image/*,video/*,audio/*">
-                </div>
-            </div>
-            <div class="input-group mb-5">
-                <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
-            </div>
-            <div class="input-group mb-2">
-                <input id="puzzle_answers" type="text" class="form-control" placeholder="Appuie pour écrire une réponse" aria-label="Answer" required>
-            </div>
-            <div class="input-group mb-2">
-                <input id="puzzle_answers" type="text" class="form-control" placeholder="Appuie pour écrire une réponse" aria-label="Answer" required>
-            </div>
-            <div class="input-group mb-2">
-                <input id="puzzle_answers" type="text" class="form-control" placeholder="Appuie pour écrire une réponse (optionel)" aria-label="Answer">
-            </div>
-            <div class="input-group mb-2">
-                <input id="puzzle_answers" type="text" class="form-control" placeholder="Appuie pour écrire une réponse (optionel)" aria-label="Answer">
-            </div>
-            <input type="submit" class="btn btn-primary" value="Enregistrer l'énigme">
-        </form>
-    </div>
+    {% include 'creation/puzzle/_form_mcq.html.twig' %}
 </div>
 {% endblock %}
