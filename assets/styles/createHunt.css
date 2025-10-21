@@ -149,6 +149,18 @@ input[type="text"]:focus, textarea:focus, select:focus {
     font-size: 14px;
 }
 
+.save-button {
+    background-color: #077BFF;
+    border: black solid 2px;
+}
+
+.creation_puzzle_header{
+    background-color: #F5DEB3;
+}
+
+.creation_puzzle{
+    background-color: #FDF5E6;
+}
 @media (max-width: 600px) {
     .question-card {
         flex-direction: column;
