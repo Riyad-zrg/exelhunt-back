@@ -24,7 +24,7 @@ class Code
 
     #[ORM\OneToOne(inversedBy: 'code')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Hunt $Hunt = null;
+    private ?hunt $hunt = null;
 
     #[ORM\OneToOne(mappedBy: 'code', cascade: ['persist', 'remove'])]
     private ?TeamPlayer $teamPlayer = null;
@@ -70,14 +70,14 @@ class Code
         return $this;
     }
 
-    public function getHunt(): ?Hunt
+    public function getHunt(): ?hunt
     {
-        return $this->Hunt;
+        return $this->hunt;
     }
 
-    public function setHunt(?Hunt $Hunt): static
+    public function setHunt(?hunt $hunt): static
     {
-        $this->Hunt = $Hunt;
+        $this->hunt = $hunt;
 
         return $this;
     }
