@@ -25,10 +25,23 @@ class TeamPlayer extends Team
     #[ORM\OneToMany(targetEntity: ParticipationTeam::class, mappedBy: 'teamPlayer')]
     private Collection $participationTeams;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $teamGlobalTime = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $averageGlobalTime = null;
+
+    /**
+     * @var Collection<int, Participation>
+     */
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'teamPlayer')]
+    private Collection $participation;
+
     public function __construct()
     {
         parent::__construct();
         $this->participationTeams = new ArrayCollection();
+        $this->participation = new ArrayCollection();
     }
 
     public function getNbPlayers(): ?int
@@ -91,6 +104,60 @@ class TeamPlayer extends Team
             // set the owning side to null (unless already changed)
             if ($participationTeam->getTeamPlayer() === $this) {
                 $participationTeam->setTeamPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTeamGlobalTime(): ?\DateTimeImmutable
+    {
+        return $this->teamGlobalTime;
+    }
+
+    public function setTeamGlobalTime(?\DateTimeImmutable $teamGlobalTime): static
+    {
+        $this->teamGlobalTime = $teamGlobalTime;
+
+        return $this;
+    }
+
+    public function getAverageGlobalTime(): ?\DateTimeImmutable
+    {
+        return $this->averageGlobalTime;
+    }
+
+    public function setAverageGlobalTime(?\DateTimeImmutable $averageGlobalTime): static
+    {
+        $this->averageGlobalTime = $averageGlobalTime;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipation(): Collection
+    {
+        return $this->participation;
+    }
+
+    public function addParticipation(Participation $participation): static
+    {
+        if (!$this->participation->contains($participation)) {
+            $this->participation->add($participation);
+            $participation->setTeamPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): static
+    {
+        if ($this->participation->removeElement($participation)) {
+            // set the owning side to null (unless already changed)
+            if ($participation->getTeamPlayer() === $this) {
+                $participation->setTeamPlayer(null);
             }
         }
 
