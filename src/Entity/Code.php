@@ -14,7 +14,7 @@ class Code
     private ?int $id = null;
 
     #[ORM\Column(length: 6, unique: true)]
-    private ?int $code = null;
+    private ?string $code = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -24,7 +24,7 @@ class Code
 
     #[ORM\OneToOne(inversedBy: 'code')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?hunt $hunt = null;
+    private ?Hunt $hunt = null;
 
     #[ORM\OneToOne(mappedBy: 'code', cascade: ['persist', 'remove'])]
     private ?TeamPlayer $teamPlayer = null;
@@ -34,12 +34,12 @@ class Code
         return $this->id;
     }
 
-    public function getCode(): ?int
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
-    public function setCode(int $code): static
+    public function setCode(string $code): static
     {
         $this->code = $code;
 
@@ -70,12 +70,12 @@ class Code
         return $this;
     }
 
-    public function getHunt(): ?hunt
+    public function getHunt(): ?Hunt
     {
         return $this->hunt;
     }
 
-    public function setHunt(?hunt $hunt): static
+    public function setHunt(?Hunt $hunt): static
     {
         $this->hunt = $hunt;
 
@@ -90,12 +90,12 @@ class Code
     public function setTeamPlayer(?TeamPlayer $teamPlayer): static
     {
         // unset the owning side of the relation if necessary
-        if ($teamPlayer === null && $this->teamPlayer !== null) {
+        if (null === $teamPlayer && null !== $this->teamPlayer) {
             $this->teamPlayer->setCode(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($teamPlayer !== null && $teamPlayer->getCode() !== $this) {
+        if (null !== $teamPlayer && $teamPlayer->getCode() !== $this) {
             $teamPlayer->setCode($this);
         }
 
