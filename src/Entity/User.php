@@ -20,10 +20,10 @@ class User
     #[ORM\Column(length: 30)]
     private ?string $nickname = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
     #[ORM\Column]
@@ -65,11 +65,18 @@ class User
     #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'player')]
     private Collection $startPuzzle;
 
+    /**
+     * @var Collection<int, UserAnswer>
+     */
+    #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'player')]
+    private Collection $userAnswers;
+
     public function __construct()
     {
         $this->memberships = new ArrayCollection();
         $this->participations = new ArrayCollection();
         $this->startPuzzle = new ArrayCollection();
+        $this->userAnswers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -281,6 +288,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($startPuzzle->getPlayer() === $this) {
                 $startPuzzle->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAnswer>
+     */
+    public function getUserAnswers(): Collection
+    {
+        return $this->userAnswers;
+    }
+
+    public function addUserAnswer(UserAnswer $userAnswer): static
+    {
+        if (!$this->userAnswers->contains($userAnswer)) {
+            $this->userAnswers->add($userAnswer);
+            $userAnswer->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAnswer(UserAnswer $userAnswer): static
+    {
+        if ($this->userAnswers->removeElement($userAnswer)) {
+            // set the owning side to null (unless already changed)
+            if ($userAnswer->getPlayer() === $this) {
+                $userAnswer->setPlayer(null);
             }
         }
 
