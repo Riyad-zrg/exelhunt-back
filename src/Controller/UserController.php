@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\Entity\Address;
+use App\Entity\User;
+use App\Form\UserType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Attribute\Route;
+
+class UserController extends AbstractController
+{
+    #[Route('/user')]
+    public function index(): Response
+    {
+        return $this->render('user/index.html.twig');
+    }
+
+    #[Route('/user/new', name: 'app_user_new')]
+    public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
+    {
+        $user = new User();
+        if (null === $user->getAddress()) {
+            $user->setAddress(new Address());
+        }
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plain = $form->get('plainPassword')->getData();
+            if ($plain) {
+                $user->setPassword($hasher->hashPassword($user, $plain));
+            }
+
+            $addr = $user->getAddress();
+            $allEmpty = $addr
+                && !trim((string) $addr->getCountry())
+                && !trim((string) $addr->getCity())
+                && !trim((string) $addr->getPostCode())
+                && !trim((string) $addr->getStreet());
+
+            if ($allEmpty) {
+                $user->setAddress(null);
+            }
+
+            if (!$user->getRoles()) {
+                $user->setRoles(['ROLE_USER']);
+            }
+
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()]);
+        }
+
+        return $this->render('user/new.html.twig', ['form' => $form->createView()]);
+    }
+}
