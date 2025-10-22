@@ -24,9 +24,15 @@
     width: 75%;
 }
 
+.puzzle_answer_mcq {
+    gap: 10px;
+    width: 75%;
+}
+
 @media (min-width:450px) {
     .puzzle_main_form > input,
     .puzzle_main_form > .input-group,
+    .puzzle_answer_mcq,
     .puzzle_main,
     .puzzle_main_text {
         width: 400px;
