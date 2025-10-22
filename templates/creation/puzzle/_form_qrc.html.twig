@@ -1,7 +1,22 @@
-<div class="creation_puzzle_main d-flex flex-column align-items-center justify-content-center mb-3">
-    <img alt="Generated QR code" src="{{ qrc.getDataUri() }}">
-    <a href="{{ path('app_creation_qrc_dl', { randomString: randomString }) }}" class="btn btn-primary mt-4">Enregistrer au format PNG</a>
+<h1 class="mb-4">Création d'une énigme - Code QR</h1>
+<div class="puzzle_main d-flex flex-column align-items-center justify-content-center mb-3">
+    <form class="puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
+        <div class="input-group mb-3">
+            <div class="custom-file puzzle_media_div">
+                <label class="custom-file-label mb-1" for="puzzle_media">Ajouter un média</label>
+                <input type="file" class="custom-file-input" id="puzzle_media" accept="image/*,video/*,audio/*">
+            </div>
+        </div>
+        <div class="input-group mb-4">
+            <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
+        </div>
+        <p class="puzzle_main_text">
+            La chaine de caractère ci-dessous représente le texte affiché par le code QR quand il sera scanné. <br />
+            <strong>Il est recommandé de laisser cette valeur par défaut</strong>, mais vous pouvez la modifier si vous le souhaitez.
+        </p>
+        <div class="input-group mb-3">
+            <input id="puzzle_answer" type="text" class="puzzle_answer form-control" placeholder="Contenu du code QR" aria-label="Question" maxlength="32" value="{{ randomString }}" required>
+        </div>
+        <input type="submit" class="btn btn-primary mb-3" value="Enregistrer l'énigme">
+    </form>
 </div>
-<p>
-    ! Recharger la page va générer un nouveau code QR !
-</p>
