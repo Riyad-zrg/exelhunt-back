@@ -54,22 +54,22 @@ class Hunt
     #[ORM\OneToOne(mappedBy: 'hunt')]
     private ?Code $code = null;
 
-    /**
-     * @var Collection<int, ParticipationTeam>
-     */
-    #[ORM\OneToMany(targetEntity: ParticipationTeam::class, mappedBy: 'hunt')]
-    private Collection $participationTeams;
-
     #[ORM\Column(options: ['default' => false])]
     private ?bool $isTeamPlayable = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $teamPlayerMax = null;
 
+    /**
+     * @var Collection<int, TeamPlayer>
+     */
+    #[ORM\OneToMany(targetEntity: TeamPlayer::class, mappedBy: 'hunt', orphanRemoval: true)]
+    private Collection $teamPlayers;
+
     public function __construct()
     {
         $this->puzzles = new ArrayCollection();
-        $this->participationTeams = new ArrayCollection();
+        $this->teamPlayers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -227,35 +227,6 @@ class Hunt
         return $this;
     }
 
-    /**
-     * @return Collection<int, ParticipationTeam>
-     */
-    public function getParticipationTeams(): Collection
-    {
-        return $this->participationTeams;
-    }
-
-    public function addParticipationTeam(ParticipationTeam $participationTeam): static
-    {
-        if (!$this->participationTeams->contains($participationTeam)) {
-            $this->participationTeams->add($participationTeam);
-            $participationTeam->setHunt($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipationTeam(ParticipationTeam $participationTeam): static
-    {
-        if ($this->participationTeams->removeElement($participationTeam)) {
-            if ($participationTeam->getHunt() === $this) {
-                $participationTeam->setHunt(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isTeamPlayable(): ?bool
     {
         return $this->isTeamPlayable;
@@ -276,6 +247,36 @@ class Hunt
     public function setTeamPlayerMax(?int $teamPlayerMax): static
     {
         $this->teamPlayerMax = $teamPlayerMax;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TeamPlayer>
+     */
+    public function getTeamPlayers(): Collection
+    {
+        return $this->teamPlayers;
+    }
+
+    public function addTeamPlayer(TeamPlayer $teamPlayer): static
+    {
+        if (!$this->teamPlayers->contains($teamPlayer)) {
+            $this->teamPlayers->add($teamPlayer);
+            $teamPlayer->setHunt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeamPlayer(TeamPlayer $teamPlayer): static
+    {
+        if ($this->teamPlayers->removeElement($teamPlayer)) {
+            // set the owning side to null (unless already changed)
+            if ($teamPlayer->getHunt() === $this) {
+                $teamPlayer->setHunt(null);
+            }
+        }
 
         return $this;
     }
