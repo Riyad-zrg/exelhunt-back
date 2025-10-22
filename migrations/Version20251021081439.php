@@ -29,13 +29,21 @@ final class Version20251021081439 extends AbstractMigration
         $this->addSql('ALTER TABLE participation_team ADD CONSTRAINT FK_189419562585A34B FOREIGN KEY (hunt_id) REFERENCES hunt (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE hunt ADD is_team_playable BOOLEAN DEFAULT false NOT NULL');
         $this->addSql('ALTER TABLE hunt ADD team_player_max INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE puzzle ALTER content TYPE VARCHAR(1000)');
+        // augmenter la taille pour éviter "value too long for type character varying(1000)"
+        $this->addSql('ALTER TABLE puzzle ALTER content TYPE VARCHAR(10000)');
         $this->addSql('ALTER TABLE team ADD code_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE team ADD type VARCHAR(255) NOT NULL');
+
+        // add `type` as nullable, populate existing rows, then set NOT NULL to avoid violation
+        $this->addSql('ALTER TABLE team ADD type VARCHAR(255) DEFAULT NULL');
+        // set a sensible default for existing rows (adjust value si besoin: `creator` ou `player`)
+        $this->addSql("UPDATE team SET type = 'player' WHERE type IS NULL");
+        $this->addSql('ALTER TABLE team ALTER COLUMN type SET NOT NULL');
+
         $this->addSql('ALTER TABLE team ADD nb_players INT DEFAULT NULL');
         $this->addSql('ALTER TABLE team ADD is_public BOOLEAN DEFAULT NULL');
         $this->addSql('ALTER TABLE team ALTER avatar DROP NOT NULL');
-        $this->addSql('ALTER TABLE team ALTER avatar TYPE VARCHAR(1000)');
+        // aligner avatar sur une taille plus grande
+        $this->addSql('ALTER TABLE team ALTER avatar TYPE VARCHAR(10000)');
         $this->addSql('ALTER TABLE team ALTER created_at DROP NOT NULL');
         $this->addSql('ALTER TABLE team ADD CONSTRAINT FK_C4E0A61F27DAFE17 FOREIGN KEY (code_id) REFERENCES code (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_C4E0A61F27DAFE17 ON team (code_id)');
