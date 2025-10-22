@@ -18,12 +18,12 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nickname', TextType::class, ['label' => 'Pseudo', 'required' => true])
-            ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom'])
-            ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom'])
-            ->add('email', EmailType::class, ['required' => true, 'label' => 'Email'])
+            ->add('nickname', TextType::class, ['label' => 'Pseudo', 'required' => true, 'attr' => ['placeholder' => 'VixSky']])
+            ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom', 'attr' => ['placeholder' => 'Jean']])
+            ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom', 'attr' => ['placeholder' => 'Dupont']])
+            ->add('email', EmailType::class, ['required' => true, 'label' => 'Email', 'attr' => ['placeholder' => 'jean.dupont@gmail.com']])
             ->add('avatar', TextType::class, ['required' => true, 'label' => 'avatar'])
-            ->add('biography', TextareaType::class, ['required' => false, 'label' => 'Biographie'])
+            ->add('biography', TextareaType::class, ['required' => false, 'label' => 'Biographie', 'attr' => ['placeholder' => 'Parlez-nous un peu de vous...']])
             ->add('Address', AddressType::class, [
                 'required' => true,
             ])
@@ -31,8 +31,9 @@ class UserType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
-                'first_options' => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'Confirmer le mot de passe'],
+                'first_options' => ['label' => 'Mot de passe', 'attr' => ['placeholder' => '***********']],
+                'second_options' => ['label' => 'Confirmer le mot de passe', 'attr' => ['placeholder' => '***********']],
+                'invalid_message' => 'Les mots de passe ne correspondent pas.',
             ])
             ->add('save', SubmitType::class, [
                 'label' => "S'inscrire",
