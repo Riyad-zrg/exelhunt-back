@@ -9,9 +9,9 @@
 
         <!-- HEADER -->
         <div class="vw-100 d-flex justify-content-between align-items-center p-3 creation_puzzle_header">
-            <button class="btn btn-danger" onclick="window.history.back()">Annuler</button>
+            <button class="btn btn-danger btn-lg" onclick="window.history.back()">Annuler</button>
             <h2 class="text-center mb-0 flex-grow-1" style="font-weight: bold;">Créer une chasse</h2>
-            <button class="btn btn-success save-button" type="submit" form="creationForm">Enregistrer</button>
+            <button class="btn btn-success btn-lg save-button" type="submit" form="creationForm">Enregistrer</button>
         </div>
 
         <!-- Main -->
@@ -57,25 +57,11 @@
 
             <!-- Questions -->
             <div class="questions-container">
-                <div class="question-card">
-                    <div class="question-image">
-                        <img src="{{ asset('images/Image_PlaceHolder.png') }}" alt="Question Image">
-                    </div>
-                    <div class="question-info">
-                        <h4>Question 1</h4>
-                        <p>2+2</p>
-                    </div>
-                </div>
 
-                <div class="question-card">
-                    <div class="question-image">
-                        <img src="{{ asset('images/Image_PlaceHolder.png') }}" alt="Question Image">
-                    </div>
-                    <div class="question-info">
-                        <h4>Question 2</h4>
-                        <p>3+5</p>
-                    </div>
-                </div>
+                {% include 'components/_question_card.html.twig' %}
+                {% include 'components/_question_card.html.twig' %}
+                {% include 'components/_question_card.html.twig' %}
+
             </div>
 
         </div>
