@@ -19,12 +19,6 @@ class TeamPlayer extends Team
     #[ORM\OneToOne(inversedBy: 'teamPlayer', cascade: ['persist', 'remove'])]
     private ?Code $code = null;
 
-    /**
-     * @var Collection<int, ParticipationTeam>
-     */
-    #[ORM\OneToMany(targetEntity: ParticipationTeam::class, mappedBy: 'teamPlayer')]
-    private Collection $participationTeams;
-
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $teamGlobalTime = null;
 
@@ -37,10 +31,13 @@ class TeamPlayer extends Team
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'teamPlayer')]
     private Collection $participation;
 
+    #[ORM\ManyToOne(inversedBy: 'teamPlayers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Hunt $hunt = null;
+
     public function __construct()
     {
         parent::__construct();
-        $this->participationTeams = new ArrayCollection();
         $this->participation = new ArrayCollection();
     }
 
@@ -76,36 +73,6 @@ class TeamPlayer extends Team
     public function setCode(?Code $code): static
     {
         $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ParticipationTeam>
-     */
-    public function getParticipationTeams(): Collection
-    {
-        return $this->participationTeams;
-    }
-
-    public function addParticipationTeam(ParticipationTeam $participationTeam): static
-    {
-        if (!$this->participationTeams->contains($participationTeam)) {
-            $this->participationTeams->add($participationTeam);
-            $participationTeam->setTeamPlayer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipationTeam(ParticipationTeam $participationTeam): static
-    {
-        if ($this->participationTeams->removeElement($participationTeam)) {
-            // set the owning side to null (unless already changed)
-            if ($participationTeam->getTeamPlayer() === $this) {
-                $participationTeam->setTeamPlayer(null);
-            }
-        }
 
         return $this;
     }
@@ -160,6 +127,18 @@ class TeamPlayer extends Team
                 $participation->setTeamPlayer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHunt(): ?Hunt
+    {
+        return $this->hunt;
+    }
+
+    public function setHunt(?Hunt $hunt): static
+    {
+        $this->hunt = $hunt;
 
         return $this;
     }
