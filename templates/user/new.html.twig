@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S'inscrire{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block body %}
+    <div class="page-form">
+        <div class="form-card">
+            <h1 class="form-title">S'inscrire</h1>
+
+            {{ form_start(form, {'attr': {'class': 'form-grid'}}) }}
+            {{ form_row(form.nickname, {'row_attr': {'class': 'full'}}) }}
+            {{ form_row(form.firstname) }}
+            {{ form_row(form.lastname) }}
+            {{ form_row(form.email, {'row_attr': {'class': 'full'}}) }}
+            {{ form_row(form.avatar, {'row_attr': {'class': 'full'}}) }}
+            {{ form_row(form.biography, {'row_attr': {'class': 'full'}}) }}
+            {{ form_row(form.Address, {'row_attr': {'class': 'full'}, 'label': false}) }}
+            {{ form_row(form.plainPassword.first) }}
+            {{ form_row(form.plainPassword.second) }}
+            <div class="actions full">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
