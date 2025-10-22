@@ -1,4 +1,4 @@
-.creation_puzzle_main_form > .input-group {
+.puzzle_main_form > .input-group {
     background-color: lightgrey;
     border-radius: 15px;
     text-align: center;
@@ -9,24 +9,26 @@
     height: 30vh;
 }
 
-#puzzle_question, #puzzle_answer, #puzzle_answers {
+#puzzle_question, .puzzle_answer {
     background-color: lightgrey;
     text-align: center;
     border: none;
 }
 
-#puzzle_answer {
+.puzzle_answer_txt {
     height: 20vh;
 }
 
-@media (min-width:450px) {
-    .creation_puzzle_main_form > input,
-    .creation_puzzle_main_form > .input-group,
-    .creation_puzzle_main {
-        width: 400px;
-    }
+.puzzle_main_text {
+    text-align: justify;
+    width: 75%;
 }
 
-p {
-    text-align: justify;
+@media (min-width:450px) {
+    .puzzle_main_form > input,
+    .puzzle_main_form > .input-group,
+    .puzzle_main,
+    .puzzle_main_text {
+        width: 400px;
+    }
 }
