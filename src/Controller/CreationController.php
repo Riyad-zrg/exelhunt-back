@@ -19,7 +19,7 @@ final class CreationController extends AbstractController
         return $this->render('creation/index.html.twig');
     }
 
-    #[Route('/create/text_puzzle', name: 'app_creation_txt_puzzle')]
+    #[Route('/create/txt_puzzle', name: 'app_creation_txt_puzzle')]
     public function text_puzzle(): Response
     {
         return $this->render('creation/puzzle/txt.html.twig');
@@ -42,6 +42,7 @@ final class CreationController extends AbstractController
     {
         $randomString = bin2hex(random_bytes(16));
 
+        /* QR code creation using Endroid - usage TBD
         $builder = new Builder(
             writer: new PngWriter(),
             writerOptions: [],
@@ -55,9 +56,8 @@ final class CreationController extends AbstractController
         );
 
         $result = $builder->build();
-
+        */
         return $this->render('creation/puzzle/qrc.html.twig', [
-            'qrc' => $result,
             'randomString' => $randomString,
         ]);
     }
