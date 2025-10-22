@@ -1,3 +1,4 @@
+<h1 class="mb-4">Création d'une énigme - QCM</h1>
 <div class="puzzle_main">
     <form class="puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
         <div class="input-group mb-3">
@@ -9,17 +10,40 @@
         <div class="input-group mb-4">
             <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
         </div>
-        <div class="input-group mb-2">
-            <input id="puzzle_answer1" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse" aria-label="Answer" required>
+        <p class="puzzle_main_text">
+            Tu peux ajouter jusqu'à 4 réponses, dont 2 optionnelles. Coche la ou les cases correspondant aux bonnes réponses.
+        </p>
+        <div class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2">
+            <div class="input-group">
+                <input id="puzzle_answer1" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse" aria-label="Answer" required>
+            </div>
+            <label class="d-flex flex-row align-items-center justify-content-center mb-2">
+                <input id="puzzle_answer1_isCorrect" type="checkbox">
+            </label>
         </div>
-        <div class="input-group mb-2">
-            <input id="puzzle_answer2" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse" aria-label="Answer" required>
+        <div class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2">
+            <div class="input-group">
+                <input id="puzzle_answer2" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse" aria-label="Answer" required>
+            </div>
+            <label class="d-flex flex-row align-items-center justify-content-center mb-2">
+                <input id="puzzle_answer2_isCorrect" type="checkbox">
+            </label>
         </div>
-        <div class="input-group mb-2">
-            <input id="puzzle_answer3" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionel)" aria-label="Answer">
+        <div class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2">
+            <div class="input-group">
+                <input id="puzzle_answer3" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionnel)" aria-label="Answer">
+            </div>
+            <label>
+                <input id="puzzle_answer3_isCorrect" type="checkbox">
+            </label>
         </div>
-        <div class="input-group mb-2">
-            <input id="puzzle_answer4" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionel)" aria-label="Answer">
+        <div class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-4">
+            <div class="input-group">
+                <input id="puzzle_answer4" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionnel)" aria-label="Answer">
+            </div>
+            <label class="d-flex flex-row align-items-center justify-content-center mb-2">
+                <input id="puzzle_answer4_isCorrect" type="checkbox">
+            </label>
         </div>
         <input type="submit" class="btn btn-primary" value="Enregistrer l'énigme">
     </form>
