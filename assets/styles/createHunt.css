@@ -5,6 +5,8 @@
     justify-content: center;
     width: 100%;
     padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #F5DEB3;
 }
 
 .puzzle_media_div {
@@ -151,7 +153,10 @@ input[type="text"]:focus, textarea:focus, select:focus {
 
 .save-button {
     background-color: #077BFF;
-    border: black solid 2px;
+}
+
+.save-button:hover {
+    background-color: #005FCC;
 }
 
 .creation_puzzle_header{
