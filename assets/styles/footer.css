@@ -33,7 +33,7 @@
 }
 
 .nav-item-footer .bi {
-    font-size: calc(1.375rem + 1.5vw) !important;
+    /*font-size: calc(1.375rem + 1.5vw) !important;*/
     width: 37.1333px;
     height: 55.7px;
     line-height: 1;
