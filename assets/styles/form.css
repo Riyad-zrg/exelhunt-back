@@ -51,6 +51,67 @@ h2{font-size:clamp(20px,2.4vw,28px)}
 }
 .col-6{grid-column:span 6}
 .col-12{grid-column:span 12}
+
+.avatar-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1000
+}
+.avatar-modal.hidden{
+    display:none
+}
+.avatar-dialog{
+    background:#ead3ad;
+    border-radius:18px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    padding:18px;
+    width:min(90vw,720px)
+}
+.avatar-crop-area{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;
+    background:#111;
+    overflow:hidden;
+    border-radius:16px
+}
+.avatar-crop-area img{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%) scale(1);
+    transform-origin:center center;
+    user-select:none;
+    cursor:grab
+}
+.avatar-crop-area.dragging img{
+    cursor:grabbing
+}
+.avatar-circle{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    margin:6%;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.55) inset,0 0 0 2px rgba(255,255,255,.9)
+}
+.avatar-actions{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:flex-end;
+    margin-top:14px
+}
+.preview-image{
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    object-fit:cover;
+    display:block
+}
+
 @media (max-width:860px){
     .col-6{grid-column:span 12}
 }
