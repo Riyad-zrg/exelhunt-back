@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
@@ -27,7 +28,7 @@ abstract class Team
     #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'team')]
     private Collection $memberships;
 
-    #[ORM\Column(length: 10000)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $avatar = null;
 
     public function __construct()

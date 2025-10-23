@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\HuntRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[\AllowDynamicProperties]
@@ -31,7 +32,7 @@ class Hunt
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 10000)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $avatar = null;
 
     #[ORM\Column]
