@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: PuzzleRepository::class)]
 class Puzzle
@@ -29,8 +28,7 @@ class Puzzle
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $hint = null;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    #[Gedmo\Timestampable]
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTime $timeLimit = null;
 
     #[ORM\Column]

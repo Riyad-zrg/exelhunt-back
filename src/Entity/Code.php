@@ -22,9 +22,9 @@ class Code
     #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable]
-    private ?\DateTimeImmutable $expireAt = null;
+    private ?\DateTime $expireAt = null;
 
     #[ORM\OneToOne(inversedBy: 'code')]
     #[ORM\JoinColumn(nullable: false)]
@@ -62,12 +62,12 @@ class Code
         return $this;
     }
 
-    public function getExpireAt(): ?\DateTimeImmutable
+    public function getExpireAt(): ?\DateTime
     {
         return $this->expireAt;
     }
 
-    public function setExpireAt(\DateTimeImmutable $expireAt): static
+    public function setExpireAt(\DateTime $expireAt): static
     {
         $this->expireAt = $expireAt;
 

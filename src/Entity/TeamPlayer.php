@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TeamPlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TeamPlayerRepository::class)]
@@ -19,11 +20,11 @@ class TeamPlayer extends Team
     #[ORM\OneToOne(inversedBy: 'teamPlayer', cascade: ['persist', 'remove'])]
     private ?Code $code = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $teamGlobalTime = null;
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?\DateTime $teamGlobalTime = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $averageGlobalTime = null;
+    #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
+    private ?\DateTime $averageGlobalTime = null;
 
     /**
      * @var Collection<int, Participation>
@@ -77,24 +78,24 @@ class TeamPlayer extends Team
         return $this;
     }
 
-    public function getTeamGlobalTime(): ?\DateTimeImmutable
+    public function getTeamGlobalTime(): ?\DateTime
     {
         return $this->teamGlobalTime;
     }
 
-    public function setTeamGlobalTime(?\DateTimeImmutable $teamGlobalTime): static
+    public function setTeamGlobalTime(?\DateTime $teamGlobalTime): static
     {
         $this->teamGlobalTime = $teamGlobalTime;
 
         return $this;
     }
 
-    public function getAverageGlobalTime(): ?\DateTimeImmutable
+    public function getAverageGlobalTime(): ?\DateTime
     {
         return $this->averageGlobalTime;
     }
 
-    public function setAverageGlobalTime(?\DateTimeImmutable $averageGlobalTime): static
+    public function setAverageGlobalTime(?\DateTime $averageGlobalTime): static
     {
         $this->averageGlobalTime = $averageGlobalTime;
 
