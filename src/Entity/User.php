@@ -29,7 +29,7 @@ class User
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(length: 10000)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 30, nullable: true)]
