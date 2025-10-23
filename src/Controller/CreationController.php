@@ -93,4 +93,12 @@ final class CreationController extends AbstractController
             'controller_name' => 'CreationController',
         ]);
     }
+
+    #[Route('/create/hunt', name: 'app_creation_hunt')]
+    public function hunt(): Response
+    {
+        return $this->render('creation/hunt.html.twig', [
+            'controller_name' => 'CreationController',
+        ]);
+    }
 }
