@@ -1,0 +1,90 @@
+header {
+    background-color: #F5DEB3;
+}
+
+nav {
+    width: 100%;
+    border-bottom: #01161E 2px solid;
+}
+
+.header__icon {
+    margin-right: 15px;
+    color: #01161E;
+    width: 36.3834px;
+    height: 50px;
+    font-size: calc(1.375rem + 1.5vw) !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header__brand {
+    font-family: 'Montserrat', sans-serif;
+    font-size: calc(1.325rem + .9vw) !important;
+    font-weight: bold;
+    color: #01161E;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.header__navbar {
+    background: transparent;
+}
+
+.header__container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.header__nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.75rem;
+}
+
+.header__link {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 120ms ease, background-color 120ms ease;
+}
+
+.header__link:hover {
+    background: #f3f4f6;
+    transform: translateY(-1px);
+}
+
+.header__logo {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+}
+
+.fs-2 {
+    font-size: 1.5rem;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.me-auto {
+    margin-right: auto;
+}
+
+.d-inline-block {
+    display: inline-block;
+}
