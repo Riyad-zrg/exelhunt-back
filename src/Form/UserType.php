@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -12,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class UserType extends AbstractType
 {
@@ -22,7 +24,22 @@ class UserType extends AbstractType
             ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom', 'attr' => ['placeholder' => 'Jean']])
             ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom', 'attr' => ['placeholder' => 'Dupont']])
             ->add('email', EmailType::class, ['required' => true, 'label' => 'Email', 'attr' => ['placeholder' => 'jean.dupont@gmail.com']])
-            ->add('avatar', TextType::class, ['required' => true, 'label' => 'avatar'])
+            ->add('avatar', FileType::class, [
+                'label' => 'Avatar',
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'custom-file-input',
+                    'accept' => 'image/*',
+                ],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '4M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
+                        'mimeTypesMessage' => 'Formats autorisés : JPEG, PNG, WEBP',
+                    ]),
+                ],
+            ])
             ->add('biography', TextareaType::class, ['required' => false, 'label' => 'Biographie', 'attr' => ['placeholder' => 'Parlez-nous un peu de vous...']])
             ->add('Address', AddressType::class, [
                 'required' => true,
