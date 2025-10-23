@@ -1,12 +1,7 @@
 <h1 class="mb-4">Création d'une énigme - Code QR</h1>
 <div class="puzzle_main d-flex flex-column align-items-center justify-content-center mb-3">
     <form class="puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
-        <div class="input-group mb-3">
-            <div class="custom-file puzzle_media_div">
-                <label class="custom-file-label mb-1" for="puzzle_media">Ajouter un média</label>
-                <input type="file" class="custom-file-input" id="puzzle_media" accept="image/*,video/*,audio/*">
-            </div>
-        </div>
+        {{ include('components/_imageUpload.html.twig') }}
         <div class="input-group mb-4">
             <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
         </div>
