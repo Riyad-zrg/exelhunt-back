@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page de création{% endblock %}
+
+{% block body %}
+<div class="creation_choice__buttons d-flex flex-column align-items-center justify-content-center vh-100">
+    <h3 class="creation_choice__title fw-bold p-3 mb-3">Création</h3>
+    <a href="/create/hunt">
+        <button class="btn btn-primary btn-lg mb-3 p-4">
+            Création de chasse
+        </button>
+    </a>
+    <a href="/create/team">
+        <button class="btn btn-secondary btn-lg mb-3 p-4">
+            Création d'une équipe
+        </button>
+    </a>
+</div>
+{% endblock %}

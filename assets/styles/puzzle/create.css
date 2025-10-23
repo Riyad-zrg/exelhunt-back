@@ -1,0 +1,36 @@
+.puzzle_main_form > .input-group {
+    background-color: lightgrey;
+    border-radius: 15px;
+    text-align: center;
+    width: 75%;
+}
+
+#puzzle_question, .puzzle_answer {
+    background-color: lightgrey;
+    text-align: center;
+    border: none;
+}
+
+.puzzle_answer_txt {
+    height: 20vh;
+}
+
+.puzzle_main_text {
+    text-align: justify;
+    width: 75%;
+}
+
+.puzzle_answer_mcq {
+    gap: 10px;
+    width: 75%;
+}
+
+@media (min-width:450px) {
+    .puzzle_main_form > input,
+    .puzzle_main_form > .input-group,
+    .puzzle_answer_mcq,
+    .puzzle_main,
+    .puzzle_main_text {
+        width: 400px;
+    }
+}

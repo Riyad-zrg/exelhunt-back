@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'une énigme{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/puzzle/create.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="creation_puzzle d-flex flex-column align-items-center vh-100 mt-5">
+    {{ include('creation/puzzle/_form_txt.html.twig') }}
+</div>
+{% endblock %}

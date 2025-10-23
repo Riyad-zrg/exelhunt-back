@@ -1,0 +1,23 @@
+<h1 class="mb-4">Création d'une énigme - Code QR</h1>
+<div class="puzzle_main d-flex flex-column align-items-center justify-content-center mb-3">
+    <form class="puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
+        {{ include('components/_imageUpload.html.twig') }}
+        <div class="input-group mb-4">
+            <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
+        </div>
+        <p class="puzzle_main_text">
+            La chaine de caractère ci-dessous représente le texte affiché par le code QR quand il sera scanné. <br />
+            <strong>Il est recommandé de laisser cette valeur par défaut</strong>, mais vous pouvez la modifier si vous le souhaitez.
+        </p>
+        <div class="input-group mb-4">
+            <input id="puzzle_answer_qr" type="text" class="puzzle_answer form-control" placeholder="Contenu du code QR" aria-label="Question" maxlength="32" value="{{ randomString }}" required>
+        </div>
+        <input type="submit" class="btn btn-primary mb-3" value="Enregistrer l'énigme">
+
+        <script>
+            document.getElementById('puzzle_answer_qr').addEventListener('input', function() {
+                this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+            });
+        </script>
+    </form>
+</div>
