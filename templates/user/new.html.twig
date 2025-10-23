@@ -19,7 +19,26 @@
             {{ form_row(form.email, {'row_attr': {'class': 'full'}}) }}
             {{ form_row(form.plainPassword.first) }}
             {{ form_row(form.plainPassword.second) }}
-            {{ form_row(form.avatar, {'row_attr': {'class': 'full'}}) }}
+
+            <div class="full">
+                {% include 'components/_avatarUpload.html.twig' with { field: form.avatar } %}
+            </div>
+            <input type="hidden" id="avatar-cropped" name="avatar_cropped">
+
+            <div id="avatar-modal" class="avatar-modal hidden">
+                <div class="avatar-dialog">
+                    <div class="avatar-crop-area" id="avatar-crop">
+                        <img id="avatar-crop-image" draggable="false" alt="avatar">
+                        <div class="avatar-circle"></div>
+                    </div>
+                    <div class="avatar-actions">
+                        <input type="range" id="avatar-zoom" min="0.5" max="3" step="0.01" value="1">
+                        <button type="button" class="btn btn-secondary" id="avatar-cancel">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="avatar-apply">Utiliser</button>
+                    </div>
+                </div>
+            </div>
+
             {{ form_row(form.biography, {'row_attr': {'class': 'full'}}) }}
             {{ form_row(form.Address, {'row_attr': {'class': 'full'}, 'label': false}) }}
 
