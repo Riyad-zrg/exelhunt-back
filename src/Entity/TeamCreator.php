@@ -51,6 +51,7 @@ class TeamCreator extends Team
             $this->hunts->add($hunt);
             $hunt->setCreatedBy($this);
         }
+
         return $this;
     }
 
@@ -61,6 +62,7 @@ class TeamCreator extends Team
                 $hunt->setCreatedBy(null);
             }
         }
+
         return $this;
     }
 }
