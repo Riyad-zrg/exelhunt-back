@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\CodeRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CodeRepository::class)]
 class Code
@@ -16,10 +18,12 @@ class Code
     #[ORM\Column(length: 6, unique: true)]
     private ?string $code = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $expireAt = null;
 
     #[ORM\OneToOne(inversedBy: 'code')]

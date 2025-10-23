@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MembershipRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: MembershipRepository::class)]
 class Membership
@@ -16,7 +17,8 @@ class Membership
 
     #[ORM\Column(type: Types::JSON)]
     private array $role = [];
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $joinedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]

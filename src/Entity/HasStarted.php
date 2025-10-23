@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\HasStartedRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: HasStartedRepository::class)]
 class HasStarted
@@ -13,7 +15,8 @@ class HasStarted
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $startedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'startPuzzle')]

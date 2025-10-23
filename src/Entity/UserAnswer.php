@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserAnswerRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserAnswerRepository::class)]
 class UserAnswer
@@ -20,7 +21,8 @@ class UserAnswer
     #[ORM\Column]
     private ?bool $isCorrect = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $sendAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'userAnswers')]
