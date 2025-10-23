@@ -5,10 +5,6 @@
     width: 75%;
 }
 
-#puzzle_media {
-    height: 30vh;
-}
-
 #puzzle_question, .puzzle_answer {
     background-color: lightgrey;
     text-align: center;
