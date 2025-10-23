@@ -6,7 +6,7 @@
             <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
         </div>
         <p class="puzzle_main_text">
-            Tu peux ajouter jusqu'à 4 réponses, dont 2 optionnelles. Coche la ou les cases correspondant aux bonnes réponses.
+            Tu peux ajouter jusqu'à 8 réponses, dont 6 optionnelles. Coche la ou les cases correspondant aux bonnes réponses.
         </p>
         <div class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2">
             <div class="input-group">
@@ -24,7 +24,7 @@
                 <input id="puzzle_answer2_isCorrect" type="checkbox">
             </label>
         </div>
-        <div class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2">
+        <div id="answer3" class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2 d-none">
             <div class="input-group">
                 <input id="puzzle_answer3" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionnel)" aria-label="Answer">
             </div>
@@ -32,7 +32,7 @@
                 <input id="puzzle_answer3_isCorrect" type="checkbox">
             </label>
         </div>
-        <div class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-4">
+        <div id="answer4" class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2 d-none">
             <div class="input-group">
                 <input id="puzzle_answer4" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionnel)" aria-label="Answer">
             </div>
@@ -40,6 +40,107 @@
                 <input id="puzzle_answer4_isCorrect" type="checkbox">
             </label>
         </div>
+        <div id="answer5" class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2 d-none">
+            <div class="input-group">
+                <input id="puzzle_answer5" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionnel)" aria-label="Answer">
+            </div>
+            <label class="d-flex flex-row align-items-center justify-content-center mb-2">
+                <input id="puzzle_answer5_isCorrect" type="checkbox">
+            </label>
+        </div>
+        <div id="answer6" class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2 d-none">
+            <div class="input-group">
+                <input id="puzzle_answer6" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionnel)" aria-label="Answer">
+            </div>
+            <label class="d-flex flex-row align-items-center justify-content-center mb-2">
+                <input id="puzzle_answer6_isCorrect" type="checkbox">
+            </label>
+        </div>
+        <div id="answer7" class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2 d-none">
+            <div class="input-group">
+                <input id="puzzle_answer7" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionnel)" aria-label="Answer">
+            </div>
+            <label class="d-flex flex-row align-items-center justify-content-center mb-2">
+                <input id="puzzle_answer7_isCorrect" type="checkbox">
+            </label>
+        </div>
+        <div id="answer8" class="puzzle_answer_mcq d-flex flex-row align-items-center justify-content-center mb-2 d-none">
+            <div class="input-group">
+                <input id="puzzle_answer8" type="text" class="puzzle_answer form-control" placeholder="Appuie pour écrire une réponse (optionnel)" aria-label="Answer">
+            </div>
+            <label class="d-flex flex-row align-items-center justify-content-center mb-2">
+                <input id="puzzle_answer8_isCorrect" type="checkbox">
+            </label>
+        </div>
+        <div>
+            <button type="button" id="addAnswerBtn" class="btn btn-success mb-4">+</button>
+            <button type="button" id="delAnswerBtn" class="btn btn-danger mb-4 d-none">-</button>
+        </div>
         <input type="submit" class="btn btn-primary" value="Enregistrer l'énigme">
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const addAnswerBtn = document.getElementById('addAnswerBtn');
+        const delAnswerBtn = document.getElementById('delAnswerBtn');
+        const answer3 = document.getElementById('answer3');
+        const contentAnswer3 = document.getElementById('puzzle_answer3');
+        const answer4 = document.getElementById('answer4');
+        const contentAnswer4 = document.getElementById('puzzle_answer4');
+        const answer5 = document.getElementById('answer5');
+        const contentAnswer5 = document.getElementById('puzzle_answer5');
+        const answer6 = document.getElementById('answer6');
+        const contentAnswer6 = document.getElementById('puzzle_answer6');
+        const answer7 = document.getElementById('answer7');
+        const contentAnswer7 = document.getElementById('puzzle_answer7');
+        const answer8 = document.getElementById('answer8');
+        const contentAnswer8 = document.getElementById('puzzle_answer8');
+
+        let visibleCount = 2;
+
+        addAnswerBtn.addEventListener('click', () => {
+            visibleCount += 1;
+            if (visibleCount === 3) {
+                answer3.classList.remove('d-none');
+                delAnswerBtn.classList.remove('d-none');
+            } else if (visibleCount === 4) {
+                answer4.classList.remove('d-none');
+            } else if (visibleCount === 5) {
+                answer5.classList.remove('d-none');
+            } else if (visibleCount === 6) {
+                answer6.classList.remove('d-none');
+            } else if (visibleCount === 7) {
+                answer7.classList.remove('d-none');
+            } else if (visibleCount === 8) {
+                answer8.classList.remove('d-none');
+                addAnswerBtn.classList.add('d-none');
+            }
+        });
+
+        delAnswerBtn.addEventListener('click', () => {
+            visibleCount -= 1;
+            if (visibleCount === 7) {
+                answer8.classList.add('d-none');
+                contentAnswer8.value = '';
+                addAnswerBtn.classList.remove('d-none');
+            } else if (visibleCount === 6) {
+                answer7.classList.add('d-none');
+                contentAnswer7.value = '';
+            } else if (visibleCount === 5) {
+                answer6.classList.add('d-none');
+                contentAnswer6.value = '';
+            } else if (visibleCount === 4) {
+                answer5.classList.add('d-none');
+                contentAnswer5.value = '';
+            } else if (visibleCount === 3) {
+                answer4.classList.add('d-none');
+                contentAnswer4.value = '';
+            } else if (visibleCount === 2) {
+                answer3.classList.add('d-none');
+                contentAnswer3.value = '';
+                delAnswerBtn.classList.add('d-none');
+            }
+        });
+    });
+</script>
