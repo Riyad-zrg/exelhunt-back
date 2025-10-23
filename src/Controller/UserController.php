@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -34,6 +36,19 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $cropped = $request->request->get('avatar_cropped');
+            if ($cropped) {
+                $user->setAvatar($cropped);
+            } else {
+                $avatarFile = $form->get('avatar')->getData();
+                if ($avatarFile instanceof UploadedFile) {
+                    $mime = $avatarFile->getMimeType() ?? 'application/octet-stream';
+                    $content = file_get_contents($avatarFile->getPathname());
+                    $dataUrl = sprintf('data:%s;base64,%s', $mime, base64_encode($content));
+                    $user->setAvatar($dataUrl);
+                }
+            }
+
             $plain = $form->get('plainPassword')->getData();
             if ($plain) {
                 $user->setPassword($hasher->hashPassword($user, $plain));
