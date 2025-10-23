@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'une énigme{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/puzzle/create.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="creation_puzzle d-flex flex-column align-items-center vh-100">
+        <div class="puzzle_top container-xl d-flex flex-row justify-content-between mb-5">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Type d'énigme</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01">
+                    <option value="txt" selected>Texte</option>
+                    <option value="mcq">QCM</option>
+                    <option value="qrc">Code QR</option>
+                    <option value="gps">Point GPS</option>
+                </select>
+            </div>
+        </div>
+        <div id="bloc-txt" class="d-flex flex-column align-items-center vh-100 bloc-type">
+            {{ include('creation/puzzle/_form_txt.html.twig') }}
+        </div>
+        <div id="bloc-mcq" class="d-flex flex-column align-items-center vh-100 bloc-type d-none">
+            {{ include('creation/puzzle/_form_mcq.html.twig') }}
+        </div>
+        <div id="bloc-qrc" class="d-flex flex-column align-items-center vh-100 bloc-type d-none">
+            {{ include('creation/puzzle/_form_qrc.html.twig') }}
+        </div>
+        {#
+        <div id="bloc-gps" class="d-flex flex-column align-items-center vh-100 bloc-type d-none">
+            {% include 'puzzle/_form_gps.html.twig' %}
+        </div>
+        #}
+    </div>
+    <script>
+        document.getElementById('inputGroupSelect01').addEventListener('change', function() {
+            const value = this.value;
+            document.querySelectorAll('.bloc-type').forEach(div => div.classList.add('d-none'));
+            document.getElementById('bloc-' + value).classList.remove('d-none');
+        });
+    </script>
+{% endblock %}

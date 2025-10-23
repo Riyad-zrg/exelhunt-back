@@ -19,25 +19,45 @@ final class CreationController extends AbstractController
         return $this->render('creation/index.html.twig');
     }
 
-    #[Route('/create/txt_puzzle', name: 'app_creation_txt_puzzle')]
+    #[Route('/create/team', name: 'app_creation_team')]
+    public function team(): Response
+    {
+        return $this->render('creation/team.html.twig', [
+            'controller_name' => 'CreationController',
+        ]);
+    }
+
+    #[Route('/create/hunt', name: 'app_creation_hunt')]
+    public function hunt(): Response
+    {
+        return $this->render('creation/hunt.html.twig', [
+            'controller_name' => 'CreationController',
+        ]);
+    }
+
+    #[Route('/create/puzzle', name: 'app_creation_puzzle')]
+    public function puzzle(): Response
+    {
+        $randomString = bin2hex(random_bytes(16));
+
+        return $this->render('creation/puzzle/index.html.twig', [
+            'randomString' => $randomString,
+        ]);
+    }
+
+    #[Route('/create/puzzle/txt', name: 'app_creation_txt_puzzle')]
     public function text_puzzle(): Response
     {
         return $this->render('creation/puzzle/txt.html.twig');
     }
 
-    #[Route('/create/mcq_puzzle', name: 'app_creation_mcq_puzzle')]
+    #[Route('/create/puzzle/mcq', name: 'app_creation_mcq_puzzle')]
     public function qcm_puzzle(): Response
     {
         return $this->render('creation/puzzle/mcq.html.twig');
     }
 
-    #[Route('/create/gps_puzzle', name: 'app_creation_gps_puzzle')]
-    public function gps_puzzle(): Response
-    {
-        return $this->render('creation/puzzle/gps.html.twig');
-    }
-
-    #[Route('/create/qrc_puzzle/', name: 'app_creation_qrc_puzzle')]
+    #[Route('/create/puzzle/qrc', name: 'app_creation_qrc_puzzle')]
     public function qrc_puzzle(): Response
     {
         $randomString = bin2hex(random_bytes(16));
@@ -62,7 +82,7 @@ final class CreationController extends AbstractController
         ]);
     }
 
-    #[Route('/create/qrc_puzzle/download/{randomString}', name: 'app_creation_qrc_dl')]
+    #[Route('/create/puzzle/qrc/download/{randomString}', name: 'app_creation_qrc_dl')]
     public function qrc_download(string $randomString): Response
     {
         $builder = new Builder(
@@ -84,21 +104,5 @@ final class CreationController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename="qrcode.png"');
 
         return $response;
-    }
-
-    #[Route('/create/team', name: 'app_creation_team')]
-    public function team(): Response
-    {
-        return $this->render('creation/team.html.twig', [
-            'controller_name' => 'CreationController',
-        ]);
-    }
-
-    #[Route('/create/hunt', name: 'app_creation_hunt')]
-    public function hunt(): Response
-    {
-        return $this->render('creation/hunt.html.twig', [
-            'controller_name' => 'CreationController',
-        ]);
     }
 }
