@@ -5,8 +5,8 @@ namespace App\DataFixtures;
 use App\Factory\PuzzleAnswerFactory;
 use App\Factory\PuzzleFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
 class PuzzleAnswerFixtures extends Fixture implements DependentFixtureInterface
 {

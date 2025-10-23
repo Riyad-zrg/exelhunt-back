@@ -48,6 +48,7 @@ abstract class Team
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -65,6 +66,7 @@ abstract class Team
             $this->memberships->add($membership);
             $membership->setTeam($this);
         }
+
         return $this;
     }
 
@@ -75,6 +77,7 @@ abstract class Team
                 $membership->setTeam(null);
             }
         }
+
         return $this;
     }
 
