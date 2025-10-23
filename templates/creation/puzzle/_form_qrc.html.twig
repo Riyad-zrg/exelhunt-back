@@ -10,14 +10,14 @@
             <strong>Il est recommandé de laisser cette valeur par défaut</strong>, mais vous pouvez la modifier si vous le souhaitez.
         </p>
         <div class="input-group mb-4">
-            <input id="puzzle_answer" type="text" class="puzzle_answer form-control" placeholder="Contenu du code QR" aria-label="Question" maxlength="32" value="{{ randomString }}" required>
+            <input id="puzzle_answer_qr" type="text" class="puzzle_answer form-control" placeholder="Contenu du code QR" aria-label="Question" maxlength="32" value="{{ randomString }}" required>
         </div>
         <input type="submit" class="btn btn-primary mb-3" value="Enregistrer l'énigme">
+
+        <script>
+            document.getElementById('puzzle_answer_qr').addEventListener('input', function() {
+                this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+            });
+        </script>
     </form>
 </div>
-
-<script>
-    document.getElementById('puzzle_answer').addEventListener('input', function() {
-        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
-    });
-</script>
