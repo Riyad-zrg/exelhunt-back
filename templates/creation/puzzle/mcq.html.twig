@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="{{ asset('styles/puzzle/create.css') }}">
 {% endblock %}
 
-
 {% block body %}
 <div class="creation_puzzle d-flex flex-column align-items-center vh-100">
     <div class="puzzle_top container-xl d-flex flex-row justify-content-between mb-5">
@@ -22,6 +21,6 @@
             </select>
         </div>
     </div>
-    {% include 'creation/puzzle/_form_mcq.html.twig' %}
+    {{ include('creation/puzzle/_form_mcq.html.twig') }}
 </div>
 {% endblock %}
