@@ -18,9 +18,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[UniqueEntity(fields: ['nickname'], message: 'Ce pseudonyme est déjà utilisé.')]
 class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 #[ApiResource(
     operations: [
@@ -49,7 +52,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[Groups(['user:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 30, unique: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $nickname = null;
 
