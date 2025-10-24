@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\File;
 
 class UserType extends AbstractType
@@ -23,7 +24,19 @@ class UserType extends AbstractType
             ->add('nickname', TextType::class, ['label' => 'Pseudo', 'required' => true, 'attr' => ['placeholder' => 'VixSky']])
             ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom', 'attr' => ['placeholder' => 'Jean']])
             ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom', 'attr' => ['placeholder' => 'Dupont']])
-            ->add('email', EmailType::class, ['required' => true, 'label' => 'Email', 'attr' => ['placeholder' => 'jean.dupont@gmail.com']])
+            ->add('email', EmailType::class, ['required' => true, 'label' => 'Email',
+                'attr' => [
+                    'placeholder' => 'jean.dupont@gmail.com',
+                    'autocomplete' => 'off'],
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'L\'email est obligatoire.',
+                    ]),
+                    new Assert\Email([
+                        'message' => 'L\'adresse "{{ value }}" n\'est pas valide (doit contenir un "@" et un ".").',
+                        'mode' => 'strict',
+                    ]),
+                ]])
             ->add('avatar', FileType::class, [
                 'label' => 'Avatar',
                 'mapped' => false,
@@ -48,8 +61,24 @@ class UserType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
-                'first_options' => ['label' => 'Mot de passe', 'attr' => ['placeholder' => '***********']],
-                'second_options' => ['label' => 'Confirmer le mot de passe', 'attr' => ['placeholder' => '***********']],
+                'first_options' => [
+                    'label' => 'Mot de passe',
+                    'attr' => [
+                        'placeholder' => '***********',
+                        'autocomplete' => 'new-password',
+                    ],
+                    'constraints' => [
+                        new Assert\NotBlank([
+                            'message' => 'Le mot de passe est obligatoire.',
+                        ]),
+                        new Assert\Length([
+                            'min' => 8,
+                            'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères.',
+                            'max' => 4096,
+                        ]),
+                    ],
+                ],
+                'second_options' => ['label' => 'Confirmer le mot de passe', 'attr' => ['placeholder' => '***********', 'autocomplete' => 'new-password']],
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
             ])
             ->add('save', SubmitType::class, [
