@@ -36,7 +36,6 @@ final class CodeFactory extends PersistentProxyObjectFactory
     {
         $faker = Factory::create('fr_FR');
 
-        // code à 6 chiffres unique
         $code = $faker->unique()->numerify('######');
 
         $createdAt = new \DateTimeImmutable();
@@ -45,7 +44,6 @@ final class CodeFactory extends PersistentProxyObjectFactory
         $hours = random_int(0, 23);
         $expireAt = (new \DateTime())->modify('+'.$days.' days +'.$hours.' hours');
 
-        // 60% pour une chasse, 40% pour une équipe (si les factories existent)
         $forTeam = $faker->boolean(40);
 
         $hunt = null;
