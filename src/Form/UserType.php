@@ -21,9 +21,18 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nickname', TextType::class, ['label' => 'Pseudo', 'required' => true, 'attr' => ['placeholder' => 'VixSky']])
-            ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom', 'attr' => ['placeholder' => 'Jean']])
-            ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom', 'attr' => ['placeholder' => 'Dupont']])
+            ->add('nickname', TextType::class, ['label' => 'Pseudo', 'required' => true, 'attr' => ['placeholder' => 'VixSky'], 'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'Le\'pseudonyme est obligatoire.',
+                ]), ]])
+            ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom', 'attr' => ['placeholder' => 'Jean'], 'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'Le prénom est obligatoire.',
+                ]), ]])
+            ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom', 'attr' => ['placeholder' => 'Dupont'], 'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'Le nom est obligatoire.',
+                ]), ]])
             ->add('email', EmailType::class, ['required' => true, 'label' => 'Email',
                 'attr' => [
                     'placeholder' => 'jean.dupont@gmail.com',
