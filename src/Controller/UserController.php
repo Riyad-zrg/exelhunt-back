@@ -9,7 +9,6 @@ use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +22,7 @@ class UserController extends AbstractController
     {
         return $this->render('user/index.html.twig');
     }
+
 
     #[Route('/user/new', name: 'app_user_new')]
     public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
@@ -69,10 +69,11 @@ class UserController extends AbstractController
                 $user->setRoles(['ROLE_USER']);
             }
 
+            $user->setCreatedAt(new \DateTimeImmutable());
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()]);
+            return $this->redirect('localhost:5173/');
         }
 
         return $this->render('user/new.html.twig', ['form' => $form->createView()]);
