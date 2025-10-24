@@ -1,0 +1,28 @@
+<h1 class="mb-4">Création d'une énigme - Quiz</h1>
+<div class="puzzle_main">
+
+    <form class="puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
+        <div class="input-group mb-4">
+            <input id="puzzle_question" type="text" class="form-control" placeholder="Appuie pour ajouter la question" aria-label="Question" required>
+        </div>
+        <p class="creation_puzzle_main_text">
+            Placez un point d'intérêt en cliquant sur la carte à l'endroit où l'énigme devra être résolue par les joueurs.
+            Vous pouvez spécifier une zone de tolérance autour du point en définissant un rayon en mètres.
+        </p>
+        <div id="map"></div>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoiNGRyMTNuIiwiYSI6ImNtaDRuNjJnOTFtY2I0N3Fwdjd2NWxjYjgifQ.AiwoBt7unJjc7NgwCZS8rA';
+            const map = new mapboxgl.Map({
+                container: 'map', // container ID
+                style: 'mapbox://styles/mapbox/streets-v12', // style URL
+                center: [-74.5, 40], // starting position [lng, lat]
+                zoom: 9, // starting zoom
+            });
+
+            map.on('click', (e) => {
+                console.log(`Clicked at: ${e.lngLat.lng}, ${e.lngLat.lat}`);
+            });
+        </script>
+        <input type="submit" class="btn btn-primary mb-3" value="Enregistrer l'énigme">
+    </form>
+</div>
