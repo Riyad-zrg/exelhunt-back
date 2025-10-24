@@ -24,6 +24,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['nickname'], message: 'Ce pseudonyme est déjà utilisé.')]
+#[UniqueEntity(fields: ['email'], message: 'Cette adresse email est déjà utilisé.')]
+
 class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 #[ApiResource(
     operations: [
@@ -81,7 +83,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[Groups(['user:read', 'user:write'])]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 100, unique: true, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
