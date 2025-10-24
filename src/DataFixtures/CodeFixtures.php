@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Factory\CodeFactory;
 use App\Factory\HuntFactory;
+use App\Factory\TeamPlayerFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
