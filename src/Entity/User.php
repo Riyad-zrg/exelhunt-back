@@ -46,9 +46,6 @@ class User
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $biography = null;
 
-    #[ORM\ManyToOne]
-    private ?Address $address = null;
-
     /**
      * @var Collection<int, Membership>
      */
@@ -72,6 +69,9 @@ class User
      */
     #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'player')]
     private Collection $userAnswers;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Address $address = null;
 
     public function __construct()
     {
@@ -194,18 +194,6 @@ class User
         return $this;
     }
 
-    public function getAddress(): ?Address
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?Address $address): static
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Membership>
      */
@@ -322,6 +310,18 @@ class User
                 $userAnswer->setPlayer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): static
+    {
+        $this->address = $address;
 
         return $this;
     }
