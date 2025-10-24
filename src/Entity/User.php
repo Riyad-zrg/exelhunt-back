@@ -25,8 +25,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['nickname'], message: 'Ce pseudonyme est déjà utilisé.')]
 #[UniqueEntity(fields: ['email'], message: 'Cette adresse email est déjà utilisé.')]
-
-class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 #[ApiResource(
     operations: [
         new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
