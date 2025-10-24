@@ -27,7 +27,7 @@ class Code
     private ?\DateTime $expireAt = null;
 
     #[ORM\OneToOne(inversedBy: 'code')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Hunt $hunt = null;
 
     #[ORM\OneToOne(mappedBy: 'code', cascade: ['persist', 'remove'])]
