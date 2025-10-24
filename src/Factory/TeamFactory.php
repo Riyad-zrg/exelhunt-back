@@ -3,7 +3,6 @@
 namespace App\Factory;
 
 use App\Entity\Team;
-use Faker\Factory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -38,7 +37,6 @@ final class TeamFactory extends PersistentProxyObjectFactory
             'name' => self::faker()->company(),
         ];
     }
-
 
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization

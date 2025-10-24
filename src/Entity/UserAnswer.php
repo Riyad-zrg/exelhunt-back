@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserAnswerRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserAnswerRepository::class)]
 class UserAnswer
@@ -13,33 +15,27 @@ class UserAnswer
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private array $content = [];
+    #[ORM\Column(type: Types::JSON)]
+    private array $contentAnswerJSON = [];
 
     #[ORM\Column]
     private ?bool $isCorrect = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $sendAt = null;
+
     #[ORM\ManyToOne(inversedBy: 'userAnswers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?PuzzleAnswer $puzzleAnswer = null;
+    private ?User $player = null;
+
+    #[ORM\ManyToOne(inversedBy: 'userAnswers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Puzzle $puzzle = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getContent(): array
-    {
-        return $this->content;
-    }
-
-    public function setContent(array $content): static
-    {
-        $this->content = $content;
-
-        return $this;
     }
 
     public function isCorrect(): ?bool
@@ -65,14 +61,40 @@ class UserAnswer
 
         return $this;
     }
-    public function getPuzzleAnswer(): ?PuzzleAnswer
+
+    public function getContentAnswerJSON(): array
     {
-        return $this->puzzleAnswer;
+        return $this->contentAnswerJSON;
     }
 
-    public function setPuzzleAnswer(?PuzzleAnswer $puzzleAnswer): static
+    public function setContentAnswerJSON(array $contentAnswerJSON): static
     {
-        $this->puzzleAnswer = $puzzleAnswer;
+        $this->contentAnswerJSON = $contentAnswerJSON;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?User
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(?User $player): static
+    {
+        $this->player = $player;
+
+        return $this;
+    }
+
+    public function getPuzzle(): ?Puzzle
+    {
+        return $this->puzzle;
+    }
+
+    public function setPuzzle(?Puzzle $puzzle): static
+    {
+        $this->puzzle = $puzzle;
+
         return $this;
     }
 }

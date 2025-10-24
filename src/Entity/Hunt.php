@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\HuntRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
+#[\AllowDynamicProperties]
 #[ORM\Entity(repositoryClass: HuntRepository::class)]
 class Hunt
 {
@@ -24,13 +27,15 @@ class Hunt
     #[ORM\Column(length: 15)]
     private ?string $visibility = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Gedmo\Timestampable(on: 'change', field: ['title', 'description', 'avatar', 'nbPlayers', 'location', 'puzzles'])]
+    private ?\DateTime $updatedAt = null;
 
-    #[ORM\Column(length: 10000)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $avatar = null;
 
     #[ORM\Column]
@@ -38,7 +43,7 @@ class Hunt
 
     #[ORM\ManyToOne(inversedBy: 'hunts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Team $createdBy = null;
+    private ?TeamCreator $createdBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'hunts')]
     #[ORM\JoinColumn(nullable: false)]
@@ -47,22 +52,28 @@ class Hunt
     /**
      * @var Collection<int, Puzzle>
      */
-    #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'Hunt', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'hunt', orphanRemoval: true)]
     private Collection $puzzles;
 
-    #[ORM\OneToOne(mappedBy: 'Hunt')]
-    private Code $code;
+    #[ORM\OneToOne(mappedBy: 'hunt')]
+    private ?Code $code = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $isTeamPlayable = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $teamPlayerMax = null;
 
     /**
-     * @var Collection<int, Participation>
+     * @var Collection<int, TeamPlayer>
      */
-    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'Hunt')]
-    private Collection $participations;
+    #[ORM\OneToMany(targetEntity: TeamPlayer::class, mappedBy: 'hunt', orphanRemoval: true)]
+    private Collection $teamPlayers;
 
     public function __construct()
     {
         $this->puzzles = new ArrayCollection();
-        $this->participations = new ArrayCollection();
+        $this->teamPlayers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -130,12 +141,12 @@ class Hunt
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(?\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
@@ -166,12 +177,12 @@ class Hunt
         return $this;
     }
 
-    public function getcreatedBy(): ?Team
+    public function getCreatedBy(): ?TeamCreator
     {
         return $this->createdBy;
     }
 
-    public function setcreatedBy(?Team $createdBy): static
+    public function setCreatedBy(?TeamCreator $createdBy): static
     {
         $this->createdBy = $createdBy;
 
@@ -220,30 +231,54 @@ class Hunt
         return $this;
     }
 
-    /**
-     * @return Collection<int, Participation>
-     */
-    public function getParticipations(): Collection
+    public function isTeamPlayable(): ?bool
     {
-        return $this->participations;
+        return $this->isTeamPlayable;
     }
 
-    public function addParticipation(Participation $participation): static
+    public function setIsTeamPlayable(bool $isTeamPlayable): static
     {
-        if (!$this->participations->contains($participation)) {
-            $this->participations->add($participation);
-            $participation->setHunt($this);
+        $this->isTeamPlayable = $isTeamPlayable;
+
+        return $this;
+    }
+
+    public function getTeamPlayerMax(): ?int
+    {
+        return $this->teamPlayerMax;
+    }
+
+    public function setTeamPlayerMax(?int $teamPlayerMax): static
+    {
+        $this->teamPlayerMax = $teamPlayerMax;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TeamPlayer>
+     */
+    public function getTeamPlayers(): Collection
+    {
+        return $this->teamPlayers;
+    }
+
+    public function addTeamPlayer(TeamPlayer $teamPlayer): static
+    {
+        if (!$this->teamPlayers->contains($teamPlayer)) {
+            $this->teamPlayers->add($teamPlayer);
+            $teamPlayer->setHunt($this);
         }
 
         return $this;
     }
 
-    public function removeParticipation(Participation $participation): static
+    public function removeTeamPlayer(TeamPlayer $teamPlayer): static
     {
-        if ($this->participations->removeElement($participation)) {
+        if ($this->teamPlayers->removeElement($teamPlayer)) {
             // set the owning side to null (unless already changed)
-            if ($participation->getHunt() === $this) {
-                $participation->setHunt(null);
+            if ($teamPlayer->getHunt() === $this) {
+                $teamPlayer->setHunt(null);
             }
         }
 

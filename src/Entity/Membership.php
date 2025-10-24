@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MembershipRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: MembershipRepository::class)]
 class Membership
@@ -14,18 +15,19 @@ class Membership
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(type: Types::JSON)]
     private array $role = [];
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $joinedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $Member = null;
+    private ?User $member = null;
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Team $Team = null;
+    private ?Team $team = null;
 
     public function getId(): ?int
     {
@@ -46,24 +48,24 @@ class Membership
 
     public function getMember(): ?User
     {
-        return $this->Member;
+        return $this->member;
     }
 
-    public function setMember(?User $Member): static
+    public function setMember(?User $member): static
     {
-        $this->Member = $Member;
+        $this->member = $member;
 
         return $this;
     }
 
     public function getTeam(): ?Team
     {
-        return $this->Team;
+        return $this->team;
     }
 
-    public function setTeam(?Team $Team): static
+    public function setTeam(?Team $team): static
     {
-        $this->Team = $Team;
+        $this->team = $team;
 
         return $this;
     }

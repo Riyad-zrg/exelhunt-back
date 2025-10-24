@@ -15,7 +15,7 @@
    composer install
    ```
    ne pas accepter le fichier de configuration grumphp lors de l'installation
-3. Pour démarrer la base de données, utilisez les commandes suivante :
+3. Pour démarrer la base de données, utilisez les commandes suivantes :
    ```bash
    docker compose up -d
    ```

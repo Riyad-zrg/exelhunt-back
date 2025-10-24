@@ -22,11 +22,14 @@ class Participation
 
     #[ORM\ManyToOne(inversedBy: 'participations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Hunt $Hunt = null;
+    private ?Hunt $hunt = null;
 
     #[ORM\ManyToOne(inversedBy: 'participations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $Player = null;
+    private ?User $player = null;
+
+    #[ORM\ManyToOne(inversedBy: 'participation')]
+    private ?TeamPlayer $teamPlayer = null;
 
     public function getId(): ?int
     {
@@ -59,24 +62,36 @@ class Participation
 
     public function getHunt(): ?Hunt
     {
-        return $this->Hunt;
+        return $this->hunt;
     }
 
-    public function setHunt(?Hunt $Hunt): static
+    public function setHunt(?Hunt $hunt): static
     {
-        $this->Hunt = $Hunt;
+        $this->hunt = $hunt;
 
         return $this;
     }
 
     public function getPlayer(): ?User
     {
-        return $this->Player;
+        return $this->player;
     }
 
-    public function setPlayer(?User $Player): static
+    public function setPlayer(?User $player): static
     {
-        $this->Player = $Player;
+        $this->player = $player;
+
+        return $this;
+    }
+
+    public function getTeamPlayer(): ?TeamPlayer
+    {
+        return $this->teamPlayer;
+    }
+
+    public function setTeamPlayer(?TeamPlayer $teamPlayer): static
+    {
+        $this->teamPlayer = $teamPlayer;
 
         return $this;
     }

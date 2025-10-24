@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -20,16 +21,17 @@ class User
     #[ORM\Column(length: 30)]
     private ?string $nickname = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(length: 10000)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 30, nullable: true)]
@@ -44,19 +46,16 @@ class User
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $biography = null;
 
-    #[ORM\ManyToOne]
-    private ?Address $Address = null;
-
     /**
      * @var Collection<int, Membership>
      */
-    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'Member', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'member', orphanRemoval: true)]
     private Collection $memberships;
 
     /**
      * @var Collection<int, Participation>
      */
-    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'Player')]
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'player')]
     private Collection $participations;
 
     /**
@@ -65,11 +64,21 @@ class User
     #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'player')]
     private Collection $startPuzzle;
 
+    /**
+     * @var Collection<int, UserAnswer>
+     */
+    #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'player')]
+    private Collection $userAnswers;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Address $address = null;
+
     public function __construct()
     {
         $this->memberships = new ArrayCollection();
         $this->participations = new ArrayCollection();
         $this->startPuzzle = new ArrayCollection();
+        $this->userAnswers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -185,18 +194,6 @@ class User
         return $this;
     }
 
-    public function getAddress(): ?Address
-    {
-        return $this->Address;
-    }
-
-    public function setAddress(?Address $Address): static
-    {
-        $this->Address = $Address;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Membership>
      */
@@ -283,6 +280,48 @@ class User
                 $startPuzzle->setPlayer(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAnswer>
+     */
+    public function getUserAnswers(): Collection
+    {
+        return $this->userAnswers;
+    }
+
+    public function addUserAnswer(UserAnswer $userAnswer): static
+    {
+        if (!$this->userAnswers->contains($userAnswer)) {
+            $this->userAnswers->add($userAnswer);
+            $userAnswer->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAnswer(UserAnswer $userAnswer): static
+    {
+        if ($this->userAnswers->removeElement($userAnswer)) {
+            // set the owning side to null (unless already changed)
+            if ($userAnswer->getPlayer() === $this) {
+                $userAnswer->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): static
+    {
+        $this->address = $address;
 
         return $this;
     }
