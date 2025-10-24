@@ -36,7 +36,7 @@ final class TeamPlayerFactory extends PersistentProxyObjectFactory
             'name' => self::faker()->company(),
             'avatar' => self::faker()->imageUrl(200, 200),
             'hunt' => HuntFactory::new(),
-            'isPublic' => self::faker()->boolean(50),
+            'isPublic' => self::faker()->boolean(),
             'nbPlayers' => self::faker()->numberBetween(1, 4),
         ];
     }
@@ -59,7 +59,25 @@ final class TeamPlayerFactory extends PersistentProxyObjectFactory
                 }
 
                 if (false === $teamPlayer->isPublic() && class_exists(CodeFactory::class)) {
-                    $teamPlayer->setCode(CodeFactory::new());
+                    $reference = null;
+                    if (method_exists($teamPlayer, 'getCreatedAt') && null !== $teamPlayer->getCreatedAt()) {
+                        $reference = $teamPlayer->getCreatedAt();
+                    } elseif (null !== $hunt && method_exists($hunt, 'getCreatedAt') && null !== $hunt->getCreatedAt()) {
+                        $reference = $hunt->getCreatedAt();
+                    }
+
+                    if ($reference instanceof \DateTimeInterface) {
+                        $seconds = random_int(1, 3600);
+                        if ($reference instanceof \DateTimeImmutable) {
+                            $createdAt = $reference->modify('+'.$seconds.' seconds');
+                        } else {
+                            $createdAt = \DateTimeImmutable::createFromMutable($reference)->modify('+'.$seconds.' seconds');
+                        }
+                    } else {
+                        $createdAt = new \DateTimeImmutable();
+                    }
+
+                    $teamPlayer->setCode(CodeFactory::new(['createdAt' => $createdAt]));
                 }
             })
         ;
