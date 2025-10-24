@@ -1,4 +1,4 @@
-<h1 class="mb-4">Création d'une énigme - Quiz</h1>
+<h1 class="mb-4">Création d'une énigme - GPS</h1>
 <div class="puzzle_main">
 
     <form class="puzzle_main_form d-flex flex-column align-items-center justify-content-center" method="POST" action="/temp">
@@ -9,20 +9,96 @@
             Placez un point d'intérêt en cliquant sur la carte à l'endroit où l'énigme devra être résolue par les joueurs.
             Vous pouvez spécifier une zone de tolérance autour du point en définissant un rayon en mètres.
         </p>
-        <div id="map"></div>
-        <script>
-            mapboxgl.accessToken = 'pk.eyJ1IjoiNGRyMTNuIiwiYSI6ImNtaDRuNjJnOTFtY2I0N3Fwdjd2NWxjYjgifQ.AiwoBt7unJjc7NgwCZS8rA';
-            const map = new mapboxgl.Map({
-                container: 'map', // container ID
-                style: 'mapbox://styles/mapbox/streets-v12', // style URL
-                center: [-74.5, 40], // starting position [lng, lat]
-                zoom: 9, // starting zoom
-            });
-
-            map.on('click', (e) => {
-                console.log(`Clicked at: ${e.lngLat.lng}, ${e.lngLat.lat}`);
-            });
-        </script>
+        <div id="map" class="mb-3"></div>
+        <p class="creation_puzzle_main_text">
+            <strong>Longitude et Latitude</strong>
+        </p>
+        <div class="input-group mb-4">
+            <input id="puzzle_answer_lng" type="number" class="puzzle_answer form-control" placeholder="Longitude du point" aria-label="Longitude" value="4.06" min="-180" max="180" step="0.000001" required>
+            <input id="puzzle_answer_lat" type="number" class="puzzle_answer form-control" placeholder="Latitude du point" aria-label="Latitude" value="49.24" min="-90" max="90" step="0.000001" required>
+        </div>
+        <p class="creation_puzzle_main_text">
+            <strong>Rayon de la zone</strong> (en mètres)
+        </p>
+        <div class="input-group mb-4">
+            <input id="puzzle_answer_rad" type="number" class="puzzle_answer form-control" placeholder="Rayon de la zone (en m)" aria-label="Rayon" value="500" min="0" max="100" step="1" required>
+        </div>
         <input type="submit" class="btn btn-primary mb-3" value="Enregistrer l'énigme">
     </form>
 </div>
+
+<script>
+    const lati = document.getElementById('puzzle_answer_lat');
+    const longi = document.getElementById('puzzle_answer_lng');
+    const radi = document.getElementById('puzzle_answer_rad');
+    const marker = new mapboxgl.Marker();
+
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiNGRyMTNuIiwiYSI6ImNtaDRuNjJnOTFtY2I0N3Fwdjd2NWxjYjgifQ.AiwoBt7unJjc7NgwCZS8rA';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        // style without road or monuments indications
+        // style: 'mapbox://styles/4dr13n/cmh4thikw00bq01qxhy5f12u8',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [4.06, 49.24],
+        zoom: 9,
+    });
+
+    map.on('load', () => {
+        map.addSource('circle', {
+            type: 'geojson',
+            data: turf.circle([0, 0], 0, { steps: 64, units: 'meters' }),
+        });
+
+        map.addLayer({
+            id: 'circle-fill',
+            type: 'fill',
+            source: 'circle',
+            layout: {},
+            paint: {
+                'fill-color': '#007cbf',
+                'fill-opacity': 0.3,
+            },
+        });
+
+        map.addLayer({
+            id: 'circle-outline',
+            type: 'line',
+            source: 'circle',
+            layout: {},
+            paint: {
+                'line-color': '#007cbf',
+                'line-width': 2,
+            },
+        });
+    });
+
+    const updateDisplay = () => {
+        const lat = parseFloat(lati.value);
+        const lng = parseFloat(longi.value);
+        marker.setLngLat([lng, lat]).addTo(map);
+
+        const center = [lng, lat];
+        const radius = radi.value;
+
+        const circle = turf.circle(center, radius, { steps: 64, units: 'meters' });
+        map.getSource('circle').setData(circle);
+    }
+
+    map.on('click', (e) => {
+        lati.value = e.lngLat.lat.toFixed(6);
+        longi.value = e.lngLat.lng.toFixed(6);
+
+        marker.setLngLat([e.lngLat.lng, e.lngLat.lat]).addTo(map);
+
+        const center = [e.lngLat.lng, e.lngLat.lat];
+        const radius = radi.value; // in kilometers
+
+        const circle = turf.circle(center, radius, { steps: 64, units: 'meters' });
+        map.getSource('circle').setData(circle);
+    });
+
+    radi.addEventListener('input', updateDisplay);
+    lati.addEventListener('input', updateDisplay);
+    longi.addEventListener('input', updateDisplay);
+</script>
