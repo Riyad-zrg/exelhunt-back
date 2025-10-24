@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[UniqueEntity(fields: ['nickname'], message: 'Ce pseudonyme est déjà utilisé.')]
 class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -18,7 +20,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 30, unique: true)]
     private ?string $nickname = null;
 
     #[ORM\Column(length: 255)]
@@ -70,7 +72,8 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'player')]
     private Collection $userAnswers;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\Column(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Address::class, cascade: ['persist'], inversedBy: 'users')]
     private ?Address $address = null;
 
     public function __construct()
