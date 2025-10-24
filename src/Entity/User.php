@@ -70,7 +70,7 @@ class User
     #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'player')]
     private Collection $userAnswers;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Address::class, cascade: ['persist'], inversedBy: 'users')]
     private ?Address $address = null;
 
     public function __construct()
