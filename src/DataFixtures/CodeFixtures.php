@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Factory\CodeFactory;
+use App\Factory\HuntFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -12,8 +13,8 @@ class CodeFixtures extends Fixture
     {
         // $product = new Product();
         // $manager->persist($product);
-        CodeFactory::createMany(100);
-
+        TeamPlayerFactory::createMany(20);
+        HuntFactory::createMany(20);
         $manager->flush();
     }
 }
