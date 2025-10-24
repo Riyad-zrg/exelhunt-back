@@ -23,7 +23,7 @@ class TeamPlayer extends Team
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTime $teamGlobalTime = null;
 
-    #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTime $averageGlobalTime = null;
 
     /**
