@@ -36,31 +36,10 @@ final class CodeFactory extends PersistentProxyObjectFactory
     {
         $faker = Factory::create('fr_FR');
 
-        $code = $faker->unique()->numerify('######');
-
-        $createdAt = new \DateTimeImmutable();
-
-        $days = random_int(1, 30);
-        $hours = random_int(0, 23);
-        $expireAt = (new \DateTime())->modify('+'.$days.' days +'.$hours.' hours');
-
-        $forTeam = $faker->boolean(40);
-
-        $hunt = null;
-        $teamPlayer = null;
-
-        if ($forTeam && class_exists(TeamPlayerFactory::class)) {
-            $teamPlayer = TeamPlayerFactory::new();
-        } elseif (class_exists(HuntFactory::class)) {
-            $hunt = HuntFactory::new();
-        }
-
         return [
-            'code' => $code,
-            'createdAt' => $createdAt,
-            'expireAt' => $expireAt,
-            'hunt' => $hunt,
-            'teamPlayer' => $teamPlayer,
+            'code' => $faker->unique()->numerify('######'),
+            'createdAt' => new \DateTimeImmutable(),
+            'expireAt' => (new \DateTime())->modify('+'.random_int(1, 30).' days +'.random_int(0, 23).' hours'),
         ];
     }
 
