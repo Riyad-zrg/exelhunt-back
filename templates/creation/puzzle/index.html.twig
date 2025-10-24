@@ -4,6 +4,12 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/puzzle/create.css') }}">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -17,7 +23,7 @@
                     <option value="txt" selected>Texte</option>
                     <option value="mcq">QCM</option>
                     <option value="qrc">Code QR</option>
-                    {# <option value="gps">Point GPS</option> #}
+                    <option value="gps">Point GPS</option>
                 </select>
             </div>
         </div>
@@ -30,11 +36,9 @@
         <div id="bloc-qrc" class="d-flex flex-column align-items-center vh-100 bloc-type d-none">
             {{ include('creation/puzzle/_form_qrc.html.twig') }}
         </div>
-        {#
         <div id="bloc-gps" class="d-flex flex-column align-items-center vh-100 bloc-type d-none">
-            {% include 'puzzle/_form_gps.html.twig' %}
+            {% include('creation/puzzle/_form_gps.html.twig') %}
         </div>
-        #}
     </div>
     <script>
         document.getElementById('inputGroupSelect01').addEventListener('change', function() {
