@@ -105,4 +105,10 @@ final class CreationController extends AbstractController
 
         return $response;
     }
+
+    #[Route('/create/puzzle/gps', name: 'app_creation_gps_puzzle')]
+    public function gps_puzzle(): Response
+    {
+        return $this->render('creation/puzzle/gps.html.twig');
+    }
 }

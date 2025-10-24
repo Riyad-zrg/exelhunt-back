@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'une énigme{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/puzzle/create.css') }}">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="creation_puzzle d-flex flex-column align-items-center vh-100 mt-5">
+        {{ include('creation/puzzle/_form_gps.html.twig') }}
+    </div>
+{% endblock %}
+

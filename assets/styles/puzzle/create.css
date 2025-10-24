@@ -25,12 +25,20 @@
     width: 75%;
 }
 
+#map {
+    width: 75%;
+    height: 40vh;
+    border-radius: 15px;
+}
+
+
 @media (min-width:450px) {
     .puzzle_main_form > input,
     .puzzle_main_form > .input-group,
     .puzzle_answer_mcq,
     .puzzle_main,
-    .puzzle_main_text {
+    .puzzle_main_text,
+    #map {
         width: 400px;
     }
 }
