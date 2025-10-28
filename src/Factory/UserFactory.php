@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Entity\User;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -11,13 +12,16 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
  */
 final class UserFactory extends PersistentProxyObjectFactory
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-    public function __construct()
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
+        $this->passwordHasher = $passwordHasher;
     }
 
     public static function class(): string
@@ -45,18 +49,11 @@ final class UserFactory extends PersistentProxyObjectFactory
             default => ['USER'],
         };
 
-        $defaultPath = __DIR__.'/../DataFixtures/img/userDefault.jpg';
+        $defaultPath = __DIR__.'/../DataFixtures/img/userDefault.png';
         if (is_readable($defaultPath)) {
             $avatarData = base64_encode(file_get_contents($defaultPath));
         } else {
-            $color = $faker->hexColor();
-            $initial = strtoupper(substr($faker->firstName(), 0, 1));
-            $svg = sprintf(
-                '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%%" height="100%%" fill="%s"/><text x="50%%" y="50%%" font-size="80" fill="#ffffff" text-anchor="middle" dominant-baseline="central">%s</text></svg>',
-                $color,
-                htmlspecialchars($initial, ENT_QUOTES)
-            );
-            $avatarData = base64_encode($svg);
+            $avatarData = '';
         }
 
         $hasAddress = $faker->boolean(60) ? AddressFactory::new() : null;
@@ -93,6 +90,12 @@ final class UserFactory extends PersistentProxyObjectFactory
     {
         return $this
             ->afterInstantiate(function (User $user): void {
+                $plain = $user->getPassword();
+                if (null !== $plain && '' !== $plain) {
+                    $hashed = $this->passwordHasher->hashPassword($user, $plain);
+                    $user->setPassword($hashed);
+                }
+
                 if ($user->getRoles() === ['GUEST']) {
                     $user->setFirstname(null);
                     $user->setLastname(null);

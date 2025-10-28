@@ -25,19 +25,19 @@ class UserFixtures extends Fixture
             ];
         });
 
-        UserFactory::createMany(16, function () {
+        UserFactory::createMany(10, function () {
             return [
                 'roles' => ['CONCEPTOR', 'PLAYER', 'USER'],
             ];
         });
 
-        UserFactory::createMany(60, function () {
+        UserFactory::createMany(30, function () {
             return [
                 'roles' => ['PLAYER', 'USER'],
             ];
         });
 
-        UserFactory::createMany(20, function () {
+        UserFactory::createMany(6, function () {
             return [
                 'roles' => ['GUEST'],
                 'firstname' => null,
