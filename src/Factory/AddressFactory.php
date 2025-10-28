@@ -32,7 +32,7 @@ final class AddressFactory extends PersistentProxyObjectFactory
     {
         $faker = Factory::create('fr_FR');
 
-        $countries = array_merge(array_fill(0, 75, 'France'), ['United States', 'Germany', 'Italy', 'Spain', 'Belgium', 'Switzerland']);
+        $countries = array_merge(array_fill(0, 44, 'France'), ['United States', 'Germany', 'Italy', 'Spain', 'Belgium', 'Switzerland']);
         $country = $faker->randomElement($countries);
 
         $fakerByCountry = match ($country) {
