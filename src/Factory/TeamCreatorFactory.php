@@ -32,9 +32,16 @@ final class TeamCreatorFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
+        $defaultPath = __DIR__.'/../DataFixtures/img/teamDefault.png';
+        if (is_readable($defaultPath)) {
+            $avatarData = base64_encode(file_get_contents($defaultPath));
+        } else {
+            $avatarData = '';
+        }
+
         return [
             'name' => self::faker()->company(),
-            'avatar' => self::faker()->imageUrl(200, 200),
+            'avatar' => $avatarData,
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 years', 'now')),
         ];
     }
@@ -44,12 +51,6 @@ final class TeamCreatorFactory extends PersistentProxyObjectFactory
      */
     protected function initialize(): static
     {
-        return $this
-            ->afterInstantiate(function (TeamCreator $teamCreator): void {
-                HuntFactory::createMany(random_int(1, 5), function () use ($teamCreator) {
-                    return ['createdBy' => $teamCreator];
-                });
-            })
-        ;
+        return $this;
     }
 }
