@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Factory\CodeFactory;
 use App\Factory\HuntFactory;
 use App\Factory\TeamPlayerFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -41,10 +40,6 @@ class TeamPlayerFixtures extends Fixture
                     'isPublic' => $isPublic,
                     'nbPlayers' => random_int(1, max(1, $hunt->getNbPlayers() ?? 4)),
                 ];
-
-                if (!$isPublic && class_exists(CodeFactory::class)) {
-                    $overrides['code'] = CodeFactory::new();
-                }
 
                 return $overrides;
             });
