@@ -4,7 +4,6 @@ namespace App\Factory;
 
 use App\Entity\Code;
 use Faker\Factory;
-use Random\RandomException;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -12,44 +11,58 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
  */
 final class CodeFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-    }
-
     public static function class(): string
     {
         return Code::class;
     }
 
     /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     * @throws RandomException
+     * @throws \Exception
      */
     protected function defaults(): array|callable
     {
         $faker = Factory::create('fr_FR');
 
+        $code = $faker->numerify('######');
+
+        $createdAt = new \DateTimeImmutable();
+        $expireAt = (new \DateTime())->modify('+'.random_int(1, 30).' days +'.random_int(0, 23).' hours');
+
         return [
-            'code' => $faker->unique()->numerify('######'),
-            'createdAt' => new \DateTimeImmutable(),
-            'expireAt' => (new \DateTime())->modify('+'.random_int(1, 30).' days +'.random_int(0, 23).' hours'),
+            'code' => $code,
+            'createdAt' => $createdAt,
+            'expireAt' => $expireAt,
+            'hunt' => null,
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Code $code): void {})
-        ;
+            ->afterInstantiate(function (Code $entity): void {
+                $c = $entity->getCode();
+                if (null !== $c) {
+                    $c = preg_replace('/[^0-9]/', '', $c);
+                    if (strlen($c) < 6) {
+                        $c = str_pad($c, 6, '0', STR_PAD_LEFT);
+                    } elseif (strlen($c) > 6) {
+                        $c = substr($c, 0, 6);
+                    }
+                    $entity->setCode($c);
+                } else {
+                    $entity->setCode((string) str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT));
+                }
+
+                $createdAt = $entity->getCreatedAt() ?? new \DateTimeImmutable();
+                $expireAt = $entity->getExpireAt() ?? (new \DateTime())->modify('+7 days');
+
+                $createdMutable = \DateTime::createFromImmutable($createdAt);
+
+                if ($expireAt <= $createdMutable) {
+                    $newExpire = clone $createdMutable;
+                    $newExpire->modify('+'.random_int(1, 30).' days +'.random_int(0, 23).' hours');
+                    $entity->setExpireAt($newExpire);
+                }
+            });
     }
 }
