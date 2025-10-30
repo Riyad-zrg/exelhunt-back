@@ -10,16 +10,6 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
  */
 final class TeamPlayerFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public static function class(): string
     {
         return TeamPlayer::class;
@@ -32,12 +22,17 @@ final class TeamPlayerFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
+        $faker = self::faker();
+
+        $avatarPath = __DIR__.'/../DataFixtures/img/teamDefault.png';
+        $avatarData = is_readable($avatarPath) ? base64_encode(file_get_contents($avatarPath)) : '';
+
         return [
-            'name' => self::faker()->company(),
-            'avatar' => self::faker()->imageUrl(200, 200),
-            'hunt' => HuntFactory::new(),
-            'isPublic' => self::faker()->boolean(),
-            'nbPlayers' => self::faker()->numberBetween(1, 4),
+            'name' => ucfirst($faker->words(2, true)).' Team',
+            'avatar' => $avatarData,
+            'hunt' => null,
+            'isPublic' => $faker->boolean(70),
+            'nbPlayers' => $faker->numberBetween(1, 4),
         ];
     }
 
@@ -77,7 +72,8 @@ final class TeamPlayerFactory extends PersistentProxyObjectFactory
                         $createdAt = new \DateTimeImmutable();
                     }
 
-                    $teamPlayer->setCode(CodeFactory::new(['createdAt' => $createdAt]));
+                    $code = CodeFactory::createOne(['createdAt' => $createdAt])->object();
+                    $teamPlayer->setCode($code);
                 }
             })
         ;
