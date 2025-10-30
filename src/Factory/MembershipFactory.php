@@ -26,7 +26,7 @@ final class MembershipFactory extends PersistentProxyObjectFactory
 
         return [
             'member' => UserFactory::new(),
-            'team' => TeamPlayerFactory::new(),
+            'team' => null,
             'role' => ['MEMBER'],
             'joinedAt' => \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-2 years', 'now')),
         ];
