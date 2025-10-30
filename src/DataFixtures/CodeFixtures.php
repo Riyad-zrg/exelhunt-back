@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Factory\HuntFactory;
 use App\Factory\TeamPlayerFactory;
+use App\Factory\CodeFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Random\RandomException;
@@ -39,6 +40,15 @@ class CodeFixtures extends Fixture
                     'nbPlayers' => random_int(1, max(1, $hunt->getNbPlayers() ?? 4)),
                 ];
             });
+
+            // Dans certains cas, créer un code directement lié à la Hunt (ex: code d'invitation global)
+            if (random_int(1, 100) <= 30) {
+                CodeFactory::createOne([
+                    'hunt' => $hunt,
+                    // expire dans 1 à 60 jours
+                    'expireAt' => (new \DateTime())->modify('+' . random_int(1, 60) . ' days'),
+                ]);
+            }
         }
 
         $manager->flush();
