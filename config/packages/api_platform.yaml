@@ -1,0 +1,10 @@
+api_platform:
+  defaults:
+    pagination_items_per_page: 30
+  swagger:
+    versions: [3]
+  formats:
+    jsonld: ['application/ld+json']
+    json: ['application/json']
+
+
