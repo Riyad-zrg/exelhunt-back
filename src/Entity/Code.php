@@ -2,36 +2,66 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CodeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: CodeRepository::class)]
 #[Assert\Callback([Code::class, 'validateRelation'])]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(security: "is_granted('ROLE_USER')"),
+        new Put(security: "is_granted('ROLE_USER')"),
+        new Patch(security: "is_granted('ROLE_USER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN')"),
+    ],
+    normalizationContext: ['groups' => ['code:read']],
+    denormalizationContext: ['groups' => ['code:write']]
+)]
+#[ApiFilter(SearchFilter::class, properties: ['code' => 'exact', 'hunt.id' => 'exact'])]
+#[ApiFilter(OrderFilter::class, properties: ['createdAt', 'expireAt', 'code'], arguments: ['orderParameterName' => 'order'])]
 class Code
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['code:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 6, unique: true)]
-    private ?string $code = null;
+    #[Groups(['code:read', 'code:write'])]
+    private ?int $code = null;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Gedmo\Timestampable]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column]
+    #[Groups(['code:read', 'code:write'])]
+    private ?\DateTime $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Gedmo\Timestampable]
+    #[ORM\Column]
+    #[Groups(['code:read', 'code:write'])]
     private ?\DateTime $expireAt = null;
 
     #[ORM\OneToOne(inversedBy: 'code', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['code:read', 'code:write'])]
     private ?Hunt $hunt = null;
+
 
     #[ORM\OneToOne(inversedBy: 'code', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
@@ -42,24 +72,24 @@ class Code
         return $this->id;
     }
 
-    public function getCode(): ?string
+    public function getCode(): ?int
     {
         return $this->code;
     }
 
-    public function setCode(string $code): static
+    public function setCode(int $code): static
     {
         $this->code = $code;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
 
