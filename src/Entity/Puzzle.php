@@ -2,67 +2,97 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\PuzzleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PuzzleRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(security: "is_granted('ROLE_USER')"),
+        new Put(security: "is_granted('ROLE_USER')"),
+        new Patch(security: "is_granted('ROLE_USER')"),
+        new Delete(security: "is_granted('ROLE_ADMIN')"),
+    ],
+    normalizationContext: ['groups' => ['puzzle:read']],
+    denormalizationContext: ['groups' => ['puzzle:write']]
+)]
+#[ApiFilter(SearchFilter::class, properties: [
+    'title' => 'partial',
+    'content' => 'partial',
+    'hunt.id' => 'exact',
+])]
+#[ApiFilter(OrderFilter::class, properties: ['index', 'title'], arguments: ['orderParameterName' => 'order'])]
 class Puzzle
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['puzzle:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $question = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $media = null;
+    #[ORM\Column(length: 500)]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
+    private ?string $content = null;
 
     #[ORM\Column(length: 500, nullable: true)]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
     private ?string $hint = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
     private ?\DateTime $timeLimit = null;
 
     #[ORM\Column]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
     private ?int $index = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
     private ?\DateTime $malus = null;
-
-    #[ORM\Column(length: 3)]
-    private ?string $typeAnswer = null;
-
-    #[ORM\Column(type: Types::JSON)]
-    private array $contentAnswerJSON = [];
 
     #[ORM\ManyToOne(inversedBy: 'puzzles')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Hunt $hunt = null;
+    #[Groups(['puzzle:read', 'puzzle:write'])]
+    private ?Hunt $Hunt = null;
 
     /**
      * @var Collection<int, HasStarted>
      */
     #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'puzzle')]
+    #[Groups(['puzzle:read'])]
     private Collection $hasStarteds;
 
     /**
-     * @var Collection<int, UserAnswer>
+     * @var Collection<int, PuzzleAnswer>
      */
-    #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'puzzle', orphanRemoval: true)]
-    private Collection $userAnswers;
+    #[ORM\OneToMany(targetEntity: PuzzleAnswer::class, mappedBy: 'puzzle', cascade: ['persist', 'remove'])]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
+    private Collection $answers;
 
     public function __construct()
     {
         $this->hasStarteds = new ArrayCollection();
-        $this->userAnswers = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -82,14 +112,14 @@ class Puzzle
         return $this;
     }
 
-    public function getMedia(): ?string
+    public function getContent(): ?string
     {
-        return $this->media;
+        return $this->content;
     }
 
-    public function setMedia(string $media): static
+    public function setContent(string $content): static
     {
-        $this->media = $media;
+        $this->content = $content;
 
         return $this;
     }
@@ -144,12 +174,12 @@ class Puzzle
 
     public function getHunt(): ?Hunt
     {
-        return $this->hunt;
+        return $this->Hunt;
     }
 
-    public function setHunt(?Hunt $hunt): static
+    public function setHunt(?Hunt $Hunt): static
     {
-        $this->hunt = $hunt;
+        $this->Hunt = $Hunt;
 
         return $this;
     }
@@ -184,68 +214,28 @@ class Puzzle
         return $this;
     }
 
-    /**
-     * @return Collection<int, UserAnswer>
-     */
-    public function getUserAnswers(): Collection
+    public function getAnswers(): Collection
     {
-        return $this->userAnswers;
+        return $this->answers;
     }
 
-    public function addUserAnswer(UserAnswer $userAnswer): static
+    public function addAnswer(PuzzleAnswer $answer): static
     {
-        if (!$this->userAnswers->contains($userAnswer)) {
-            $this->userAnswers->add($userAnswer);
-            $userAnswer->setPuzzle($this);
+        if (!$this->answers->contains($answer)) {
+            $this->answers->add($answer);
+            $answer->setPuzzle($this);
         }
 
         return $this;
     }
 
-    public function removeUserAnswer(UserAnswer $userAnswer): static
+    public function removeAnswer(PuzzleAnswer $answer): static
     {
-        if ($this->userAnswers->removeElement($userAnswer)) {
-            // set the owning side to null (unless already changed)
-            if ($userAnswer->getPuzzle() === $this) {
-                $userAnswer->setPuzzle(null);
+        if ($this->answers->removeElement($answer)) {
+            if ($answer->getPuzzle() === $this) {
+                $answer->setPuzzle(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getQuestion(): ?string
-    {
-        return $this->question;
-    }
-
-    public function setQuestion(string $question): static
-    {
-        $this->question = $question;
-
-        return $this;
-    }
-
-    public function getTypeAnswer(): ?string
-    {
-        return $this->typeAnswer;
-    }
-
-    public function setTypeAnswer(string $typeAnswer): static
-    {
-        $this->typeAnswer = $typeAnswer;
-
-        return $this;
-    }
-
-    public function getContentAnswerJSON(): array
-    {
-        return $this->contentAnswerJSON;
-    }
-
-    public function setContentAnswerJSON(array $contentAnswerJSON): static
-    {
-        $this->contentAnswerJSON = $contentAnswerJSON;
 
         return $this;
     }
