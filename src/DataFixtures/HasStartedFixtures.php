@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\HasStarted;
 use App\Factory\HasStartedFactory;
 use App\Factory\PuzzleFactory;
 use App\Factory\UserFactory;
@@ -20,10 +21,29 @@ class HasStartedFixtures extends Fixture implements DependentFixtureInterface
             return;
         }
 
-        foreach ($users as $user) {
-            $startedPuzzles = $this->getRandomElements($puzzles, rand(1, 5));
+        $playerUsers = array_filter($users, function ($u) {
+            return is_object($u) && method_exists($u, 'getRoles') && in_array('PLAYER', $u->getRoles(), true);
+        });
+
+        if (empty($playerUsers)) {
+            return;
+        }
+
+        foreach ($playerUsers as $user) {
+            $count = rand(1, min(5, count($puzzles)));
+            $startedPuzzles = $this->getRandomElements($puzzles, $count);
 
             foreach ($startedPuzzles as $puzzle) {
+                $exists = $manager->getRepository(HasStarted::class)->findOneBy([
+                    'player' => $user,
+                    'puzzle' => $puzzle,
+                ]);
+
+                if ($exists) {
+                    // déjà présent, on saute
+                    continue;
+                }
+
                 HasStartedFactory::createOne([
                     'player' => $user,
                     'puzzle' => $puzzle,
