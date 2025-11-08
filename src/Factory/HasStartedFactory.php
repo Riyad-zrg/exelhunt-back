@@ -10,15 +10,6 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
  */
 final class HasStartedFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-    }
-
     public static function class(): string
     {
         return HasStarted::class;
@@ -45,10 +36,26 @@ final class HasStartedFactory extends PersistentProxyObjectFactory
     {
         return $this
             ->afterInstantiate(function (HasStarted $hasStarted): void {
-                if (!$hasStarted->getStartedAt() instanceof \DateTimeImmutable) {
-                    $hasStarted->setStartedAt(
-                        new \DateTimeImmutable($hasStarted->getStartedAt()->format('Y-m-d H:i:s'))
+                $puzzle = $hasStarted->getPuzzle();
+
+                $earliest = new \DateTimeImmutable('-30 days');
+                if ($puzzle && $puzzle->getHunt() && $puzzle->getHunt()->getCreatedAt() instanceof \DateTimeInterface) {
+                    $earliest = \DateTimeImmutable::createFromMutable(
+                        \DateTime::createFromFormat('Y-m-d H:i:s', $puzzle->getHunt()->getCreatedAt()->format('Y-m-d H:i:s'))
                     );
+                }
+
+                $startedAt = $hasStarted->getStartedAt();
+
+                if (!($startedAt instanceof \DateTimeImmutable) || $startedAt < $earliest) {
+                    $startTs = $earliest->getTimestamp();
+                    $endTs = (new \DateTimeImmutable('now'))->getTimestamp();
+                    if ($startTs > $endTs) {
+                        $startTs = $endTs;
+                    }
+
+                    $randomTs = random_int((int) $startTs, (int) $endTs);
+                    $hasStarted->setStartedAt((new \DateTimeImmutable())->setTimestamp($randomTs));
                 }
             });
     }
