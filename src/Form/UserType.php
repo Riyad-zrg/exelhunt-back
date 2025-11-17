@@ -21,21 +21,21 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nickname', TextType::class, ['label' => 'Pseudo', 'required' => true, 'attr' => ['placeholder' => 'VixSky'], 'constraints' => [
+            ->add('nickname', TextType::class, ['label' => 'Pseudo', 'required' => true, 'attr' => ['placeholder' => 'MickeyMouse'], 'constraints' => [
                 new Assert\NotBlank([
                     'message' => 'Le\'pseudonyme est obligatoire.',
                 ]), ]])
-            ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom', 'attr' => ['placeholder' => 'Jean'], 'constraints' => [
+            ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom', 'attr' => ['placeholder' => 'Mickey'], 'constraints' => [
                 new Assert\NotBlank([
                     'message' => 'Le prénom est obligatoire.',
                 ]), ]])
-            ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom', 'attr' => ['placeholder' => 'Dupont'], 'constraints' => [
+            ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom', 'attr' => ['placeholder' => 'Mouse'], 'constraints' => [
                 new Assert\NotBlank([
                     'message' => 'Le nom est obligatoire.',
                 ]), ]])
             ->add('email', EmailType::class, ['required' => true, 'label' => 'Email',
                 'attr' => [
-                    'placeholder' => 'jean.dupont@gmail.com',
+                    'placeholder' => 'mickey.mouse@gmail.com',
                     'autocomplete' => 'off'],
                 'constraints' => [
                     new Assert\NotBlank([
@@ -62,7 +62,7 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('biography', TextareaType::class, ['required' => false, 'label' => 'Biographie', 'attr' => ['placeholder' => 'Parlez-nous un peu de vous...']])
+            ->add('biography', TextareaType::class, ['required' => false, 'label' => 'Biographie', 'attr' => ['placeholder' => 'Parle-nous un peu de toi...']])
             ->add('Address', AddressType::class, [
                 'required' => true,
             ])
