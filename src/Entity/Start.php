@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\HasStartedRepository;
+use App\Repository\StartRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-#[ORM\Entity(repositoryClass: HasStartedRepository::class)]
-class HasStarted
+#[ORM\Entity(repositoryClass: StartRepository::class)]
+class Start
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,7 +23,7 @@ class HasStarted
     #[ORM\JoinColumn(nullable: false)]
     private ?User $player = null;
 
-    #[ORM\ManyToOne(inversedBy: 'hasStarteds')]
+    #[ORM\ManyToOne(inversedBy: 'starts')]
     private ?Puzzle $puzzle = null;
 
     public function getId(): ?int

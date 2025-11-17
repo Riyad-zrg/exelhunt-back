@@ -10,10 +10,7 @@ class AddressFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
-        AddressFactory::createMany(100);
-
+        AddressFactory::createMany(50);
         $manager->flush();
     }
 }

@@ -16,7 +16,7 @@ class UserAnswer
     private ?int $id = null;
 
     #[ORM\Column(type: Types::JSON)]
-    private array $contentAnswerJSON = [];
+    private array $answerContent = [];
 
     #[ORM\Column]
     private ?bool $isCorrect = null;
@@ -62,14 +62,14 @@ class UserAnswer
         return $this;
     }
 
-    public function getContentAnswerJSON(): array
+    public function getAnswerContent(): array
     {
-        return $this->contentAnswerJSON;
+        return $this->answerContent;
     }
 
-    public function setContentAnswerJSON(array $contentAnswerJSON): static
+    public function setAnswerContent(array $answerContent): static
     {
-        $this->contentAnswerJSON = $contentAnswerJSON;
+        $this->answerContent = $answerContent;
 
         return $this;
     }

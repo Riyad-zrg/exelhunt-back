@@ -17,7 +17,7 @@ class TeamPlayer extends Team
     #[ORM\Column]
     private ?bool $isPublic = null;
 
-    #[ORM\OneToOne(inversedBy: 'teamPlayer', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'teamPlayer', cascade: ['persist', 'remove'])]
     private ?Code $code = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
@@ -33,7 +33,7 @@ class TeamPlayer extends Team
     private Collection $participation;
 
     #[ORM\ManyToOne(inversedBy: 'teamPlayers')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Hunt $hunt = null;
 
     public function __construct()

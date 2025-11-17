@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\HasStarted;
+use App\Entity\Start;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<HasStarted>
+ * @extends ServiceEntityRepository<Start>
  */
-class HasStartedRepository extends ServiceEntityRepository
+class StartRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, HasStarted::class);
+        parent::__construct($registry, Start::class);
     }
 
     //    /**
-    //     * @return HasStarted[] Returns an array of HasStarted objects
+    //     * @return Start[] Returns an array of Start objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class HasStartedRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?HasStarted
+    //    public function findOneBySomeField($value): ?Start
     //    {
     //        return $this->createQueryBuilder('h')
     //            ->andWhere('h.exampleField = :val')

@@ -10,9 +10,44 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
-        UserFactory::createMany(100);
+        UserFactory::new()->createOne([
+            'nickname' => 'admin',
+            'password' => 'admin_password',
+            'roles' => ['ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_PLAYER', 'ROLE_CONCEPTOR', 'ROLE_USER'],
+            'firstname' => 'Super',
+            'lastname' => 'Admin',
+            'email' => 'admin@example.local',
+        ]);
+
+        UserFactory::createMany(3, function () {
+            return [
+                'roles' => ['ROLE_STAFF', 'ROLE_PLAYER', 'ROLE_CONCEPTOR', 'ROLE_USER'],
+            ];
+        });
+
+        UserFactory::createMany(10, function () {
+            return [
+                'roles' => ['ROLE_CONCEPTOR', 'ROLE_PLAYER', 'ROLE_USER'],
+            ];
+        });
+
+        UserFactory::createMany(30, function () {
+            return [
+                'roles' => ['ROLE_PLAYER', 'ROLE_USER'],
+            ];
+        });
+
+        UserFactory::createMany(6, function () {
+            return [
+                'roles' => ['ROLE_GUEST'],
+                'firstname' => null,
+                'lastname' => null,
+                'email' => null,
+                'biography' => null,
+                'address' => null,
+            ];
+        });
+
         $manager->flush();
     }
 }

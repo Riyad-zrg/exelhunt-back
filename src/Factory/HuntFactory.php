@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\Hunt;
+use Faker\Factory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -10,15 +11,6 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
  */
 final class HuntFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-    }
-
     public static function class(): string
     {
         return Hunt::class;
@@ -31,17 +23,40 @@ final class HuntFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
-        $faker = \Faker\Factory::create('fr_FR');
+        $faker = Factory::create('fr_FR');
+
+        $avatarPath = __DIR__.'/../DataFixtures/img/huntDefault.png';
+        $avatarData = is_readable($avatarPath) ? base64_encode(file_get_contents($avatarPath)) : '';
+
+        $visibility = $faker->randomElement(
+            array_merge(
+                array_fill(0, 60, 'PUBLIC'),
+                array_fill(0, 30, 'PRIVATE'),
+                ['DEVELOPMENT', 'CLOSED']
+            )
+        );
+
+        $nbPlayers = $faker->numberBetween(1, 20);
+
+        $createdAt = \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-50 days', 'now'));
+
+        $updatedAt = $faker->boolean(20) ? $faker->dateTimeBetween($createdAt->format('Y-m-d H:i:s'), 'now') : null;
+
+        $isTeamPlayable = $nbPlayers >= 2 && $faker->boolean(30);
+        $teamPlayerMax = $isTeamPlayable ? $faker->numberBetween(2, min(10, $nbPlayers)) : null;
 
         return [
-            'avatar' => base64_encode(file_get_contents(__DIR__.'/../DataFixtures/img/huntIcon.jpg')),
-            'createdAt' => \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-50 days', 'now')),
-            'description' => self::faker()->text(500),
+            'avatar' => $avatarData,
+            'createdAt' => $createdAt,
+            'updatedAt' => $updatedAt,
+            'description' => self::faker()->realText(300),
             'location' => AddressFactory::new(),
-            'nbPlayers' => self::faker()->randomNumber(3, false),
+            'nbPlayers' => $nbPlayers,
             'title' => self::faker()->sentence(3, true),
-            'visibility' => self::faker()->randomElement(['PUBLIC', 'PRIVATE', 'DEVELOPMENT', 'CLOSED']),
-            'createdBy' => TeamFactory::new(),
+            'visibility' => $visibility,
+            'createdBy' => TeamCreatorFactory::new(),
+            'isTeamPlayable' => $isTeamPlayable,
+            'teamPlayerMax' => $teamPlayerMax,
         ];
     }
 

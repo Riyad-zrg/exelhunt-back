@@ -2,18 +2,15 @@
 
 namespace App\DataFixtures;
 
-use App\Factory\TeamFactory;
+use App\Factory\TeamCreatorFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class TeamFixtures extends Fixture
+class TeamCreatorFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
-        TeamFactory::createMany(100);
-
+        TeamCreatorFactory::createMany(20);
         $manager->flush();
     }
 }

@@ -10,41 +10,45 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
  */
 final class ParticipationFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-    }
-
     public static function class(): string
     {
         return Participation::class;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function defaults(): array|callable
     {
+        $faker = self::faker();
+
         $hunt = HuntFactory::randomOrCreate();
         $player = UserFactory::randomOrCreate();
-        $puzzles = $hunt->getPuzzles()->toArray();
-        $tracking = null;
-        if (!empty($puzzles)) {
-            $randomPuzzle = self::faker()->randomElement($puzzles);
-            $tracking = 'Puzzle_'.$randomPuzzle->getId();
+
+        $pool = array_merge(
+            array_fill(0, 25, 'pending'),
+            array_fill(0, 40, 'in_progress'),
+            array_fill(0, 14, 'paused'),
+            array_fill(0, 15, 'done'),
+            array_fill(0, 4, 'aborted'),
+            array_fill(0, 2, 'disqualified')
+        );
+        $tracking = $faker->randomElement($pool);
+
+        $teamPlayer = null;
+        if ($faker->boolean(30) && $hunt->_real()->isTeamPlayable()) {
+            $teamPlayer = TeamPlayerFactory::randomOrCreate(['hunt' => $hunt])->_real();
+        }
+
+        $globalTime = null;
+        if ('pending' !== $tracking) {
+            $minutes = rand(5, 180);
+            $globalTime = (new \DateTime())->setTime(0, $minutes, rand(0, 59));
         }
 
         return [
             'hunt' => $hunt,
             'player' => $player,
-            'tracking' => $tracking ?? 'start',
-            'globalTime' => null,
+            'tracking' => $tracking,
+            'globalTime' => $globalTime,
+            'teamPlayer' => $teamPlayer,
         ];
     }
 
@@ -52,9 +56,6 @@ final class ParticipationFactory extends PersistentProxyObjectFactory
     {
         return $this
             ->afterInstantiate(function (Participation $participation): void {
-                if (self::faker()->boolean(20)) {
-                    $participation->setGlobalTime(self::faker()->dateTimeBetween('-2 hours', 'now'));
-                }
             });
     }
 }

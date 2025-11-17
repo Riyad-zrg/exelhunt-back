@@ -11,7 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -59,9 +59,9 @@ class User
     private Collection $participations;
 
     /**
-     * @var Collection<int, HasStarted>
+     * @var Collection<int, Start>
      */
-    #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'player')]
+    #[ORM\OneToMany(targetEntity: Start::class, mappedBy: 'player')]
     private Collection $startPuzzle;
 
     /**
@@ -70,7 +70,7 @@ class User
     #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'player')]
     private Collection $userAnswers;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Address::class, cascade: ['persist'], inversedBy: 'users')]
     private ?Address $address = null;
 
     public function __construct()
@@ -255,14 +255,14 @@ class User
     }
 
     /**
-     * @return Collection<int, HasStarted>
+     * @return Collection<int, Start>
      */
     public function getStartPuzzle(): Collection
     {
         return $this->startPuzzle;
     }
 
-    public function addStartPuzzle(HasStarted $startPuzzle): static
+    public function addStartPuzzle(Start $startPuzzle): static
     {
         if (!$this->startPuzzle->contains($startPuzzle)) {
             $this->startPuzzle->add($startPuzzle);
@@ -272,7 +272,7 @@ class User
         return $this;
     }
 
-    public function removeStartPuzzle(HasStarted $startPuzzle): static
+    public function removeStartPuzzle(Start $startPuzzle): static
     {
         if ($this->startPuzzle->removeElement($startPuzzle)) {
             // set the owning side to null (unless already changed)
