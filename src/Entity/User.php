@@ -69,7 +69,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[Groups(['user:read', 'user:write'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $avatar = null;
 
