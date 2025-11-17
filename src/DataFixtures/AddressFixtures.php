@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Factory\HuntFactory;
+use App\Factory\AddressFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -10,7 +10,7 @@ class AddressFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        HuntFactory::createMany(3);
+        AddressFactory::createMany(50);
         $manager->flush();
     }
 }
