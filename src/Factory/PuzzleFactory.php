@@ -27,13 +27,10 @@ final class PuzzleFactory extends PersistentProxyObjectFactory
         $type = $faker->randomElement(['QRO', 'QCM', 'QR', 'GPS']);
 
         $question = match ($type) {
-            'QRO' => $faker->sentence(8, true),
-            'QCM' => $faker->sentence(8, true),
             'QR' => 'Scannez le QR code spécifique à cet emplacement pour valider cette étape.',
             'GPS' => 'Rendez-vous à l\'emplacement indiqué et entrez dans le périmètre pour valider cette étape.',
+            default => $faker->sentence(8, true),
         };
-
-        $content = [];
 
         if ('QCM' === $type) {
             $numOptions = $faker->numberBetween(3, 5);
@@ -41,7 +38,7 @@ final class PuzzleFactory extends PersistentProxyObjectFactory
             for ($i = 0; $i < $numOptions; ++$i) {
                 $options[] = $faker->sentence(3, true);
             }
-            $correctCount = $faker->boolean(80) ? 1 : $faker->numberBetween(1, min(2, $numOptions));
+            $correctCount = $faker->boolean(60) ? $faker->numberBetween(2, min(3, $numOptions)) : 1;
             $correctIndices = $faker->randomElements(range(0, $numOptions - 1), $correctCount);
 
             $content = [
@@ -61,8 +58,8 @@ final class PuzzleFactory extends PersistentProxyObjectFactory
                 'code' => 'QR-'.strtoupper($faker->bothify('??-#####')),
             ];
         } else { // GPS
-            $lat = $faker->latitude(43, 50);
-            $lng = $faker->longitude(-1, 7);
+            $lat = $faker->randomFloat(6, 43, 50);
+            $lng = $faker->randomFloat(6, -1, 7);
             $content = [
                 'lat' => (float) $lat,
                 'lng' => (float) $lng,
@@ -70,18 +67,19 @@ final class PuzzleFactory extends PersistentProxyObjectFactory
             ];
         }
 
-        $defaultPath = __DIR__.'/../DataFixtures/img/puzzleDefault.png';
-        if (is_readable($defaultPath)) {
-            $mediaData = base64_encode(file_get_contents($defaultPath));
-        } else {
-            $mediaData = '';
+        $mediaData = null;
+        if ($faker->boolean(40)) {
+            $defaultPath = __DIR__.'/../DataFixtures/img/puzzleDefault.png';
+            if (is_readable($defaultPath)) {
+                $mediaData = base64_encode(file_get_contents($defaultPath));
+            }
         }
 
         return [
             'title' => ucfirst($faker->words(3, true)),
             'question' => $question,
             'typeAnswer' => $type,
-            'contentAnswerJSON' => $content,
+            'answerContent' => $content,
             'hint' => $faker->boolean(60) ? $faker->sentence(8) : null,
             'timeLimit' => $faker->boolean(40) ? (new \DateTime())->setTime(0, $faker->numberBetween(1, 60)) : null,
             'malus' => $faker->boolean(30) ? (new \DateTime())->setTime(0, $faker->numberBetween(1, 30)) : null,
@@ -97,8 +95,14 @@ final class PuzzleFactory extends PersistentProxyObjectFactory
             ->afterInstantiate(function (Puzzle $puzzle): void {
                 $hunt = $puzzle->getHunt();
                 if ($hunt) {
-                    $index = count($hunt->getPuzzles()) + 1;
-                    $puzzle->setIndex($index);
+                    $existingPuzzles = $hunt->getPuzzles()->toArray();
+                    $maxIndex = 0;
+                    foreach ($existingPuzzles as $p) {
+                        if ($p !== $puzzle && $p->getIndex() > $maxIndex) {
+                            $maxIndex = $p->getIndex();
+                        }
+                    }
+                    $puzzle->setIndex($maxIndex + 1);
                 }
             });
     }
