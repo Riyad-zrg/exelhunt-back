@@ -27,12 +27,30 @@ final class TeamPlayerFactory extends PersistentProxyObjectFactory
         $avatarPath = __DIR__.'/../DataFixtures/img/teamDefault.png';
         $avatarData = is_readable($avatarPath) ? base64_encode(file_get_contents($avatarPath)) : '';
 
+        $teamGlobalTime = null;
+        $averageGlobalTime = null;
+
+        if ($faker->boolean(60)) {
+            $minutes = $faker->numberBetween(30, 300);
+            $teamGlobalTime = (new \DateTime())->setTime(0, $minutes);
+
+            $nbPlayers = $faker->numberBetween(1, 4);
+            $averageMinutes = (int) ($minutes / max(1, $nbPlayers));
+            $averageGlobalTime = (new \DateTime())->setTime(0, $averageMinutes);
+        }
+
         return [
-            'name' => ucfirst($faker->words(2, true)).' Team',
+            'name' => (function () use ($faker) {
+                $n = ucfirst($faker->words(2, true)).' Team';
+
+                return mb_strlen($n) > 30 ? mb_substr($n, 0, 30) : $n;
+            })(),
             'avatar' => $avatarData,
-            'hunt' => null,
+            'hunt' => HuntFactory::random(),
             'isPublic' => $faker->boolean(70),
-            'nbPlayers' => $faker->numberBetween(1, 4),
+            'nbPlayers' => $nbPlayers ?? $faker->numberBetween(1, 4),
+            'teamGlobalTime' => $teamGlobalTime,
+            'averageGlobalTime' => $averageGlobalTime,
         ];
     }
 
@@ -51,29 +69,6 @@ final class TeamPlayerFactory extends PersistentProxyObjectFactory
                     $teamPlayer->setNbPlayers($nb);
                 } else {
                     $teamPlayer->setNbPlayers(max(1, $teamPlayer->getNbPlayers() ?? 1));
-                }
-
-                if (false === $teamPlayer->isPublic() && class_exists(CodeFactory::class)) {
-                    $reference = null;
-                    if (method_exists($teamPlayer, 'getCreatedAt') && null !== $teamPlayer->getCreatedAt()) {
-                        $reference = $teamPlayer->getCreatedAt();
-                    } elseif (null !== $hunt && method_exists($hunt, 'getCreatedAt') && null !== $hunt->getCreatedAt()) {
-                        $reference = $hunt->getCreatedAt();
-                    }
-
-                    if ($reference instanceof \DateTimeInterface) {
-                        $seconds = random_int(1, 3600);
-                        if ($reference instanceof \DateTimeImmutable) {
-                            $createdAt = $reference->modify('+'.$seconds.' seconds');
-                        } else {
-                            $createdAt = \DateTimeImmutable::createFromMutable($reference)->modify('+'.$seconds.' seconds');
-                        }
-                    } else {
-                        $createdAt = new \DateTimeImmutable();
-                    }
-
-                    $code = CodeFactory::createOne(['createdAt' => $createdAt])->object();
-                    $teamPlayer->setCode($code);
                 }
             })
         ;
