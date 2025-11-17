@@ -43,7 +43,7 @@ final class HuntFactory extends PersistentProxyObjectFactory
         $updatedAt = $faker->boolean(20) ? $faker->dateTimeBetween($createdAt->format('Y-m-d H:i:s'), 'now') : null;
 
         $isTeamPlayable = $nbPlayers >= 2 && $faker->boolean(30);
-        $teamPlayerMax = $isTeamPlayable ? $faker->numberBetween(2, max(2, min(10, $nbPlayers))) : null;
+        $teamPlayerMax = $isTeamPlayable ? $faker->numberBetween(2, min(10, $nbPlayers)) : null;
 
         return [
             'avatar' => $avatarData,
