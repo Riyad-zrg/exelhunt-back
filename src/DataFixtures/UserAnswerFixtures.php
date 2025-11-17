@@ -14,16 +14,14 @@ class UserAnswerFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $puzzles = PuzzleFactory::all();
-        $users = UserFactory::all();
+        $puzzles = array_map(fn ($proxy) => $proxy->_real(), PuzzleFactory::all());
+        $users = array_map(fn ($proxy) => $proxy->_real(), UserFactory::all());
 
         if (empty($puzzles) || empty($users)) {
             return;
         }
 
-        $globalPlayerUsers = array_filter($users, function ($u) {
-            return is_object($u) && method_exists($u, 'getRoles') && in_array('PLAYER', $u->getRoles(), true);
-        });
+        $globalPlayerUsers = array_filter($users, fn ($u) => in_array('ROLE_PLAYER', $u->getRoles(), true));
 
         foreach ($puzzles as $puzzle) {
             $hunt = $puzzle->getHunt();
@@ -31,7 +29,7 @@ class UserAnswerFixtures extends Fixture implements DependentFixtureInterface
             if ($hunt) {
                 $parts = $manager->getRepository(\App\Entity\Participation::class)->findBy(['hunt' => $hunt]);
                 foreach ($parts as $part) {
-                    if (method_exists($part, 'getPlayer') && $part->getPlayer()) {
+                    if ($part->getPlayer()) {
                         $participants[] = $part->getPlayer();
                     }
                 }
