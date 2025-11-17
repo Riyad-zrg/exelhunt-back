@@ -40,7 +40,11 @@ final class TeamCreatorFactory extends PersistentProxyObjectFactory
         }
 
         return [
-            'name' => self::faker()->company(),
+            'name' => (function () {
+                $n = self::faker()->company();
+
+                return mb_strlen($n) > 30 ? mb_substr($n, 0, 30) : $n;
+            })(),
             'avatar' => $avatarData,
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 years', 'now')),
         ];
