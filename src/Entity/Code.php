@@ -6,8 +6,11 @@ use App\Repository\CodeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: CodeRepository::class)]
+#[Assert\Callback([Code::class, 'validateRelation'])]
 class Code
 {
     #[ORM\Id]
@@ -26,11 +29,12 @@ class Code
     #[Gedmo\Timestampable]
     private ?\DateTime $expireAt = null;
 
-    #[ORM\OneToOne(inversedBy: 'code')]
+    #[ORM\OneToOne(inversedBy: 'code', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?Hunt $hunt = null;
 
-    #[ORM\OneToOne(mappedBy: 'code', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'code', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
     private ?TeamPlayer $teamPlayer = null;
 
     public function getId(): ?int
@@ -81,6 +85,21 @@ class Code
 
     public function setHunt(?Hunt $hunt): static
     {
+        // If setting a hunt, clear teamPlayer to respect XOR constraint
+        if (null !== $hunt && null !== $this->teamPlayer) {
+            $this->setTeamPlayer(null);
+        }
+
+        // unset the owning side of the relation if necessary
+        if (null === $hunt && null !== $this->hunt) {
+            $this->hunt->setCode(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if (null !== $hunt && $hunt->getCode() !== $this) {
+            $hunt->setCode($this);
+        }
+
         $this->hunt = $hunt;
 
         return $this;
@@ -93,6 +112,11 @@ class Code
 
     public function setTeamPlayer(?TeamPlayer $teamPlayer): static
     {
+        // If setting a teamPlayer, clear hunt to respect XOR constraint
+        if (null !== $teamPlayer && null !== $this->hunt) {
+            $this->setHunt(null);
+        }
+
         // unset the owning side of the relation if necessary
         if (null === $teamPlayer && null !== $this->teamPlayer) {
             $this->teamPlayer->setCode(null);
@@ -106,5 +130,26 @@ class Code
         $this->teamPlayer = $teamPlayer;
 
         return $this;
+    }
+
+    /**
+     * Validation callback to ensure a Code is associated with either a Hunt or a TeamPlayer, but not both or none.
+     */
+    public static function validateRelation(Code $code, ExecutionContextInterface $context): void
+    {
+        $hasHunt = null !== $code->getHunt();
+        $hasTeamPlayer = null !== $code->getTeamPlayer();
+
+        if (!$hasHunt && !$hasTeamPlayer) {
+            $context->buildViolation('A code must be associated with either a hunt or a team player.')
+                ->atPath('hunt')
+                ->addViolation();
+        }
+
+        if ($hasHunt && $hasTeamPlayer) {
+            $context->buildViolation('A code cannot be associated with both a hunt and a team player.')
+                ->atPath('teamPlayer')
+                ->addViolation();
+        }
     }
 }
