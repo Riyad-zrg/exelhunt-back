@@ -18,6 +18,7 @@ final class AddressFactory extends PersistentProxyObjectFactory
      */
     public function __construct()
     {
+        parent::__construct();
     }
 
     public static function class(): string
@@ -62,6 +63,18 @@ final class AddressFactory extends PersistentProxyObjectFactory
         if (mb_strlen($street) > 100) {
             $street = mb_substr($street, 0, 100);
         }
+
+        $normalize = function (string $s): string {
+            $s = preg_replace('/\s+/u', ' ', $s) ?? $s;
+            $s = trim($s);
+
+            return preg_replace('/[\x00-\x1F\x7F]/u', '', $s) ?? $s;
+        };
+
+        $city = $normalize($city);
+        $country = $normalize($country);
+        $postCode = $normalize($postCode);
+        $street = $normalize($street);
 
         if (mb_strlen($city) > 50) {
             $city = mb_substr($city, 0, 50);
