@@ -41,17 +41,17 @@ class Puzzle
     private ?string $typeAnswer = null;
 
     #[ORM\Column(type: Types::JSON)]
-    private array $contentAnswerJSON = [];
+    private array $answerContent = [];
 
     #[ORM\ManyToOne(inversedBy: 'puzzles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Hunt $hunt = null;
 
     /**
-     * @var Collection<int, HasStarted>
+     * @var Collection<int, Start>
      */
-    #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'puzzle')]
-    private Collection $hasStarteds;
+    #[ORM\OneToMany(targetEntity: Start::class, mappedBy: 'puzzle')]
+    private Collection $starts;
 
     /**
      * @var Collection<int, UserAnswer>
@@ -61,7 +61,7 @@ class Puzzle
 
     public function __construct()
     {
-        $this->hasStarteds = new ArrayCollection();
+        $this->starts = new ArrayCollection();
         $this->userAnswers = new ArrayCollection();
     }
 
@@ -87,7 +87,7 @@ class Puzzle
         return $this->media;
     }
 
-    public function setMedia(string $media): static
+    public function setMedia(?string $media): static
     {
         $this->media = $media;
 
@@ -155,29 +155,29 @@ class Puzzle
     }
 
     /**
-     * @return Collection<int, HasStarted>
+     * @return Collection<int, Start>
      */
-    public function getHasStarteds(): Collection
+    public function getStarts(): Collection
     {
-        return $this->hasStarteds;
+        return $this->starts;
     }
 
-    public function addHasStarted(HasStarted $hasStarted): static
+    public function addStart(Start $start): static
     {
-        if (!$this->hasStarteds->contains($hasStarted)) {
-            $this->hasStarteds->add($hasStarted);
-            $hasStarted->setPuzzle($this);
+        if (!$this->starts->contains($start)) {
+            $this->starts->add($start);
+            $start->setPuzzle($this);
         }
 
         return $this;
     }
 
-    public function removeHasStarted(HasStarted $hasStarted): static
+    public function removeStart(Start $start): static
     {
-        if ($this->hasStarteds->removeElement($hasStarted)) {
+        if ($this->starts->removeElement($start)) {
             // set the owning side to null (unless already changed)
-            if ($hasStarted->getPuzzle() === $this) {
-                $hasStarted->setPuzzle(null);
+            if ($start->getPuzzle() === $this) {
+                $start->setPuzzle(null);
             }
         }
 
@@ -238,14 +238,14 @@ class Puzzle
         return $this;
     }
 
-    public function getContentAnswerJSON(): array
+    public function getAnswerContent(): array
     {
-        return $this->contentAnswerJSON;
+        return $this->answerContent;
     }
 
-    public function setContentAnswerJSON(array $contentAnswerJSON): static
+    public function setAnswerContent(array $answerContent): static
     {
-        $this->contentAnswerJSON = $contentAnswerJSON;
+        $this->answerContent = $answerContent;
 
         return $this;
     }
