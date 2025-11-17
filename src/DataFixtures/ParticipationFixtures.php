@@ -47,13 +47,15 @@ class ParticipationFixtures extends Fixture implements DependentFixtureInterface
                     'tracking' => $tracking,
                 ];
 
-                if (class_exists(TeamPlayerFactory::class) && rand(1, 100) <= 35) {
+                if (class_exists(TeamPlayerFactory::class) && $hunt->isTeamPlayable() && rand(1, 100) <= 35) {
                     $data['teamPlayer'] = TeamPlayerFactory::randomOrCreate(['hunt' => $hunt])->_real();
                 }
 
-                $puzzles = $hunt->getPuzzles()->toArray();
-                if (!empty($puzzles) && rand(1, 100) <= 60) {
-                    $data['globalTime'] = new \DateTime(sprintf('-%d minutes', rand(5, 180)));
+                if ('pending' !== $tracking) {
+                    $minutes = rand(5, 180);
+                    $data['globalTime'] = (new \DateTime())->setTime(0, $minutes, rand(0, 59));
+                } else {
+                    $data['globalTime'] = null;
                 }
 
                 ParticipationFactory::createOne($data);
