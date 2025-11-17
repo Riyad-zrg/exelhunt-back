@@ -13,7 +13,7 @@ class UserFixtures extends Fixture
         UserFactory::new()->createOne([
             'nickname' => 'admin',
             'password' => 'admin_password',
-            'roles' => ['ADMIN', 'STAFF', 'PLAYER', 'CONCEPTOR', 'USER'],
+            'roles' => ['ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_PLAYER', 'ROLE_CONCEPTOR', 'ROLE_USER'],
             'firstname' => 'Super',
             'lastname' => 'Admin',
             'email' => 'admin@example.local',
@@ -21,25 +21,25 @@ class UserFixtures extends Fixture
 
         UserFactory::createMany(3, function () {
             return [
-                'roles' => ['STAFF', 'PLAYER', 'CONCEPTOR', 'USER'],
+                'roles' => ['ROLE_STAFF', 'ROLE_PLAYER', 'ROLE_CONCEPTOR', 'ROLE_USER'],
             ];
         });
 
         UserFactory::createMany(10, function () {
             return [
-                'roles' => ['CONCEPTOR', 'PLAYER', 'USER'],
+                'roles' => ['ROLE_CONCEPTOR', 'ROLE_PLAYER', 'ROLE_USER'],
             ];
         });
 
         UserFactory::createMany(30, function () {
             return [
-                'roles' => ['PLAYER', 'USER'],
+                'roles' => ['ROLE_PLAYER', 'ROLE_USER'],
             ];
         });
 
         UserFactory::createMany(6, function () {
             return [
-                'roles' => ['GUEST'],
+                'roles' => ['ROLE_GUEST'],
                 'firstname' => null,
                 'lastname' => null,
                 'email' => null,
