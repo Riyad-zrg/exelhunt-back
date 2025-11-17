@@ -41,7 +41,8 @@
             </div>
 
             {{ form_row(form.biography, {'row_attr': {'class': 'full'}}) }}
-            {{ form_row(form.Address, {'row_attr': {'class': 'full'}, 'label': false}) }}
+            {{ form_row(form.Address, {'row_attr': {'class': 'full address-block'},'label': false}) }}
+
 
             <div class="actions full">
                 {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
