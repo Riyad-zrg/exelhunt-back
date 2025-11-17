@@ -63,7 +63,7 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('biography', TextareaType::class, ['required' => false, 'label' => 'Biographie', 'attr' => ['placeholder' => 'Parle-nous un peu de toi...']])
-            ->add('Address', AddressType::class, [
+            ->add('address', AddressType::class, [
                 'required' => true,
             ])
 

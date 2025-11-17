@@ -117,6 +117,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private Collection $userAnswers;
 
     #[ORM\ManyToOne(targetEntity: Address::class, cascade: ['persist'], inversedBy: 'users')]
+    #[ORM\JoinColumn(name: 'address_id', referencedColumnName: 'id', nullable: true)]
     private ?Address $address = null;
 
     public function __construct()
