@@ -2,55 +2,53 @@
 
 namespace App\DataFixtures;
 
-use App\Factory\HuntFactory;
-use App\Factory\TeamPlayerFactory;
+use App\Entity\TeamPlayer;
 use App\Factory\CodeFactory;
+use App\Factory\HuntFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Random\RandomException;
 
-class CodeFixtures extends Fixture
+class CodeFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
      * @throws RandomException
      */
     public function load(ObjectManager $manager): void
     {
-        $hunts = HuntFactory::createMany(20, function () {
-            $isPlayable = 1 === random_int(0, 1);
+        $teamPlayerRepository = $manager->getRepository(TeamPlayer::class);
+        $allTeamPlayers = $teamPlayerRepository->findAll();
 
-            return [
-                'isTeamPlayable' => $isPlayable,
-                'teamPlayerMax' => $isPlayable ? random_int(2, 8) : null,
-            ];
-        });
-
-        foreach ($hunts as $hunt) {
-            if (!$hunt->isTeamPlayable()) {
-                continue;
+        foreach ($allTeamPlayers as $teamPlayer) {
+            if (random_int(1, 100) <= 70) {
+                CodeFactory::createOne([
+                    'teamPlayer' => $teamPlayer,
+                    'hunt' => null,
+                    'expireAt' => (new \DateTime())->modify('+'.random_int(1, 60).' days'),
+                ]);
             }
+        }
 
-            $max = $hunt->getTeamPlayerMax() ?? 5;
-            $count = random_int(1, min(5, max(1, $max)));
-
-            TeamPlayerFactory::createMany($count, function () use ($hunt) {
-                return [
-                    'hunt' => $hunt,
-                    'isPublic' => (bool) random_int(0, 1),
-                    'nbPlayers' => random_int(1, max(1, $hunt->getNbPlayers() ?? 4)),
-                ];
-            });
-
-            // Dans certains cas, créer un code directement lié à la Hunt (ex: code d'invitation global)
-            if (random_int(1, 100) <= 30) {
+        $allHunts = array_map(fn ($proxy) => $proxy->_real(), HuntFactory::all());
+        foreach ($allHunts as $hunt) {
+            if (random_int(1, 100) <= 50) {
                 CodeFactory::createOne([
                     'hunt' => $hunt,
-                    // expire dans 1 à 60 jours
-                    'expireAt' => (new \DateTime())->modify('+' . random_int(1, 60) . ' days'),
+                    'teamPlayer' => null,
+                    'expireAt' => (new \DateTime())->modify('+'.random_int(1, 60).' days'),
                 ]);
             }
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            HuntFixtures::class,
+            TeamPlayerFixtures::class,
+        ];
     }
 }
