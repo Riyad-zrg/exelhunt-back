@@ -23,7 +23,6 @@ class UserController extends AbstractController
         return $this->render('user/index.html.twig');
     }
 
-
     #[Route('/user/new', name: 'app_user_new')]
     public function new(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): Response
     {
@@ -35,6 +34,12 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                dump($form->getErrors(true, false));
+                exit;
+            }
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $cropped = $request->request->get('avatar_cropped');
             if ($cropped) {

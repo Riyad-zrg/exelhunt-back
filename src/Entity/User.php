@@ -35,7 +35,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[Gedmo\Timestampable]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 30, nullable: true)]
