@@ -24,13 +24,10 @@ final class ParticipationFactory extends PersistentProxyObjectFactory
 
         $pool = array_merge(
             array_fill(0, 25, 'pending'),
-            array_fill(0, 35, 'in_progress'),
-            array_fill(0, 10, 'paused'),
+            array_fill(0, 40, 'in_progress'),
+            array_fill(0, 14, 'paused'),
             array_fill(0, 15, 'done'),
             array_fill(0, 4, 'aborted'),
-            array_fill(0, 4, 'abandoned'),
-            array_fill(0, 3, 'timeout'),
-            array_fill(0, 2, 'blocked'),
             array_fill(0, 2, 'disqualified')
         );
         $tracking = $faker->randomElement($pool);
