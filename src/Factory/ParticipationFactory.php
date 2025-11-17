@@ -36,16 +36,14 @@ final class ParticipationFactory extends PersistentProxyObjectFactory
         $tracking = $faker->randomElement($pool);
 
         $teamPlayer = null;
-        if (class_exists(TeamPlayerFactory::class) && $faker->boolean(30)) {
-            // Fix: Simply use _real() to get the entity from the proxy
+        if ($faker->boolean(30) && $hunt->_real()->isTeamPlayable()) {
             $teamPlayer = TeamPlayerFactory::randomOrCreate(['hunt' => $hunt])->_real();
         }
 
         $globalTime = null;
-        $puzzles = $hunt->getPuzzles()->toArray();
-        if (!empty($puzzles) && $faker->boolean(60)) {
+        if ('pending' !== $tracking) {
             $minutes = rand(5, 180);
-            $globalTime = (new \DateTime())->modify(sprintf('-%d minutes', $minutes));
+            $globalTime = (new \DateTime())->setTime(0, $minutes, rand(0, 59));
         }
 
         return [
