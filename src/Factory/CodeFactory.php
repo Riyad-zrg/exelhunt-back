@@ -24,7 +24,6 @@ final class CodeFactory extends PersistentProxyObjectFactory
         $faker = Factory::create('fr_FR');
 
         $code = $faker->numerify('######');
-
         $createdAt = new \DateTimeImmutable();
         $expireAt = (new \DateTime())->modify('+'.random_int(1, 30).' days +'.random_int(0, 23).' hours');
 
@@ -32,7 +31,8 @@ final class CodeFactory extends PersistentProxyObjectFactory
             'code' => $code,
             'createdAt' => $createdAt,
             'expireAt' => $expireAt,
-            'hunt' => null,
+            'hunt' => HuntFactory::random(),
+            'teamPlayer' => null,
         ];
     }
 
