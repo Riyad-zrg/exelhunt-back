@@ -59,9 +59,9 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private Collection $participations;
 
     /**
-     * @var Collection<int, HasStarted>
+     * @var Collection<int, Start>
      */
-    #[ORM\OneToMany(targetEntity: HasStarted::class, mappedBy: 'player')]
+    #[ORM\OneToMany(targetEntity: Start::class, mappedBy: 'player')]
     private Collection $startPuzzle;
 
     /**
@@ -255,14 +255,14 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     }
 
     /**
-     * @return Collection<int, HasStarted>
+     * @return Collection<int, Start>
      */
     public function getStartPuzzle(): Collection
     {
         return $this->startPuzzle;
     }
 
-    public function addStartPuzzle(HasStarted $startPuzzle): static
+    public function addStartPuzzle(Start $startPuzzle): static
     {
         if (!$this->startPuzzle->contains($startPuzzle)) {
             $this->startPuzzle->add($startPuzzle);
@@ -272,7 +272,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
         return $this;
     }
 
-    public function removeStartPuzzle(HasStarted $startPuzzle): static
+    public function removeStartPuzzle(Start $startPuzzle): static
     {
         if ($this->startPuzzle->removeElement($startPuzzle)) {
             // set the owning side to null (unless already changed)
