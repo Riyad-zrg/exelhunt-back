@@ -156,6 +156,7 @@ applyBtn.addEventListener("click",()=>{
     preview.style.display="block"
     hidden.value=data
     modal.classList.add("hidden")
+    document.getElementById("icon-container").classList.add("icon-hidden")
     label.querySelector(".text").textContent="Modifier l’avatar"
 })
 
