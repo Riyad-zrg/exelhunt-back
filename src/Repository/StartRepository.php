@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Address;
+use App\Entity\Start;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Address>
+ * @extends ServiceEntityRepository<Start>
  */
-class AddressRepository extends ServiceEntityRepository
+class StartRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Address::class);
+        parent::__construct($registry, Start::class);
     }
 
     //    /**
-    //     * @return Address[] Returns an array of Address objects
+    //     * @return Start[] Returns an array of Start objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
+    //        return $this->createQueryBuilder('h')
+    //            ->andWhere('h.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
+    //            ->orderBy('h.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Address
+    //    public function findOneBySomeField($value): ?Start
     //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
+    //        return $this->createQueryBuilder('h')
+    //            ->andWhere('h.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()
