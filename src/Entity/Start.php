@@ -13,15 +13,12 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Repository\HasStartedRepository;
 use App\Repository\StartRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: StartRepository::class)]
-class Start
-#[ORM\Entity(repositoryClass: HasStartedRepository::class)]
 #[ApiResource(
     operations: [
         new Get(),
@@ -37,7 +34,7 @@ class Start
 #[ApiFilter(SearchFilter::class, properties: ['player.id' => 'exact', 'puzzle.id' => 'exact'])]
 #[ApiFilter(DateFilter::class, properties: ['startedAt'])]
 #[ApiFilter(OrderFilter::class, properties: ['startedAt'], arguments: ['orderParameterName' => 'order'])]
-class HasStarted
+class Start
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
