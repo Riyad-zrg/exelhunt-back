@@ -17,6 +17,7 @@ use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\MappedSuperclass;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
@@ -50,7 +51,6 @@ class Team
     #[ORM\Column(length: 5000)]
     #[Groups(['team:read', 'team:write'])]
     private ?string $avatar = null;
-
 
     /**
      * @var Collection<int, Membership>
