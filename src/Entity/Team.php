@@ -51,16 +51,6 @@ class Team
     #[Groups(['team:read', 'team:write'])]
     private ?string $avatar = null;
 
-    #[ORM\Column]
-    #[Groups(['team:read', 'team:write'])]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    /**
-     * @var Collection<int, Hunt>
-     */
-    #[ORM\OneToMany(targetEntity: Hunt::class, mappedBy: 'Team')]
-    #[Groups(['team:read'])]
-    private Collection $hunts;
 
     /**
      * @var Collection<int, Membership>
@@ -100,48 +90,6 @@ class Team
     public function setAvatar(string $avatar): static
     {
         $this->avatar = $avatar;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Hunt>
-     */
-    public function getHunts(): Collection
-    {
-        return $this->hunts;
-    }
-
-    public function addHunt(Hunt $hunt): static
-    {
-        if (!$this->hunts->contains($hunt)) {
-            $this->hunts->add($hunt);
-            $hunt->setTeam($this);
-        }
-
-        return $this;
-    }
-
-    public function removeHunt(Hunt $hunt): static
-    {
-        if ($this->hunts->removeElement($hunt)) {
-            // set the owning side to null (unless already changed)
-            if ($hunt->getTeam() === $this) {
-                $hunt->setTeam(null);
-            }
-        }
 
         return $this;
     }
