@@ -188,4 +188,22 @@ class Address
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        $parts = [];
+
+        if ($this->street) {
+            $parts[] = $this->street;
+        }
+        if ($this->postCode || $this->city) {
+            $parts[] = trim($this->postCode . ' ' . $this->city);
+        }
+        if ($this->country) {
+            $parts[] = $this->country;
+        }
+
+        return implode(', ', $parts) ?: 'Adresse';
+    }
+
 }

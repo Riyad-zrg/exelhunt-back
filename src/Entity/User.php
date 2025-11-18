@@ -18,9 +18,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[UniqueEntity(fields: ['nickname'], message: 'Ce pseudonyme est déjà utilisé.')]
+#[UniqueEntity(fields: ['email'], message: 'Cette adresse email est déjà utilisé.')]
+#[UniqueEntity(fields: ['nickname'], message: 'Ce pseudonyme est déjà utilisé.')]
+#[UniqueEntity(fields: ['email'], message: 'Cette adresse email est déjà utilisé.')]
 #[ApiResource(
     operations: [
         new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
@@ -48,7 +54,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[Groups(['user:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 30, unique: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $nickname = null;
 
@@ -65,7 +71,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[Groups(['user:read', 'user:write'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $avatar = null;
 
@@ -77,7 +83,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[Groups(['user:read', 'user:write'])]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 100, unique: true, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
@@ -113,6 +119,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private Collection $userAnswers;
 
     #[ORM\ManyToOne(targetEntity: Address::class, cascade: ['persist'], inversedBy: 'users')]
+    #[ORM\JoinColumn(name: 'address_id', referencedColumnName: 'id', nullable: true)]
     private ?Address $address = null;
 
     public function __construct()

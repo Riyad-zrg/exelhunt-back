@@ -12,7 +12,7 @@ nav {
     color: #01161E;
     width: 36.3834px;
     height: 50px;
-    font-size: calc(1.375rem + 1.5vw) !important;
+    font-size: calc(1.375rem + 1.5vw);
     display: inline-flex;
     align-items: center;
     justify-content: center;
