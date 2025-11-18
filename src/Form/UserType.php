@@ -21,19 +21,19 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nickname', TextType::class, ['label' => 'Pseudo', 'required' => true, 'attr' => ['placeholder' => 'MickeyMouse'], 'constraints' => [
+            ->add('nickname', TextType::class, ['label' => '*Pseudo', 'required' => true, 'attr' => ['placeholder' => 'MickeyMouse'], 'constraints' => [
                 new Assert\NotBlank([
                     'message' => 'Le\'pseudonyme est obligatoire.',
                 ]), ]])
-            ->add('firstname', TextType::class, ['required' => true, 'label' => 'Prénom', 'attr' => ['placeholder' => 'Mickey'], 'constraints' => [
+            ->add('firstname', TextType::class, ['required' => true, 'label' => '*Prénom', 'attr' => ['placeholder' => 'Mickey'], 'constraints' => [
                 new Assert\NotBlank([
                     'message' => 'Le prénom est obligatoire.',
                 ]), ]])
-            ->add('lastname', TextType::class, ['required' => true, 'label' => 'Nom', 'attr' => ['placeholder' => 'Mouse'], 'constraints' => [
+            ->add('lastname', TextType::class, ['required' => true, 'label' => '*Nom', 'attr' => ['placeholder' => 'Mouse'], 'constraints' => [
                 new Assert\NotBlank([
                     'message' => 'Le nom est obligatoire.',
                 ]), ]])
-            ->add('email', EmailType::class, ['required' => true, 'label' => 'Email',
+            ->add('email', EmailType::class, ['required' => true, 'label' => '*Email',
                 'attr' => [
                     'placeholder' => 'mickey.mouse@gmail.com',
                     'autocomplete' => 'off'],
@@ -71,7 +71,7 @@ class UserType extends AbstractType
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'first_options' => [
-                    'label' => 'Mot de passe',
+                    'label' => '*Mot de passe',
                     'attr' => [
                         'placeholder' => '***********',
                         'autocomplete' => 'new-password',
@@ -87,7 +87,7 @@ class UserType extends AbstractType
                         ]),
                     ],
                 ],
-                'second_options' => ['label' => 'Confirmer le mot de passe', 'attr' => ['placeholder' => '***********', 'autocomplete' => 'new-password']],
+                'second_options' => ['label' => '*Confirmer le mot de passe', 'attr' => ['placeholder' => '***********', 'autocomplete' => 'new-password']],
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
             ])
             ->add('save', SubmitType::class, [
