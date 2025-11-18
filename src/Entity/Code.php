@@ -58,7 +58,6 @@ class Code
 
     #[ORM\OneToOne(inversedBy: 'code', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
-    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['code:read', 'code:write'])]
     private ?Hunt $hunt = null;
 
