@@ -21,7 +21,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 #[ApiResource(
     operations: [
         new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
@@ -41,7 +40,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     'address.country' => 'partial',
 ])]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'nickname'], arguments: ['orderParameterName' => 'order'])]
-class User
+class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -85,10 +84,6 @@ class User
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $biography = null;
-
-    #[ORM\ManyToOne]
-    #[Groups(['user:read', 'user:write'])]
-    private ?Address $Address = null;
 
     /**
      * @var Collection<int, Membership>
@@ -237,18 +232,6 @@ class User
     public function setBiography(?string $biography): static
     {
         $this->biography = $biography;
-
-        return $this;
-    }
-
-    public function getAddress(): ?Address
-    {
-        return $this->Address;
-    }
-
-    public function setAddress(?Address $Address): static
-    {
-        $this->Address = $Address;
 
         return $this;
     }
