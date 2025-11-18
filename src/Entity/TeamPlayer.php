@@ -30,7 +30,7 @@ class TeamPlayer extends Team
      * @var Collection<int, Participation>
      */
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'teamPlayer')]
-    private Collection $participation;
+    private Collection $participations;
 
     #[ORM\ManyToOne(inversedBy: 'teamPlayers')]
     #[ORM\JoinColumn(nullable: true)]
@@ -39,7 +39,7 @@ class TeamPlayer extends Team
     public function __construct()
     {
         parent::__construct();
-        $this->participation = new ArrayCollection();
+        $this->participations = new ArrayCollection();
     }
 
     public function getNbPlayers(): ?int
@@ -105,15 +105,15 @@ class TeamPlayer extends Team
     /**
      * @return Collection<int, Participation>
      */
-    public function getParticipation(): Collection
+    public function getParticipations(): Collection
     {
-        return $this->participation;
+        return $this->participations;
     }
 
     public function addParticipation(Participation $participation): static
     {
-        if (!$this->participation->contains($participation)) {
-            $this->participation->add($participation);
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
             $participation->setTeamPlayer($this);
         }
 
@@ -122,7 +122,7 @@ class TeamPlayer extends Team
 
     public function removeParticipation(Participation $participation): static
     {
-        if ($this->participation->removeElement($participation)) {
+        if ($this->participations->removeElement($participation)) {
             // set the owning side to null (unless already changed)
             if ($participation->getTeamPlayer() === $this) {
                 $participation->setTeamPlayer(null);

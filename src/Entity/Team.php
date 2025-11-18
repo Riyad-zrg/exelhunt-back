@@ -17,10 +17,15 @@ use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\MappedSuperclass;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
+#[InheritanceType('JOINED')]
+#[DiscriminatorColumn(name: 'discriminator', type: 'string')]
+#[DiscriminatorMap(['createdBy' => TeamCreator::class, 'teamPlayer' => TeamPlayer::class])]
 #[ApiResource(
     operations: [
         new Get(),
@@ -61,7 +66,6 @@ class Team
 
     public function __construct()
     {
-        $this->hunts = new ArrayCollection();
         $this->memberships = new ArrayCollection();
     }
 
