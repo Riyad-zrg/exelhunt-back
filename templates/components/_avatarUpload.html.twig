@@ -5,11 +5,15 @@
 <script src="{{ asset('js/avatarPreview.js') }}" defer></script>
 
 <div class="puzzle_media_div">
-    <label for="{{ field.vars.id }}" class="file-upload-label" id="upload-label">
-        <div class="icon-container">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#fff" viewBox="0 0 24 24">
-                <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM5 5h14v14H5V5zm4 8l2.5 3 3-4 4 5H5l4-4z"/>
-            </svg>
+    <label class="file-upload-label" id="upload-label">
+        <div class="preview-wrapper" id="preview-wrapper">
+            <img id="preview-image" class="preview-image" src="#" alt="Preview" style="display:none;">
+
+            <div class="icon-container" id="icon-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" color="01161E" viewBox="0 0 24 24">
+                    <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM5 5h14v14H5V5zm4 8l2.5 3 3-4 4 5H5l4-4z"/>
+                </svg>
+            </div>
         </div>
 
         <div class="text">Ajoute une photo de profil</div>
@@ -25,4 +29,3 @@
 
     {{ form_errors(field) }}
 </div>
-
