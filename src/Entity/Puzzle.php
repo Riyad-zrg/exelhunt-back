@@ -123,7 +123,7 @@ class Puzzle
         return $this->media;
     }
 
-    public function setMedia(string $media): static
+    public function setMedia(?string $media): static
     {
         $this->media = $media;
 
@@ -282,6 +282,13 @@ class Puzzle
     public function setAnswerContent(array $answerContent): static
     {
         $this->answerContent = $answerContent;
+
+        return $this;
+    }
+
+    public function setContent(?string $content): static
+    {
+        $this->content = $content;
 
         return $this;
     }

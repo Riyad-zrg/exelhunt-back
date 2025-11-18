@@ -77,6 +77,7 @@ final class PuzzleFactory extends PersistentProxyObjectFactory
 
         return [
             'title' => ucfirst($faker->words(3, true)),
+            'content' => $faker->sentence(10, true),
             'question' => $question,
             'typeAnswer' => $type,
             'answerContent' => $content,
