@@ -69,6 +69,7 @@
                 {{ form_label(form.avatar) }}
                 {% include 'components/_avatarUpload.html.twig' with { field: form.avatar } %}
                 <div class="form-error">
+
                     {{ form_errors(form.avatar) }}
                 </div>
             </div>
