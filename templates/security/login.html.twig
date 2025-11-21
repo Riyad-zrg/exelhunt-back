@@ -46,10 +46,27 @@
                     >
                 </div>
 
+                <div class="remember-container">
+                    <label class="remember-label">
+                        <input type="checkbox" name="_remember_me" class="remember-checkbox">
+                        <span>Rester connecté</span>
+                    </label>
+                </div>
+
                 <div class="actions full">
                     <button type="submit" class="btn btn-primary btn-lg">
                         Se connecter
                     </button>
+                </div>
+
+                <div class="full" style="text-align:center; margin-top: 16px;">
+                    <div style="margin-bottom:8px;">
+                        Vous n'avez pas de compte ?
+                        <a href="{{ path('app_user_new') }}">Inscrivez-vous</a>
+                    </div>
+                    <div>
+                        <a href="{{ path('app_forgot_password') }}">Mot de passe oublié ?</a>
+                    </div>
                 </div>
             </form>
         </div>
