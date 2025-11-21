@@ -51,6 +51,7 @@ class UserType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'attr' => [
+                    'label' => 'Avatar',
                     'class' => 'custom-file-input',
                     'accept' => 'image/*',
                 ],
