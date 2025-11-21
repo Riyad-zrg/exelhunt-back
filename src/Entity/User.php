@@ -17,9 +17,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -46,7 +48,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     'address.country' => 'partial',
 ])]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'nickname'], arguments: ['orderParameterName' => 'order'])]
-class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -161,7 +163,13 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
 
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles ?: [];
+
+        if (!in_array('ROLE_USER', $roles, true)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_values(array_unique($roles));
     }
 
     public function setRoles(array $roles): static
@@ -374,4 +382,18 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
 
         return $this;
     }
+
+    public function getUserIdentifier(): string
+    {
+        if ($this->email) {
+            return (string) $this->email;
+        }
+
+        return (string) $this->nickname;
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
 }
