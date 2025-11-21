@@ -40,6 +40,8 @@ class SecurityController extends AbstractController
     {
     }
 
+
+
     #[Route('/forgot-password', name: 'app_forgot_password')]
     public function forgotPassword(
         Request $request,
@@ -129,5 +131,6 @@ class SecurityController extends AbstractController
         return $this->render('security/reset_password.html.twig', [
             'token' => $token,
         ]);
+
     }
 }
