@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block body %}
+    {% include 'components/_header.html.twig' %}
+
+    <div class="page-form">
+        <div class="form-card">
+            <h1 class="form-title">Se connecter</h1>
+
+            {% if error %}
+                <div class="form-error" style="margin-bottom: 16px;">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form method="post" action="{{ path('app_login') }}" class="form-grid">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="full">
+                    <label for="inputEmail">Adresse email</label>
+                    <input
+                            id="inputEmail"
+                            name="email"
+                            type="email"
+                            value="{{ last_username }}"
+                            required
+                            autocomplete="email"
+                    >
+                </div>
+
+                <div class="full">
+                    <label for="inputPassword">Mot de passe</label>
+                    <input
+                            id="inputPassword"
+                            name="password"
+                            type="password"
+                            required
+                            autocomplete="current-password"
+                    >
+                </div>
+
+                <div class="actions full">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Se connecter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
