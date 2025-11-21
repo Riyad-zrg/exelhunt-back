@@ -381,4 +381,108 @@ h2{font-size:clamp(20px,2.4vw,28px)}
     white-space: nowrap !important;
 }
 
+.password-helper-box{
+    text-align:center;
+    margin-top:6px;
+}
+
+.password-helper-box a{
+    color:var(--primary);
+    font-weight:600;
+    text-decoration:none;
+}
+.password-helper-box a:hover{
+    text-decoration:underline;
+}
+
+/* Page mot de passe oublié */
+.forgot-wrapper{
+    max-width:620px;
+    margin:48px auto;
+    padding:0 20px;
+}
+
+.forgot-card{
+    background:var(--surface);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:28px;
+    margin-bottom:72px;
+}
+
+.forgot-title{
+    font-size:clamp(26px,4vw,42px);
+    font-weight:800;
+    text-decoration:underline;
+    text-underline-offset:6px;
+    text-align:center;
+    margin:0 0 24px;
+}
+
+.forgot-text{
+    text-align:center;
+    margin-bottom:22px;
+    font-size:1rem;
+    color:var(--muted);
+}
+
+/* Page reset password */
+.reset-card{
+    background:var(--surface);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:28px;
+    max-width:620px;
+    margin:48px auto 72px;
+}
+
+.reset-title{
+    font-size:clamp(26px,4vw,42px);
+    font-weight:800;
+    text-decoration:underline;
+    text-underline-offset:6px;
+    margin:0 0 24px;
+    text-align:center;
+}
+
+.reset-grid{
+    display:grid;
+    gap:16px 18px;
+    grid-template-columns:1fr 1fr;
+}
+.reset-grid .full{
+    grid-column:1 / -1;
+}
+
+.reset-grid label{
+    display:block;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.reset-grid input{
+    width:100%;
+    background:#fff;
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:12px;
+    padding:.85rem 1rem;
+    font:inherit;
+    box-shadow:0 3px 10px rgba(0,0,0,.10);
+}
+
+.reset-actions{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:34px;
+}
+
+.action-link {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+@media (max-width:820px){
+    .reset-grid{grid-template-columns:1fr}
+}
 
