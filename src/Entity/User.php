@@ -92,6 +92,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $biography = null;
+    private ?string $resetPasswordToken = null;
+
+    private ?\DateTimeInterface $resetPasswordTokenExpiresAt = null;
 
     /**
      * @var Collection<int, Membership>
@@ -394,6 +397,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
+    }
+
+    public function getResetPasswordToken(): ?string
+    {
+        return $this->resetPasswordToken;
+    }
+
+    public function setResetPasswordToken(?string $resetPasswordToken): self
+    {
+        $this->resetPasswordToken = $resetPasswordToken;
+        return $this;
+    }
+
+    public function getResetPasswordTokenExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->resetPasswordTokenExpiresAt;
+    }
+
+    public function setResetPasswordTokenExpiresAt(?\DateTimeInterface $resetPasswordTokenExpiresAt): self
+    {
+        $this->resetPasswordTokenExpiresAt = $resetPasswordTokenExpiresAt;
+        return $this;
     }
 
 }
