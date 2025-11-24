@@ -51,6 +51,7 @@ class UserType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'attr' => [
+                    'label' => 'Avatar',
                     'class' => 'custom-file-input',
                     'accept' => 'image/*',
                 ],
@@ -92,6 +93,7 @@ class UserType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'label' => "S'inscrire",
+
                 'attr' => ['class' => 'btn btn-primary'],
             ])
         ;

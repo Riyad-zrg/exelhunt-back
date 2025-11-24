@@ -19,6 +19,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -46,7 +48,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     'address.country' => 'partial',
 ])]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'nickname'], arguments: ['orderParameterName' => 'order'])]
-class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -90,6 +92,9 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $biography = null;
+    private ?string $resetPasswordToken = null;
+
+    private ?\DateTimeInterface $resetPasswordTokenExpiresAt = null;
 
     /**
      * @var Collection<int, Membership>
@@ -161,7 +166,13 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
 
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles ?: [];
+
+        if (!in_array('ROLE_USER', $roles, true)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_values(array_unique($roles));
     }
 
     public function setRoles(array $roles): static
@@ -374,4 +385,40 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
 
         return $this;
     }
+
+    public function getUserIdentifier(): string
+    {
+        if ($this->email) {
+            return (string) $this->email;
+        }
+
+        return (string) $this->nickname;
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getResetPasswordToken(): ?string
+    {
+        return $this->resetPasswordToken;
+    }
+
+    public function setResetPasswordToken(?string $resetPasswordToken): self
+    {
+        $this->resetPasswordToken = $resetPasswordToken;
+        return $this;
+    }
+
+    public function getResetPasswordTokenExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->resetPasswordTokenExpiresAt;
+    }
+
+    public function setResetPasswordTokenExpiresAt(?\DateTimeInterface $resetPasswordTokenExpiresAt): self
+    {
+        $this->resetPasswordTokenExpiresAt = $resetPasswordTokenExpiresAt;
+        return $this;
+    }
+
 }

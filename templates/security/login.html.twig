@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block body %}
+    {% include 'components/_header.html.twig' %}
+
+    <div class="page-form">
+        <div class="form-card">
+            <h1 class="form-title">Se connecter</h1>
+
+            {% if error %}
+                <div class="form-error" style="margin-bottom: 16px;">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form method="post" action="{{ path('app_login') }}" class="form-grid">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="full">
+                    <label for="inputEmail">Adresse email</label>
+                    <input
+                            id="inputEmail"
+                            name="email"
+                            type="email"
+                            value="{{ last_username }}"
+                            required
+                            autocomplete="email"
+                    >
+                </div>
+
+                <div class="full">
+                    <label for="inputPassword">Mot de passe</label>
+                    <input
+                            id="inputPassword"
+                            name="password"
+                            type="password"
+                            required
+                            autocomplete="current-password"
+                    >
+                </div>
+
+                <div class="remember-container">
+                    <label class="remember-label">
+                        <input type="checkbox" name="_remember_me" class="remember-checkbox">
+                        <span>Rester connecté</span>
+                    </label>
+                </div>
+
+                <div class="actions full">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Se connecter
+                    </button>
+                </div>
+
+                <div class="full" style="text-align:center; margin-top: 16px;">
+                    <div style="margin-bottom:8px;">
+                        Vous n'avez pas de compte ?
+                        <a href="{{ path('app_user_new') }}">Inscrivez-vous</a>
+                    </div>
+                    <div>
+                        <a href="{{ path('app_forgot_password') }}">Mot de passe oublié ?</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

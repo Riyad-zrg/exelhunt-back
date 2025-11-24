@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block body %}
-    {{ include('components/_header.html.twig') }}
+    {% include 'components/_header.html.twig' %}
     <div class="page-form">
         <div class="form-card">
             <h1 class="form-title">S'inscrire</h1>
@@ -66,8 +66,10 @@
             </div>
 
             <div class="full">
-                {{ include('components/_avatarUpload.html.twig', {field: form.avatar}) }}
+                {{ form_label(form.avatar) }}
+                {% include 'components/_avatarUpload.html.twig' with { field: form.avatar } %}
                 <div class="form-error">
+
                     {{ form_errors(form.avatar) }}
                 </div>
             </div>
@@ -97,7 +99,7 @@
             </div>
 
             <div class="full address-block">
-                {{ form_label(form.address) }}
+{#                {{ form_label(form.address) }}#}
                 {{ form_widget(form.address) }}
                 <div class="form-error">
                     {{ form_errors(form.address) }}
@@ -109,6 +111,10 @@
             </div>
 
             {{ form_end(form) }}
+            <div style="margin-bottom:8px; text-align: center;">
+                Vous avez un compte ?
+                <a href="{{ path('app_login') }}">Connectez-vous</a>
+            </div>
         </div>
     </div>
 {% endblock %}
