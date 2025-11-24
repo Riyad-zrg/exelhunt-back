@@ -6,6 +6,8 @@ namespace App\Tests\Application;
 
 use App\Entity\User;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Tests\Support\ApplicationTester;
 
 final class UserCest
@@ -109,4 +111,31 @@ final class UserCest
 
         $I->assertTrue($emailErrorFound, 'Une erreur d’unicité sur email est attendue.');
     }
+    public function userIsConsideredAuthenticated(ApplicationTester $I): void
+    {
+        $I->haveInRepository(User::class, [
+            'nickname' => 'login_user',
+            'password' => 'hashed-password',
+            'roles' => ['ROLE_USER'],
+            'createdAt' => new \DateTimeImmutable(),
+            'email' => 'login@example.test',
+        ]);
+
+        $user = $I->grabEntityFromRepository(User::class, [
+            'email' => 'login@example.test',
+        ]);
+
+        $tokenStorage = $I->grabService(TokenStorageInterface::class);
+
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+        $tokenStorage->setToken($token);
+
+        $currentToken = $tokenStorage->getToken();
+
+        $I->assertNotNull($currentToken);
+        $I->assertInstanceOf(UsernamePasswordToken::class, $currentToken);
+        $I->assertSame($user, $currentToken->getUser());
+        $I->assertContains('ROLE_USER', $currentToken->getRoleNames());
+    }
+
 }
