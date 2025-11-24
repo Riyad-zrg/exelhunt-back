@@ -55,12 +55,12 @@ class Membership
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['membership:read', 'membership:write'])]
-    private ?User $Member = null;
+    private ?User $member = null;
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['membership:read', 'membership:write'])]
-    private ?Team $Team = null;
+    private ?Team $team = null;
 
     public function getId(): ?int
     {
@@ -81,24 +81,24 @@ class Membership
 
     public function getMember(): ?User
     {
-        return $this->Member;
+        return $this->member;
     }
 
-    public function setMember(?User $Member): static
+    public function setMember(?User $member): static
     {
-        $this->Member = $Member;
+        $this->member = $member;
 
         return $this;
     }
 
     public function getTeam(): ?Team
     {
-        return $this->Team;
+        return $this->team;
     }
 
-    public function setTeam(?Team $Team): static
+    public function setTeam(?Team $team): static
     {
-        $this->Team = $Team;
+        $this->team = $team;
 
         return $this;
     }

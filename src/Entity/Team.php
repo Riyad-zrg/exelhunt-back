@@ -60,7 +60,7 @@ class Team
     /**
      * @var Collection<int, Membership>
      */
-    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'Team')]
+    #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'team')]
     #[Groups(['team:read'])]
     private Collection $memberships;
 

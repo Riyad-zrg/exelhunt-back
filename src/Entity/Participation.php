@@ -60,7 +60,7 @@ class Participation
     #[ORM\ManyToOne(inversedBy: 'participations')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['participation:read', 'participation:write'])]
-    private ?User $Player = null;
+    private ?User $player = null;
 
     #[ORM\ManyToOne(targetEntity: TeamPlayer::class, inversedBy: 'participations')]
     #[ORM\JoinColumn(nullable: true)]
@@ -110,12 +110,12 @@ class Participation
 
     public function getPlayer(): ?User
     {
-        return $this->Player;
+        return $this->player;
     }
 
-    public function setPlayer(?User $Player): static
+    public function setPlayer(?User $player): static
     {
-        $this->Player = $Player;
+        $this->player = $player;
 
         return $this;
     }
