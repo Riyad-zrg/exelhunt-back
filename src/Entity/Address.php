@@ -197,7 +197,7 @@ class Address
             $parts[] = $this->street;
         }
         if ($this->postCode || $this->city) {
-            $parts[] = trim($this->postCode . ' ' . $this->city);
+            $parts[] = trim($this->postCode.' '.$this->city);
         }
         if ($this->country) {
             $parts[] = $this->country;
@@ -205,5 +205,4 @@ class Address
 
         return implode(', ', $parts) ?: 'Adresse';
     }
-
 }

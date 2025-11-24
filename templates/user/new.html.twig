@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'components/_header.html.twig' %}
+    {{ include('components/_header.html.twig') }}
     <div class="page-form">
         <div class="form-card">
             <h1 class="form-title">S'inscrire</h1>
 
-            {{ form_start(form, {'attr': {'class': 'form-grid'}}) }}
+            {{ form_start(form, {attr: {class: 'form-grid'}}) }}
 
             {{ form_errors(form) }}
 
@@ -66,7 +66,7 @@
             </div>
 
             <div class="full">
-                {% include 'components/_avatarUpload.html.twig' with { field: form.avatar } %}
+                {{ include('components/_avatarUpload.html.twig', {field: form.avatar}) }}
                 <div class="form-error">
                     {{ form_errors(form.avatar) }}
                 </div>
@@ -105,7 +105,7 @@
             </div>
 
             <div class="actions full">
-                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
+                {{ form_widget(form.save, {attr: {class: 'btn btn-primary btn-lg'}}) }}
             </div>
 
             {{ form_end(form) }}

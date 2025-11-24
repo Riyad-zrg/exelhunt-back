@@ -106,7 +106,8 @@
         "@test:csfixer",
         "@test:phpstan",
         "@test:twig",
-        "@test:yaml"
+        "@test:yaml",
+        "@test:codeception"
       ],
       "fix" : [
         "@fix:csfixer",
@@ -118,6 +119,14 @@
         "bin/console doctrine:migrations:migrate --no-interaction",
         "bin/console doctrine:fixtures:load --no-interaction"
       ],
+      "test:codeception": [
+        "codecept clean",
+        "bin/console --env=test doctrine:database:drop --force || true",
+        "bin/console --env=test doctrine:database:create",
+        "bin/console --env=test doctrine:schema:create",
+        "codecept run"
+      ],
+
 
       "auto-scripts": {
             "cache:clear": "symfony-cmd",
@@ -152,6 +161,10 @@
         }
     },
     "require-dev": {
+        "codeception/codeception": "^5.3",
+        "codeception/module-asserts": "^3.2",
+        "codeception/module-doctrine": "^3.3",
+        "codeception/module-symfony": "^3.7",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
         "php-cs-fixer/shim": "^3.88",
         "phpro/grumphp-shim": "^2.15",

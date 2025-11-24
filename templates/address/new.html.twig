@@ -11,11 +11,11 @@
     <div class="page-form">
         <div class="form-card">
             <h1 class="form-title">Ajouter une adresse</h1>
-            {{ form_start(form, {'attr': {'class': 'form-grid'}}) }}
+            {{ form_start(form, {attr: {class: 'form-grid'}}) }}
             {{ form_row(form.country) }}
             {{ form_row(form.city) }}
             {{ form_row(form.postCode) }}
-            {{ form_row(form.street, {'row_attr': {'class': 'full'}}) }}
+            {{ form_row(form.street, {row_attr: {class: 'full'}}) }}
             <div class="actions full">
                 {{ form_widget(form.save) }}
             </div>

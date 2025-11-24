@@ -1,0 +1,18 @@
+actor: ApplicationTester
+suite_namespace: Tests\Application
+modules:
+  # enable helpers as array
+  enabled:
+    - Symfony:
+        app_path: src
+        project_dir: .
+        environment: test
+        kernel_class: 'App\Kernel'
+        var_path: var
+        debug: true
+    - Doctrine:
+        depends: Symfony
+        cleanup: true
+        connection: default
+        em: default
+    - Asserts
