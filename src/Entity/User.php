@@ -30,6 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
+        new Get(uriTemplate: '/users/{id}/public', normalizationContext: ['groups' => ['user:public']], security: "is_granted('PUBLIC_ACCESS')"),
         new GetCollection(security: "is_granted('ROLE_ADMIN')"),
         new Post(security: "is_granted('PUBLIC_ACCESS')"),
         new Put(security: "is_granted('ROLE_ADMIN') or object == user"),
@@ -55,7 +56,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private ?int $id = null;
 
     #[ORM\Column(length: 30, unique: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:public'])]
     private ?string $nickname = null;
 
     #[ORM\Column(length: 255)]
@@ -72,7 +73,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:public'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 30, nullable: true)]
@@ -88,7 +89,7 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     private ?string $email = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:public'])]
     private ?string $biography = null;
 
     /**
