@@ -6,11 +6,13 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Random\RandomException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Random\RandomException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -41,6 +43,7 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
     }
+
 
     /**
      * @throws RandomException
@@ -135,5 +138,6 @@ class SecurityController extends AbstractController
         return $this->render('security/reset_password.html.twig', [
             'token' => $token,
         ]);
+
     }
 }
