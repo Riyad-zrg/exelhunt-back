@@ -6,10 +6,12 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Random\RandomException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -41,7 +43,10 @@ class SecurityController extends AbstractController
     }
 
 
-
+    /**
+     * @throws RandomException
+     * @throws TransportExceptionInterface
+     */
     #[Route('/forgot-password', name: 'app_forgot_password')]
     public function forgotPassword(
         Request $request,
