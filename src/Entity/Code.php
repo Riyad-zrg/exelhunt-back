@@ -13,10 +13,8 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\CodeRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -60,7 +58,6 @@ class Code
     #[ORM\JoinColumn(nullable: true)]
     #[Groups(['code:read', 'code:write'])]
     private ?Hunt $hunt = null;
-
 
     #[ORM\OneToOne(inversedBy: 'code', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]

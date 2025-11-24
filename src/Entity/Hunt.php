@@ -100,7 +100,6 @@ class Hunt
     #[Groups(['hunt:read'])]
     private ?Code $code = null;
 
-
     #[ORM\Column(options: ['default' => false])]
     #[Groups(['hunt:read'])]
     private ?bool $isTeamPlayable = null;
