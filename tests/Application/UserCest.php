@@ -60,7 +60,6 @@ final class UserCest
 
             $I->fail('Une contrainte d’unicité sur nickname aurait dû être levée.');
         } catch (UniqueConstraintViolationException $exception) {
-            $I->assertInstanceOf(UniqueConstraintViolationException::class, $exception);
         }
     }
 }
