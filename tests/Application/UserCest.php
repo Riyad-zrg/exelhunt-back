@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Application;
 
 use App\Entity\User;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Tests\Support\ApplicationTester;
 
@@ -49,17 +48,65 @@ final class UserCest
             'email' => 'user1@example.test',
         ]);
 
-        try {
-            $I->haveInRepository(User::class, [
-                'nickname' => 'unique_nickname',
-                'password' => 'hashed-password',
-                'roles' => ['ROLE_USER'],
-                'createdAt' => new \DateTimeImmutable(),
-                'email' => 'user2@example.test',
-            ]);
+        $validator = $I->grabService(ValidatorInterface::class);
 
-            $I->fail('Une contrainte d’unicité sur nickname aurait dû être levée.');
-        } catch (UniqueConstraintViolationException $exception) {
+        $secondUser = new User();
+        $secondUser
+            ->setNickname('unique_nickname')
+            ->setPassword('another-password')
+            ->setRoles(['ROLE_USER'])
+            ->setCreatedAt(new \DateTimeImmutable())
+            ->setEmail('user2@example.test')
+        ;
+
+        $errors = $validator->validate($secondUser);
+
+        $I->assertGreaterThan(0, $errors->count());
+
+        $nicknameErrorFound = false;
+        foreach ($errors as $error) {
+            if ('nickname' === $error->getPropertyPath()) {
+                $nicknameErrorFound = true;
+                break;
+            }
         }
+
+        $I->assertTrue($nicknameErrorFound, 'Une erreur d’unicité sur nickname est attendue.');
+    }
+
+    public function userEmailIsUnique(ApplicationTester $I): void
+    {
+        $I->haveInRepository(User::class, [
+            'nickname' => 'user_a',
+            'password' => 'hashed-password',
+            'roles' => ['ROLE_USER'],
+            'createdAt' => new \DateTimeImmutable(),
+            'email' => 'same@example.test',
+        ]);
+
+        $validator = $I->grabService(ValidatorInterface::class);
+
+        $secondUser = new User();
+        $secondUser
+            ->setNickname('user_b')
+            ->setPassword('another-password')
+            ->setRoles(['ROLE_USER'])
+            ->setCreatedAt(new \DateTimeImmutable())
+            ->setEmail('same@example.test')
+        ;
+
+        $errors = $validator->validate($secondUser);
+
+        $I->assertGreaterThan(0, $errors->count());
+
+        $emailErrorFound = false;
+        foreach ($errors as $error) {
+            if ('email' === $error->getPropertyPath()) {
+                $emailErrorFound = true;
+                break;
+            }
+        }
+
+        $I->assertTrue($emailErrorFound, 'Une erreur d’unicité sur email est attendue.');
     }
 }
