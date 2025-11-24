@@ -44,15 +44,6 @@ security:
     # - { path: ^/admin, roles: ROLE_ADMIN }
     # - { path: ^/profile, roles: ROLE_USER }
     - { path: ^/login, roles: PUBLIC_ACCESS }
-  remember_me:
-      secret: '%kernel.secret%'
-      lifetime: 1209600
-      path: /
-      remember_me_parameter: _remember_me
-
-  logout:
-    path: app_logout
-    target: /
 
 when@test:
   security:
