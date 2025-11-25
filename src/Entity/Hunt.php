@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -52,60 +53,64 @@ class Hunt
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['hunt:read', 'hunt:write'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamPlayer:read', 'teamCreator:read', 'address:read', 'participation:read', 'puzzle:read', 'user_answer:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 500)]
-    #[Groups(['hunt:read', 'hunt:write'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamPlayer:read', 'teamCreator:read', 'participation:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 15)]
-    #[Groups(['hunt:read', 'hunt:write'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read'])]
     private ?string $visibility = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Groups(['hunt:read', 'hunt:write'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['hunt:read', 'hunt:write'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read'])]
     private ?\DateTime $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['hunt:read', 'hunt:write'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read', 'participation:read'])]
     private ?string $avatar = null;
 
     #[ORM\Column]
-    #[Groups(['hunt:read', 'hunt:write'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read'])]
     private ?int $nbPlayers = null;
 
     #[ORM\ManyToOne(inversedBy: 'hunts')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['hunt:read', 'hunt:write'])]
+    #[ApiProperty(readable: true)]
     private ?TeamCreator $createdBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'hunts')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['hunt:read', 'hunt:write'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read'])]
+    #[ApiProperty(readable: true)]
     private ?Address $location = null;
 
     /**
      * @var Collection<int, Puzzle>
      */
     #[ORM\OneToMany(targetEntity: Puzzle::class, mappedBy: 'hunt', orphanRemoval: true)]
-    #[Groups(['hunt:read'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read'])]
+    #[ApiProperty(readable: true)]
     private Collection $puzzles;
 
     #[ORM\OneToOne(mappedBy: 'hunt')]
-    #[Groups(['hunt:read'])]
+    #[Groups(['hunt:read', 'teamCreator:read'])]
+    #[ApiProperty(readable: true)]
     private ?Code $code = null;
 
     #[ORM\Column(options: ['default' => false])]
-    #[Groups(['hunt:read'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read'])]
     private ?bool $isTeamPlayable = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['hunt:read'])]
+    #[Groups(['hunt:read', 'hunt:write', 'teamCreator:read'])]
     private ?int $teamPlayerMax = null;
 
     /**
@@ -116,7 +121,6 @@ class Hunt
     private Collection $teamPlayers;
 
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'hunt')]
-    #[Groups(['hunt:read'])]
     private Collection $participations;
 
     public function __construct()
