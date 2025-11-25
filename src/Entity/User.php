@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -58,7 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 30, unique: true)]
-    #[Groups(['user:read', 'user:write', 'user:public'])]
+    #[Groups(['user:read', 'user:write', 'user:public', 'membership:read', 'team:read', 'address:read', 'participation:read', 'has_started:read'])]
     private ?string $nickname = null;
 
     #[ORM\Column(length: 255)]
@@ -75,15 +76,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['user:read', 'user:write', 'user:public'])]
+    #[Groups(['user:read', 'user:write', 'user:public', 'membership:read', 'team:read'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 30, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'address:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 30, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'address:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 100, unique: true, nullable: true)]
@@ -102,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'member', orphanRemoval: true)]
     #[Groups(['user:read'])]
+    #[ApiProperty(readable: true)]
     private Collection $memberships;
 
     /**
@@ -109,6 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'player')]
     #[Groups(['user:read'])]
+    #[ApiProperty(readable: true)]
     private Collection $participations;
 
     /**
@@ -116,6 +119,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Start::class, mappedBy: 'player')]
     #[Groups(['user:read'])]
+    #[ApiProperty(readable: true)]
     private Collection $startPuzzle;
 
     /**
