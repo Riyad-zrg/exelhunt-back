@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -45,26 +46,29 @@ class Participation
     private ?int $id = null;
 
     #[ORM\Column(length: 15)]
-    #[Groups(['participation:read', 'participation:write'])]
+    #[Groups(['participation:read', 'participation:write', 'teamPlayer:read', 'user:read'])]
     private ?string $tracking = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    #[Groups(['participation:read', 'participation:write'])]
+    #[Groups(['participation:read', 'participation:write', 'teamPlayer:read', 'user:read'])]
     private ?\DateTime $globalTime = null;
 
     #[ORM\ManyToOne(inversedBy: 'participations')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['participation:read', 'participation:write'])]
+    #[ApiProperty(readable: true)]
     private ?Hunt $hunt = null;
 
     #[ORM\ManyToOne(inversedBy: 'participations')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['participation:read', 'participation:write'])]
+    #[ApiProperty(readable: true)]
     private ?User $player = null;
 
     #[ORM\ManyToOne(targetEntity: TeamPlayer::class, inversedBy: 'participations')]
     #[ORM\JoinColumn(nullable: true)]
     #[Groups(['participation:read', 'participation:write'])]
+    #[ApiProperty(readable: true)]
     private ?TeamPlayer $teamPlayer = null;
 
     public function getId(): ?int
