@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -16,6 +17,7 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
@@ -39,22 +41,23 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['team:write']]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
-#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
-#[ApiFilter(OrderFilter::class, properties: ['name', 'createdAt'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(DateFilter::class, properties: [])]
+#[ApiFilter(OrderFilter::class, properties: ['name'], arguments: ['orderParameterName' => 'order'])]
 class Team
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['team:read'])]
+    #[ApiProperty]
+    #[Groups(['team:read', 'hunt:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 60)]
-    #[Groups(['team:read', 'team:write'])]
+    #[Groups(['team:read', 'team:write', 'hunt:read', 'membership:read', 'participation:read'])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 5000)]
-    #[Groups(['team:read', 'team:write'])]
+    #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['team:read', 'team:write', 'hunt:read'])]
     private ?string $avatar = null;
 
     /**
