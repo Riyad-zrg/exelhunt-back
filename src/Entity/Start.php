@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -42,16 +43,18 @@ class Start
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['has_started:read', 'has_started:write'])]
+    #[Groups(['has_started:read', 'has_started:write', 'user:read'])]
     private ?\DateTimeImmutable $startedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'startPuzzle')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['has_started:read', 'has_started:write'])]
+    #[ApiProperty(readable: true)]
     private ?User $player = null;
 
     #[ORM\ManyToOne(inversedBy: 'starts')]
     #[Groups(['has_started:read', 'has_started:write'])]
+    #[ApiProperty(readable: true)]
     private ?Puzzle $puzzle = null;
 
     public function getId(): ?int
