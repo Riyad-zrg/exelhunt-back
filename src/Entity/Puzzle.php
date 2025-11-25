@@ -71,9 +71,11 @@ class Puzzle
     private ?\DateTime $malus = null;
 
     #[ORM\Column(length: 3)]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
     private ?string $typeAnswer = null;
 
     #[ORM\Column(type: Types::JSON)]
+    #[Groups(['puzzle:read', 'puzzle:write'])]
     private array $answerContent = [];
 
     #[ORM\ManyToOne(inversedBy: 'puzzles')]
@@ -291,5 +293,10 @@ class Puzzle
         $this->content = $content;
 
         return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
     }
 }
