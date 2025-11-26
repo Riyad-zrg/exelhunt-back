@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -12,7 +13,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\OpenApi\Model;
 use App\Repository\UserRepository;
+use App\State\UserMeProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -33,6 +36,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
         new Get(uriTemplate: '/users/{id}/public', normalizationContext: ['groups' => ['user:public']], security: "is_granted('PUBLIC_ACCESS')"),
+        new Get(
+            uriTemplate: '/me',
+            openapi: new Model\Operation(
+                summary: 'Récupère l\'utilisateur connecté',
+                description: 'Récupère les informations de l\'utilisateur connecté',
+            ),
+            normalizationContext: ['groups' => ['user:me']],
+            security: "is_granted('ROLE_USER')",
+            provider: UserMeProvider::class
+        ),
+
         new GetCollection(security: "is_granted('ROLE_ADMIN')"),
         new Post(security: "is_granted('PUBLIC_ACCESS')"),
         new Put(security: "is_granted('ROLE_ADMIN') or object == user"),
@@ -54,11 +68,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:me'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 30, unique: true)]
-    #[Groups(['user:read', 'user:write', 'user:public'])]
+    #[Groups(['user:read', 'user:me', 'user:write', 'user:public', 'membership:read', 'team:read', 'address:read', 'participation:read', 'has_started:read'])]
     private ?string $nickname = null;
 
     #[ORM\Column(length: 255)]
@@ -66,32 +80,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: Types::JSON)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:me'])]
     private array $roles = [];
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Gedmo\Timestampable]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:me'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['user:read', 'user:write', 'user:public'])]
+    #[Groups(['user:read', 'user:write', 'user:me', 'user:public', 'membership:read', 'team:read'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 30, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:me', 'address:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 30, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:me', 'address:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 100, unique: true, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:me'])]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['user:read', 'user:write', 'user:public'])]
+    #[Groups(['user:read', 'user:write', 'user:public', 'user:me'])]
     private ?string $biography = null;
     private ?string $resetPasswordToken = null;
 
@@ -101,21 +115,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Membership>
      */
     #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: 'member', orphanRemoval: true)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:me'])]
+    #[ApiProperty(readable: true)]
     private Collection $memberships;
 
     /**
      * @var Collection<int, Participation>
      */
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'player')]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:me'])]
+    #[ApiProperty(readable: true)]
     private Collection $participations;
 
     /**
      * @var Collection<int, Start>
      */
     #[ORM\OneToMany(targetEntity: Start::class, mappedBy: 'player')]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:me'])]
+    #[ApiProperty(readable: true)]
     private Collection $startPuzzle;
 
     /**
@@ -126,6 +143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(targetEntity: Address::class, cascade: ['persist'], inversedBy: 'users')]
     #[ORM\JoinColumn(name: 'address_id', referencedColumnName: 'id', nullable: true)]
+    #[Groups(['user:read', 'user:write', 'user:me'])]
     private ?Address $address = null;
 
     public function __construct()
@@ -408,6 +426,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setResetPasswordToken(?string $resetPasswordToken): self
     {
         $this->resetPasswordToken = $resetPasswordToken;
+
         return $this;
     }
 
@@ -419,7 +438,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setResetPasswordTokenExpiresAt(?\DateTimeInterface $resetPasswordTokenExpiresAt): self
     {
         $this->resetPasswordTokenExpiresAt = $resetPasswordTokenExpiresAt;
+
         return $this;
     }
-
 }

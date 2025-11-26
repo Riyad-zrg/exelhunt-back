@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -42,19 +43,19 @@ class Address
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['address:read', 'address:write', 'hunt:read', 'user:read', 'teamCreator:read'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['address:read', 'address:write', 'hunt:read', 'user:read', 'teamCreator:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 10)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['address:read', 'address:write', 'hunt:read', 'user:read', 'teamCreator:read'])]
     private ?string $postCode = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['address:read', 'address:write'])]
+    #[Groups(['address:read', 'address:write', 'hunt:read', 'user:read', 'teamCreator:read'])]
     private ?string $street = null;
 
     /**
@@ -62,12 +63,15 @@ class Address
      */
     #[ORM\OneToMany(targetEntity: Hunt::class, mappedBy: 'location')]
     #[Groups(['address:read'])]
+    #[ApiProperty(readable: true)]
     private Collection $hunts;
 
     /**
      * @var Collection<int, User>
      */
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'address')]
+    #[Groups(['address:read'])]
+    #[ApiProperty(readable: true)]
     private Collection $users;
 
     public function __construct()

@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -47,52 +48,56 @@ class Puzzle
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['puzzle:read', 'puzzle:write'])]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read', 'user_answer:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['puzzle:read', 'puzzle:write'])]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read'])]
     private ?string $content = null;
 
     #[ORM\Column(length: 500, nullable: true)]
-    #[Groups(['puzzle:read', 'puzzle:write'])]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read'])]
     private ?string $hint = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    #[Groups(['puzzle:read', 'puzzle:write'])]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read'])]
     private ?\DateTime $timeLimit = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read'])]
+    private ?string $media = null;
 
     #[ORM\Column]
-    #[Groups(['puzzle:read', 'puzzle:write'])]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read', 'has_started:read', 'user_answer:read'])]
     private ?int $index = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    #[Groups(['puzzle:read', 'puzzle:write'])]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read', 'user_answer:read'])]
     private ?\DateTime $malus = null;
 
     #[ORM\Column(length: 3)]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read', 'user_answer:read'])]
     private ?string $typeAnswer = null;
 
     #[ORM\Column(type: Types::JSON)]
+    #[Groups(['puzzle:read', 'puzzle:write', 'hunt:read', 'teamCreator:read', 'user_answer:read'])]
     private array $answerContent = [];
 
     #[ORM\ManyToOne(inversedBy: 'puzzles')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['puzzle:read', 'puzzle:write'])]
+    #[Groups(['puzzle:read', 'puzzle:write', 'user_answer:read'])]
+    #[ApiProperty(readable: true)]
     private ?Hunt $hunt = null;
 
     /**
      * @var Collection<int, Start>
      */
     #[ORM\OneToMany(targetEntity: Start::class, mappedBy: 'puzzle')]
-    #[Groups(['puzzle:read'])]
     private Collection $starts;
 
     /**
      * @var Collection<int, UserAnswer>
      */
     #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'puzzle', orphanRemoval: true)]
-    #[Groups(['puzzle:read', 'puzzle:write'])]
     private Collection $userAnswers;
 
     public function __construct()
@@ -291,5 +296,10 @@ class Puzzle
         $this->content = $content;
 
         return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
     }
 }

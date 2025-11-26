@@ -39,24 +39,23 @@ class Code
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['code:read'])]
+    #[Groups(['code:read', 'hunt:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 6, unique: true)]
-    #[Groups(['code:read', 'code:write'])]
+    #[Groups(['code:read', 'code:write', 'hunt:read', 'teamPlayer:read', 'teamCreator:read'])]
     private ?int $code = null;
 
     #[ORM\Column]
-    #[Groups(['code:read', 'code:write'])]
+    #[Groups(['code:read', 'code:write', 'hunt:read', 'teamPlayer:read', 'teamCreator:read'])]
     private ?\DateTime $createdAt = null;
 
     #[ORM\Column]
-    #[Groups(['code:read', 'code:write'])]
+    #[Groups(['code:read', 'code:write', 'hunt:read', 'teamPlayer:read', 'teamCreator:read'])]
     private ?\DateTime $expireAt = null;
 
     #[ORM\OneToOne(inversedBy: 'code', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['code:read', 'code:write'])]
     private ?Hunt $hunt = null;
 
     #[ORM\OneToOne(inversedBy: 'code', cascade: ['persist', 'remove'])]

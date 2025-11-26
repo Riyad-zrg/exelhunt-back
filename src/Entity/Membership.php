@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -46,20 +47,22 @@ class Membership
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['membership:read', 'membership:write'])]
+    #[Groups(['membership:read', 'membership:write', 'team:read', 'user:read'])]
     private array $role = [];
     #[ORM\Column]
-    #[Groups(['membership:read', 'membership:write'])]
+    #[Groups(['membership:read', 'membership:write', 'team:read', 'user:read'])]
     private ?\DateTimeImmutable $joinedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['membership:read', 'membership:write'])]
+    #[Groups(['membership:read', 'membership:write', 'team:read'])]
+    #[ApiProperty(readable: true)]
     private ?User $member = null;
 
     #[ORM\ManyToOne(inversedBy: 'memberships')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['membership:read', 'membership:write'])]
+    #[ApiProperty(readable: true)]
     private ?Team $team = null;
 
     public function getId(): ?int
