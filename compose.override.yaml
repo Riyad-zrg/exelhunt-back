@@ -1,12 +1,42 @@
-
 services:
-  ###> doctrine/doctrine-bundle ###
+  backend:
+    build: .
+    container_name: symfony-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0
+      DATABASE_URL: "postgresql://app:secret@database:5432/app_gwix"
+      MAILER_DSN: "smtp://mailpit:1025"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - database
+      - mailpit
+    command: >
+      sh -c "
+      composer install --no-dev --optimize-autoloader &&
+      php bin/console doctrine:database:create --if-not-exists &&
+      php bin/console doctrine:migrations:migrate --no-interaction &&
+      php bin/console doctrine:fixtures:load --no-interaction &&
+      php -S 0.0.0.0:8000 -t public
+      "
+
   database:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: app_gwix
     ports:
       - "5432:5432"
-  ###< doctrine/doctrine-bundle ###
+    volumes:
+      - db-data:/var/lib/postgresql/data
 
-  ###> symfony/mailer ###
   mailpit:
     image: axllent/mailpit
     container_name: mailpit
@@ -21,7 +51,6 @@ services:
       MP_DATABASE: /data/mailpit.db
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
-  ###< symfony/mailer ###
 
   adminer:
     image: butopea/adminer
@@ -30,3 +59,5 @@ services:
     environment:
       ADMINER_AUTOLOGIN: 1
 
+volumes:
+  db-data:
